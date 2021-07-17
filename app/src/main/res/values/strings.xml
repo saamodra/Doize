@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Doize</string>
-    <string name="let_s_get_started">Let's get started</string>
-    <string name="login_desc">Login with your data that you entered during registration to continue</string>
+    <string name="let_s_get_started">Organize your work!</string>
+    <string name="login_desc">Login with your account to continue</string>
     <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>

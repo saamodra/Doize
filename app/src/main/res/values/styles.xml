@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FormControl" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="startIconTint">@color/purple_800</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>
