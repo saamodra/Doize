@@ -8,9 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="purple_800">#261686</color>
-    <color name="purple_550">#4C34E0</color>
-    <color name="pink_500">#FC026C</color>
-    <color name="yellow_500">#FEBD0B</color>
-    <color name="blue_200">#42A3ED</color>
+    <color name="darkPurple">#261686</color>
+    <color name="purple">#4C34E0</color>
+    <color name="pink">#FC026C</color>
+    <color name="yellow">#FEBD0B</color>
+    <color name="blue">#42A3ED</color>
 </resources>

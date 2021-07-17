@@ -2,7 +2,16 @@
 <resources>
     <style name="FormControl" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginTop">15dp</item>
-        <item name="startIconTint">@color/purple_800</item>
-        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="startIconTint">@color/darkPurple</item>
+        <item name="fontFamily">@font/sf_pro_regular</item>
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/sf_pro_bold</item>
+    </style>
+
+    <style name="Button.Primary" parent="Button">
+        <item name="backgroundTint">@color/purple</item>
     </style>
 </resources>

@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import android.os.Bundle;
 
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.ui.fragment.DashboardFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,10 +19,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        User user = (User) getIntent().getSerializableExtra("userLogin");
+
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
         if (fragment == null) {
-            fragment = DashboardFragment.newInstance();
+            fragment = DashboardFragment.newInstance(user);
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
