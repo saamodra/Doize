@@ -1,8 +1,10 @@
-package id.kelompok04.doize;
+package id.kelompok04.doize.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import id.kelompok04.doize.R;
 
 public class MainActivity extends AppCompatActivity {
 
