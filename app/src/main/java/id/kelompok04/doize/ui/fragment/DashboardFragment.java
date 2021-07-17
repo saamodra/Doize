@@ -52,6 +52,7 @@ public class DashboardFragment extends Fragment {
         mBtnLogout.setOnClickListener(v1 -> {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
+            getActivity().finish();
         });
 
         return v;
