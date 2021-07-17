@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.api.ApiUtils;
@@ -59,13 +60,16 @@ public class LoginActivity extends AppCompatActivity {
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                Log.d(TAG, "onResponse: " + response.body());
                 LoginResponse loginResponse = response.body();
                 if (loginResponse.getStatus() == 200) {
                     mUserViewModel.setLoginResponse(loginResponse);
-                    String userLoginObject = gson.toJson(anime);
+
+                    // Convert object to string
+                    String userLoginObject = new Gson().toJson(loginResponse.getData().getUser());
+
+                    // Passing string object to intent extra
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("userLogin", (Parcelable) loginResponse.getData().getUser());
+                    intent.putExtra("userLogin", userLoginObject);
                     startActivity(intent);
                 } else {
                     Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
