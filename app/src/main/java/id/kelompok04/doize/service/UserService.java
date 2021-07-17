@@ -6,6 +6,7 @@ import id.kelompok04.doize.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -26,4 +27,7 @@ public interface UserService {
 
     @DELETE("user")
     Call<User> deleteUserById(@Query("id") String id);
+
+    @POST("login")
+    Call<User> login(@Field("email") String email, @Field("password") String password);
 }
