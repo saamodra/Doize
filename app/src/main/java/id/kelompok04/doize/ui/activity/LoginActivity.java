@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onChanged(LoginResponse loginResponse) {
                         if (loginResponse.getStatus() == 200) {;
                             // Convert object to string
-                            String userLoginObject = new Gson().toJson(loginResponse.getData().getUser());
+                            String userLoginObject = new Gson().toJson(loginResponse.getUser());
 
                             // Passing string object to intent extra
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

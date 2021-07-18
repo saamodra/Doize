@@ -23,8 +23,4 @@ public class UserViewModel extends ViewModel {
         return mUserRepository.doLogin(email, password);
     }
 
-
-    public void setLoginResponse(LoginResponse loginResponse) {
-        mLoginResponse = loginResponse;
-    }
 }

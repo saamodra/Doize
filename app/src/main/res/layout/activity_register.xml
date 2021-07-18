@@ -11,7 +11,7 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:src="@drawable/doize_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
         android:id="@+id/tvGetStarted"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/sign_up"
         android:textAlignment="center"
@@ -40,16 +40,16 @@
         app:layout_constraintTop_toBottomOf="@+id/tvGetStarted">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtLayoutFirstname"
+            android:id="@+id/txtLayoutName"
             style="@style/FormControl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/first_name"
+            android:hint="@string/name"
             app:endIconMode="clear_text"
-            app:startIconDrawable="@drawable/ic_baseline_email_24">
+            app:startIconDrawable="@drawable/ic_baseline_person_24">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtFirstname"
+                android:id="@+id/txtName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -58,16 +58,16 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtLayoutLastname"
+            android:id="@+id/txtLayoutEmail"
             style="@style/FormControl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/last_name"
+            android:hint="@string/email"
             app:endIconMode="clear_text"
             app:startIconDrawable="@drawable/ic_baseline_email_24">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtLastname"
+                android:id="@+id/txtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -91,6 +91,24 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/txtLayoutPasswordConfirmation"
+            style="@style/FormControl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/confirmation_password"
+            app:passwordToggleEnabled="true"
+            app:startIconDrawable="@drawable/ic_baseline_check_circle_24">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtPasswordConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <Button
             android:id="@+id/btnLogin"
             style="@style/Button.Primary"
@@ -99,10 +117,11 @@
             android:layout_marginTop="15dp"
             android:fontFamily="@font/sf_pro_bold"
             android:padding="15dp"
-            android:text="@string/sign_in"
+            android:text="@string/sign_up"
             android:textSize="17sp" />
 
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_marginTop="30dp"
