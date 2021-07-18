@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -58,8 +59,24 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(v -> {
             String email = mEmailTxt.getText().toString();
             String password = mPasswordTxt.getText().toString();
+
             if (validate(v)) {
-                doLogin(email, password);
+                mUserViewModel.login(email, password).observe(this, new Observer<LoginResponse>() {
+                    @Override
+                    public void onChanged(LoginResponse loginResponse) {
+                        if (loginResponse.getStatus() == 200) {;
+                            // Convert object to string
+                            String userLoginObject = new Gson().toJson(loginResponse.getData().getUser());
+
+                            // Passing string object to intent extra
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra("userLogin", userLoginObject);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
@@ -67,38 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-    }
 
-
-    public void doLogin(String email, String password) {
-        Log.d(TAG, "login: " + email + password);
-        Call<LoginResponse> call = mUserService.login(email, password);
-        call.enqueue(new Callback<LoginResponse>() {
-            @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                LoginResponse loginResponse = response.body();
-
-                if (loginResponse.getStatus() == 200) {
-                    mUserViewModel.setLoginResponse(loginResponse);
-
-                    // Convert object to string
-                    String userLoginObject = new Gson().toJson(loginResponse.getData().getUser());
-
-                    // Passing string object to intent extra
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("userLogin", userLoginObject);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
-            }
-        });
     }
 
     public boolean validate(View v) {
@@ -107,6 +93,4 @@ public class LoginActivity extends AppCompatActivity {
 
         return emailValidation && passwordValidation;
     }
-
-
 }

@@ -1,11 +1,15 @@
 package id.kelompok04.doize.architecture.viewmodel;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import id.kelompok04.doize.architecture.repository.UserRepository;
 import id.kelompok04.doize.model.response.LoginResponse;
 
 public class UserViewModel extends ViewModel {
+    private static final String TAG = "UserViewModel";
     private UserRepository mUserRepository;
 
     private LoginResponse mLoginResponse;
@@ -15,13 +19,10 @@ public class UserViewModel extends ViewModel {
         mLoginResponse = new LoginResponse();
     }
 
-    public void login(String email, String password) {
-        mUserRepository.doLogin(email, password);
+    public LiveData<LoginResponse> login(String email, String password) {
+        return mUserRepository.doLogin(email, password);
     }
 
-    public LoginResponse getLoginResponse() {
-        return mLoginResponse;
-    }
 
     public void setLoginResponse(LoginResponse loginResponse) {
         mLoginResponse = loginResponse;
