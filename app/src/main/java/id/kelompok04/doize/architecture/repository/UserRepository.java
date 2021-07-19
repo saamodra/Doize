@@ -49,43 +49,27 @@ public class UserRepository {
     }
 
 
-    public void getUsers() {
+    public LiveData<LoginResponse> register(User user) {
+        MutableLiveData<LoginResponse> loginResponseMutableLiveData = new MutableLiveData<>();
+
         Log.d(TAG, "getUsers: Called");
-        Call<ListUserResponse> call = mUserService.getUsers();
-        call.enqueue(new Callback<ListUserResponse>() {
+        Call<LoginResponse> call = mUserService.register(user);
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<ListUserResponse> call, Response<ListUserResponse> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 Log.d(TAG, "onResponse: " + response.body());
+                loginResponseMutableLiveData.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ListUserResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: " + t.getMessage());
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+
             }
         });
 
-//        return mUserDao.getUsers();
+        return loginResponseMutableLiveData;
     }
 
-    public void getUser() {
-        Log.d(TAG, "getUser: Called");
-        Call<User> call = mUserService.getUserById("1");
-        call.enqueue(new Callback<User>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "onResponse: " + response.body().getName());
-                Log.d(TAG, "getUsers.onResponse: called");
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.e(TAG, "onFailure API Call : " + t.getMessage());
-            }
-        });
-
-//        return mUserDao.getUsers();
-    }
 
     public LiveData<LoginResponse> doLogin(String email, String password) {
         MutableLiveData<LoginResponse> loginResponseMutableLiveData = new MutableLiveData<>();

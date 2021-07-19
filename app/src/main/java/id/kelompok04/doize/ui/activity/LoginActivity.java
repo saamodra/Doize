@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         setContentView(R.layout.activity_login);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         mLoginButton = findViewById(R.id.btnLogin);
         mSignUpTv = findViewById(R.id.tvSignUp);
@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("userLogin", userLoginObject);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         }
