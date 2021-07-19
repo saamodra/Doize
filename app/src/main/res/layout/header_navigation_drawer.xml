@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:paddingTop="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,7 +12,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        android:text="Rizki Kurniawati" />
+        android:text="Kelompok 04" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +22,7 @@
         android:layout_marginEnd="24dp"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/material_on_surface_emphasis_medium"
-        android:text="rzkurniawati.s@gmail.com" />
+        android:text="kel04@gmail.com" />
 
 
 </LinearLayout>

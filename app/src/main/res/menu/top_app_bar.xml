@@ -6,6 +6,6 @@
         android:id="@+id/notification"
         android:icon="@drawable/ic_baseline_notifications_24"
         android:title="@string/notifications"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

@@ -28,12 +28,8 @@ public class DashboardFragment extends Fragment {
     private TextView mUserLogin;
     private Button mBtnLogout;
 
-    public static DashboardFragment newInstance(String user) {
-        Bundle args = new Bundle();
-        args.putSerializable(USERLOGIN, user);
-        DashboardFragment fragment = new DashboardFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static DashboardFragment newInstance() {
+        return new DashboardFragment();
     }
 
     @Nullable
@@ -43,10 +39,10 @@ public class DashboardFragment extends Fragment {
 
         Gson gson = new Gson();
 
-        User userLogin = gson.fromJson((String) getArguments().getSerializable(USERLOGIN), User.class);
+        User user = new User("Kelompok 04", "kel4@gmail.com", "password", "1");
 
         mUserLogin = v.findViewById(R.id.txtDashboardWelcome);
-        mUserLogin.setText("Welcome, " + userLogin.getName());
+        mUserLogin.setText("Welcome, " + user.getName());
 
         mBtnLogout = v.findViewById(R.id.btnLogout);
         mBtnLogout.setOnClickListener(v1 -> {
