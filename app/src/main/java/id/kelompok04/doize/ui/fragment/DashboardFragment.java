@@ -46,7 +46,7 @@ public class DashboardFragment extends Fragment {
         User userLogin = gson.fromJson((String) getArguments().getSerializable(USERLOGIN), User.class);
 
         mUserLogin = v.findViewById(R.id.txtDashboardWelcome);
-        mUserLogin.setText("Welcome, " + userLogin.getFirstName());
+        mUserLogin.setText("Welcome, " + userLogin.getName());
 
         mBtnLogout = v.findViewById(R.id.btnLogout);
         mBtnLogout.setOnClickListener(v1 -> {

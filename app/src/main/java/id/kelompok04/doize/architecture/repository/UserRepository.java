@@ -74,7 +74,7 @@ public class UserRepository {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                Log.d(TAG, "onResponse: " + response.body().getFirstName());
+                Log.d(TAG, "onResponse: " + response.body().getName());
                 Log.d(TAG, "getUsers.onResponse: called");
             }
 

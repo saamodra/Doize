@@ -10,13 +10,9 @@ public class User {
     @Expose
     private String idUser;
 
-    @SerializedName("first_name")
+    @SerializedName("name")
     @Expose
-    private String firstName;
-
-    @SerializedName("last_name")
-    @Expose
-    private String lastName;
+    private String name;
 
     @SerializedName("birth_date")
     @Expose
@@ -53,20 +49,12 @@ public class User {
         this.idUser = idUser;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getBirthDate() {

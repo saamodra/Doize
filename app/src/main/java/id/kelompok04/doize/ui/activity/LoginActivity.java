@@ -1,6 +1,8 @@
 package id.kelompok04.doize.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -54,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         mEmailLayout = findViewById(R.id.txtLayoutEmail);
         mPasswordLayout = findViewById(R.id.txtLayoutPassword);
 
-        mUserService = ApiUtils.getUserService();
-
         mLoginButton.setOnClickListener(v -> {
             String email = mEmailTxt.getText().toString();
             String password = mPasswordTxt.getText().toString();
@@ -84,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-
     }
 
     public boolean validate(View v) {

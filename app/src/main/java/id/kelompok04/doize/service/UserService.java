@@ -25,7 +25,7 @@ public interface UserService {
     Call<ListUserResponse> getUsers();
 
     @POST("user")
-    Call<User> addUser(@Body User user);
+    Call<User> register(@Body User user);
 
     @PUT("user")
     Call<User> updateUser(@Body User user);
