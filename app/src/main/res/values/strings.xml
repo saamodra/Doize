@@ -12,6 +12,9 @@
     <string name="last_name">Last Name</string>
     <string name="phone">Phone</string>
     <string name="name">Name</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="birth_date">Birth Date</string>
+    <string name="account">Account</string>
     <string name="confirmation_password">Confirmation Password</string>
     <string name="notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
