@@ -15,10 +15,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MaterialToolbar mToolbar;
     private NavigationView nvDrawer;
     private NavController mNavController;
+    private BottomNavigationView mBottomNavigationView;
     private AppBarConfiguration mAppBarConfiguration;
 
 
@@ -57,17 +61,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         nvDrawer = findViewById(R.id.nvView);
+        mBottomNavigationView = findViewById(R.id.bottom_navigation);
 
         mNavController = Navigation.findNavController(this, R.id.fragment_container);
 
         NavigationUI.setupActionBarWithNavController(this, mNavController, mDrawerLayout);
-
         NavigationUI.setupWithNavController(nvDrawer, mNavController);
+        NavigationUI.setupWithNavController(mBottomNavigationView, mNavController);
 
         nvDrawer.setNavigationItemSelectedListener(this);
+        mBottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                mDrawerLayout.closeDrawers();
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.dashboardFragment:
+                        Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
+                        mNavController.navigate(R.id.dashboardFragment);
+                        break;
+
+                    case R.id.dailyActivityFragment:
+                        Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
+                        mNavController.navigate(R.id.dailyActivityFragment);
+                        break;
+
+                    case R.id.scheduleFragment:
+                        mNavController.navigate(R.id.scheduleFragment);
+                        break;
+
+                    case R.id.exit_drawer:
+                        finishAffinity();
+                        break;
+
+                }
+
+                return true;
+            }
+        });
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -94,11 +130,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.to_do_drawer:
-                mNavController.navigate(R.id.dailyActivityFragment);
+                mNavController.navigate(R.id.action_dashboardFragment_to_dailyActivityFragment);
                 break;
 
             case R.id.schedule_drawer:
-                mNavController.navigate(R.id.scheduleFragment);
+                mNavController.navigate(R.id.action_dashboardFragment_to_scheduleFragment);
                 break;
 
             case R.id.exit_drawer:

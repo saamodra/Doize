@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home_menu"
+        android:id="@id/dashboardFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_home_24"
         android:title="Home" />
     <item
-        android:id="@+id/todo_menu"
+        android:id="@id/dailyActivityFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_list_24"
         android:title="To Do" />
     <item
-        android:id="@+id/assignment_menu"
+        android:id="@id/scheduleFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_calendar_today_24"
         android:title="Assignment" />

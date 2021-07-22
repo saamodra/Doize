@@ -7,6 +7,28 @@
         <item name="fontFamily">@font/sf_pro_regular</item>
     </style>
 
+    <style name="FormSm" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="startIconTint">@color/darkPurple</item>
+        <item name="fontFamily">@font/sf_pro_regular</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="MyDenseOutlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="materialThemeOverlay">@style/MyThemeOverlayOutlinedDense</item>
+
+    </style>
+
+    <style name="MyThemeOverlayOutlinedDense">
+        <item name="editTextStyle">@style/MyTextInputEditText_outlinedBox_dense_h
+        </item>
+    </style>
+
+    <style name="MyTextInputEditText_outlinedBox_dense_h" parent="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
     <style name="Button" parent="Widget.AppCompat.Button">
         <item name="textAllCaps">false</item>
         <item name="fontFamily">@font/sf_pro_bold</item>

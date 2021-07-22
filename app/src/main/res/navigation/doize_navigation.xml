@@ -21,9 +21,17 @@
         android:label="DashboardFragment" >
         <action
             android:id="@+id/action_dashboardFragment_to_scheduleFragment"
-            app:destination="@id/scheduleFragment" />
+            app:destination="@id/scheduleFragment"
+            app:enterAnim="@anim/wait_anim"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/slide_left"
+            app:popExitAnim="@anim/slide_right" />
         <action
             android:id="@+id/action_dashboardFragment_to_dailyActivityFragment"
-            app:destination="@id/dailyActivityFragment" />
+            app:destination="@id/dailyActivityFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
 </navigation>
