@@ -8,11 +8,17 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -23,12 +29,15 @@ import id.kelompok04.doize.ui.fragment.DailyActivityFragment;
 import id.kelompok04.doize.ui.fragment.DashboardFragment;
 import id.kelompok04.doize.ui.fragment.ScheduleFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
 
     private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
+    private MaterialToolbar mToolbar;
     private NavigationView nvDrawer;
+    private NavController mNavController;
+    private AppBarConfiguration mAppBarConfiguration;
+
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
@@ -37,92 +46,67 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setupNavigation();
+
+    }
+
+    public void setupNavigation() {
         mToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(mToolbar);
-
-        // This will display an Up icon (<-), we will replace it with hamburger later
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
-        // Setup drawer view
-        setupDrawerContent(nvDrawer);
+        nvDrawer = findViewById(R.id.nvView);
 
-        // Get userlogin extra from login activity
-//        String userObject = getIntent().getStringExtra("userLogin");
+        mNavController = Navigation.findNavController(this, R.id.fragment_container);
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
-            // Instantiate Dashboard Fragment
-            fragment = DashboardFragment.newInstance();
-            fm.beginTransaction()
-                    .add(R.id.fragment_container, fragment)
-                    .commit();
-        }
+        NavigationUI.setupActionBarWithNavController(this, mNavController, mDrawerLayout);
+
+        NavigationUI.setupWithNavController(nvDrawer, mNavController);
+
+        nvDrawer.setNavigationItemSelectedListener(this);
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(mNavController, mDrawerLayout);
     }
 
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_app_bar, menu);
+
+        return true;
     }
 
     @SuppressLint("NonConstantResourceId")
-    public void selectDrawerItem(MenuItem menuItem) {
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fm = getSupportFragmentManager();
-        // Create a new fragment and specify the fragment to show based on nav item clicked
-        Fragment fragment = fm.findFragmentById(R.id.fragment_container);;
-        Class fragmentClass = null;
-
-        switch(menuItem.getItemId()) {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        item.setChecked(true);
+        mDrawerLayout.closeDrawers();
+        int id = item.getItemId();
+        switch (id) {
             case R.id.home_drawer:
-                fragmentClass = DashboardFragment.class;
+                mNavController.navigate(R.id.dashboardFragment);
                 break;
+
             case R.id.to_do_drawer:
-                fragmentClass = DailyActivityFragment.class;
+                mNavController.navigate(R.id.dailyActivityFragment);
                 break;
+
             case R.id.schedule_drawer:
-                fragmentClass = ScheduleFragment.class;
+                mNavController.navigate(R.id.scheduleFragment);
                 break;
+
             case R.id.exit_drawer:
                 finishAffinity();
                 break;
-            default:
-                fragmentClass = DashboardFragment.class;
+
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        fm.beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
-        // Highlight the selected item has been done by NavigationView
-        menuItem.setChecked(true);
-        // Set action bar title
-        setTitle(menuItem.getTitle());
-        // Close the navigation drawer
-        mDrawerLayout.closeDrawers();
+        return true;
     }
 }

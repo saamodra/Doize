@@ -2,9 +2,12 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,7 +30,7 @@ public class ScheduleFragment extends Fragment {
     private String mParam2;
 
     public ScheduleFragment() {
-        // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
     /**
@@ -51,10 +54,17 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.top_app_back, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
