@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.exit_drawer:
-
+                finishAffinity();
                 break;
 
         }
