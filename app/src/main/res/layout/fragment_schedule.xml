@@ -37,17 +37,16 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_marginTop="10dp"
-                android:id="@+id/txtLayoutEmail"
+                android:id="@+id/til_schedule_search"
                 style="@style/MyDenseOutlined"
                 app:endIconMode="custom"
                 android:layout_width="match_parent"
                 app:endIconDrawable="@drawable/ic_baseline_search_24"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                app:hintEnabled="false">
+                android:hint="@string/search">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/txtEmail"
+                android:id="@+id/tie_schedule_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
@@ -55,6 +54,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
+
+        <include
+            android:id="@+id/layout_empty_data"
+            layout="@layout/layout_empty_data"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginHorizontal="20dp"

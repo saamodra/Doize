@@ -33,6 +33,16 @@ public class Schedule {
 	@Expose
 	private int status;
 
+	public Schedule() {
+
+	}
+
+	public Schedule(String nameSchedule, String descriptionSchedule, int idUser) {
+		this.nameSchedule = nameSchedule;
+		this.descriptionSchedule = descriptionSchedule;
+		this.idUser = idUser;
+	}
+
 	public void setIdSchedule(int idSchedule){
 		this.idSchedule = idSchedule;
 	}

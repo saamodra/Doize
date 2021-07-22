@@ -40,10 +40,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView nvDrawer;
     private NavController mNavController;
     private BottomNavigationView mBottomNavigationView;
-    private AppBarConfiguration mAppBarConfiguration;
-
-
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
