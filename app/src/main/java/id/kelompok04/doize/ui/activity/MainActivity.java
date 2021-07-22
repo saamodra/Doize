@@ -11,8 +11,10 @@ import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private DrawerLayout mDrawerLayout;
-    private Toolbar mToolbar;
+    private MaterialToolbar mToolbar;
     private NavigationView nvDrawer;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -61,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.top_app_bar, menu);
+
+        return true;
     }
 
     @Override

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_nav"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dailyActivityFragment"
+        android:name="id.kelompok04.doize.ui.fragment.DailyActivityFragment"
+        android:label="fragment_daily_activity"
+        tools:layout="@layout/fragment_daily_activity" />
+    <fragment
+        android:id="@+id/scheduleFragment"
+        android:name="id.kelompok04.doize.ui.fragment.ScheduleFragment"
+        android:label="fragment_schedule"
+        tools:layout="@layout/fragment_schedule" />
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="id.kelompok04.doize.ui.fragment.DashboardFragment"
+        android:label="DashboardFragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_scheduleFragment"
+            app:destination="@id/scheduleFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_dailyActivityFragment"
+            app:destination="@id/dailyActivityFragment" />
+    </fragment>
+</navigation>
