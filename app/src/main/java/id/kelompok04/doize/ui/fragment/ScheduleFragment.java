@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -201,6 +202,7 @@ public class ScheduleFragment extends Fragment {
 
         private TextView mScheduleName;
         private TextView mScheduleDesc;
+        private Schedule mSchedule;
 
         public ScheduleHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.item_row_schedule, parent, false));
@@ -211,13 +213,18 @@ public class ScheduleFragment extends Fragment {
         }
 
         public void bind(Schedule schedule) {
+            mSchedule = schedule;
             mScheduleName.setText(schedule.getNameSchedule());
             mScheduleDesc.setText(schedule.getDescriptionSchedule());
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getContext(), "Onclick on " + mScheduleDesc.getText(), Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putString("name", mSchedule.getNameSchedule());
+            bundle.putString("desc", mSchedule.getDescriptionSchedule());
+            Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
+
         }
     }
 
