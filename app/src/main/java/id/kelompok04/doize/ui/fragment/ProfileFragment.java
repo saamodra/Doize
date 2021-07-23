@@ -25,6 +25,7 @@ import java.util.Date;
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.architecture.viewmodel.UserViewModel;
+import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.UserResponse;
 
@@ -34,45 +35,28 @@ import id.kelompok04.doize.model.response.UserResponse;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment implements DatePickerFragment.Callbacks {
+    private static final String TAG = "ProfileFragment";
 
+    // View Model
     private UserViewModel mUserViewModel;
 
+    // Component
     private TextInputLayout mNameLayout;
     private TextInputLayout mPhoneLayout;
     private TextInputLayout mEmailLayout;
     private TextInputLayout mBirthDateLayout;
     private Button mButtonUpdate;
+
+    // Date Format
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-    SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -94,42 +78,31 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
         mBirthDateLayout = view.findViewById(R.id.txtLayoutBirthDate);
         mButtonUpdate = view.findViewById(R.id.btnUpdateProfile);
 
-        mButtonUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = mNameLayout.getEditText().getText().toString();
-                String phone = mPhoneLayout.getEditText().getText().toString();
-                String email = mEmailLayout.getEditText().getText().toString();
-                String birth_date = mBirthDateLayout.getEditText().getText().toString();
-                Date birthDate = new Date();
+        mButtonUpdate.setOnClickListener(v -> {
+            String name = mNameLayout.getEditText().getText().toString();
+            String phone = mPhoneLayout.getEditText().getText().toString();
+            String email = mEmailLayout.getEditText().getText().toString();
+            String birth_date = mBirthDateLayout.getEditText().getText().toString();
+            String newBirthDate = DateConverter.toDbFrom(mSimpleDateFormat, birth_date);
 
-                try {
-                    birthDate = mSimpleDateFormat.parse(birth_date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            User user = new User();
+            user.setName(name);
+            user.setPhone(phone);
+            user.setEmail(email);
+            user.setBirthDate(newBirthDate);
 
-                String newBirthDate = mDateFormat.format(birthDate);
+            mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), new Observer<UserResponse>() {
+                @Override
+                public void onChanged(UserResponse userResponse) {
+                    if (userResponse.getStatus() == 200) {
+                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
 
-                User user = new User();
-                user.setName(name);
-                user.setPhone(phone);
-                user.setEmail(email);
-                user.setBirthDate(newBirthDate);
-
-                mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), new Observer<UserResponse>() {
-                    @Override
-                    public void onChanged(UserResponse userResponse) {
-                        if (userResponse.getStatus() == 200) {
-                            FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-
-                        } else {
-                            FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                        }
+                    } else {
+                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                     }
-                });
+                }
+            });
 
-            }
         });
 
         mBirthDateLayout.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -142,7 +115,6 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
             }
         });
 
-        // Inflate the layout for this fragment
         return view;
     }
 
@@ -153,15 +125,8 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
         mUserViewModel.getUserLogin().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                Date birthDate = new Date();
+                String newBirthDate = DateConverter.fromDbTo(mSimpleDateFormat, user.getBirthDate());
 
-                try {
-                    birthDate = mDateFormat.parse(user.getBirthDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                String newBirthDate = mSimpleDateFormat.format(birthDate);
                 mNameLayout.getEditText().setText(user.getName());
                 mPhoneLayout.getEditText().setText(user.getPhone());
                 mEmailLayout.getEditText().setText(user.getEmail());
