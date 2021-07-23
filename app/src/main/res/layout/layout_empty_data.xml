@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="400dp"
+        android:layout_height="360dp"
+        android:src="@drawable/ic_no_data_amico" />
+
+    <TextView
+        android:layout_marginTop="20dp"
+        android:text="@string/oopss_no_data_found"
+        android:textAlignment="center"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/darkPurple"
+        android:textSize="25sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="14dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="@string/sorry_there_are_no_results"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
