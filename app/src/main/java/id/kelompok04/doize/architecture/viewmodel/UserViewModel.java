@@ -24,4 +24,8 @@ public class UserViewModel extends ViewModel {
     public LiveData<LoginResponse> register(User user) {
         return mUserRepository.register(user);
     }
+
+    public LiveData<LoginResponse> updateProfile(User user) {
+        return mUserRepository.updateUser(user);
+    }
 }

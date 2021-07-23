@@ -52,6 +52,13 @@ public class User {
         this.password = password;
     }
 
+    public User(String name, Date birthDate, String phone, String email) {
+        this.name = name;
+        this.birthDate = birthDate;
+        this.phone = phone;
+        this.email = email;
+    }
+
     public String getIdUser() {
         return idUser;
     }

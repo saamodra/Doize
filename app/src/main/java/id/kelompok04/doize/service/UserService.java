@@ -27,8 +27,8 @@ public interface UserService {
     @POST("register")
     Call<LoginResponse> register(@Body User user);
 
-    @PUT("user")
-    Call<User> updateUser(@Body User user);
+    @PUT("updateUser")
+    Call<LoginResponse> updateUser(@Body User user);
 
     @DELETE("user")
     Call<User> deleteUserById(@Query("id") String id);

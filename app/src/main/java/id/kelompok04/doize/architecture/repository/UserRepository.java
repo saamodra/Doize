@@ -92,4 +92,25 @@ public class UserRepository {
         return loginResponseMutableLiveData;
     }
 
+    public LiveData<LoginResponse> updateUser(User user) {
+        MutableLiveData<LoginResponse> loginResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.d(TAG, "getUsers: Called");
+        Call<LoginResponse> call = mUserService.updateUser(user);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                Log.d(TAG, "onResponse: " + response.body());
+                loginResponseMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+
+            }
+        });
+
+        return loginResponseMutableLiveData;
+    }
+
 }
