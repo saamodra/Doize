@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 import id.kelompok04.doize.architecture.repository.UserRepository;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.LoginResponse;
+import id.kelompok04.doize.model.response.UserResponse;
 
 public class UserViewModel extends ViewModel {
     private static final String TAG = "UserViewModel";
@@ -23,5 +24,13 @@ public class UserViewModel extends ViewModel {
 
     public LiveData<LoginResponse> register(User user) {
         return mUserRepository.register(user);
+    }
+
+    public LiveData<User> getUserLogin(){
+        return mUserRepository.getUserLogin();
+    }
+
+    public LiveData<UserResponse> updateProfile(User user) {
+        return mUserRepository.updateUser(user);
     }
 }

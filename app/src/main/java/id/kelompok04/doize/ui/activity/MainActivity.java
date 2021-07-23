@@ -121,6 +121,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.closeDrawers();
         int id = item.getItemId();
         switch (id) {
+            case R.id.profile_drawer:
+                mNavController.navigate(R.id.profileFragment);
+                break;
+
             case R.id.home_drawer:
                 mNavController.navigate(R.id.dashboardFragment);
                 break;

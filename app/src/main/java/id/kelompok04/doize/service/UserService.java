@@ -6,6 +6,7 @@ import id.kelompok04.doize.model.response.ListUserResponse;
 import id.kelompok04.doize.model.response.LoginResponse;
 import id.kelompok04.doize.model.response.RequestResponse;
 import id.kelompok04.doize.model.User;
+import id.kelompok04.doize.model.response.UserResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -27,8 +28,8 @@ public interface UserService {
     @POST("register")
     Call<LoginResponse> register(@Body User user);
 
-    @PUT("user")
-    Call<User> updateUser(@Body User user);
+    @PUT("user/{id}")
+    Call<UserResponse> updateUser(@Path("id") String id, @Body User user);
 
     @DELETE("user")
     Call<User> deleteUserById(@Query("id") String id);

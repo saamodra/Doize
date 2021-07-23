@@ -19,6 +19,7 @@ import id.kelompok04.doize.model.response.ListUserResponse;
 import id.kelompok04.doize.model.response.LoginResponse;
 import id.kelompok04.doize.model.response.RequestResponse;
 import id.kelompok04.doize.model.User;
+import id.kelompok04.doize.model.response.UserResponse;
 import id.kelompok04.doize.service.UserService;
 import id.kelompok04.doize.ui.activity.LoginActivity;
 import id.kelompok04.doize.ui.activity.MainActivity;
@@ -81,6 +82,7 @@ public class UserRepository {
                 LoginResponse loginResponse = response.body();
                 Log.d(TAG, "onResponse: " + loginResponse);
                 loginResponseMutableLiveData.setValue(loginResponse);
+                mUserDao.setUserLogin(loginResponse.getUser());
             }
 
             @Override
@@ -90,6 +92,34 @@ public class UserRepository {
         });
 
         return loginResponseMutableLiveData;
+    }
+
+    public LiveData<User> getUserLogin(){
+        return mUserDao.getUserLogin();
+    }
+
+    public LiveData<UserResponse> updateUser(User user) {
+        MutableLiveData<UserResponse> userResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.d(TAG, "getUsers: Called");
+        Call<UserResponse> call = mUserService.updateUser(mUserDao.getUserLogin().getValue().getIdUser(), user);
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                UserResponse userResponse = response.body();
+                Log.d(TAG, "onResponse: " + userResponse);
+                userResponseMutableLiveData.setValue(userResponse);
+                mUserDao.setUserLogin(userResponse.getData());
+            }
+
+            @Override
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage() );
+            }
+        });
+
+        return userResponseMutableLiveData;
+
     }
 
 }

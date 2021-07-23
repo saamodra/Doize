@@ -12,6 +12,7 @@ import id.kelompok04.doize.model.response.LoginResponse;
 
 public class UserDao {
     private MutableLiveData<LoginResponse> mLoginResponse = new MutableLiveData<>();
+    private MutableLiveData<User> mUserLogin = new MutableLiveData<>();
     private MutableLiveData<List<User>> listUser = new MutableLiveData<List<User>>();
 
     public LiveData<LoginResponse> getLogin() {
@@ -20,5 +21,13 @@ public class UserDao {
 
     public void setLoginResponse(LoginResponse loginResponse) {
         mLoginResponse.setValue(loginResponse);
+    }
+
+    public MutableLiveData<User> getUserLogin() {
+        return mUserLogin;
+    }
+
+    public void setUserLogin(User userLogin) {
+        mUserLogin.setValue(userLogin);
     }
 }
