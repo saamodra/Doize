@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryDark">@color/blue</item>
+        <item name="colorAccent">@color/darkPurple</item>
+    </style>
+
+    <style name="DialogButtonStyle">
+        <item name="android:textColor">@color/darkPurple</item>
+    </style>
 
     <style name="FormControl" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_marginTop">15dp</item>
@@ -16,7 +25,6 @@
 
     <style name="MyDenseOutlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="materialThemeOverlay">@style/MyThemeOverlayOutlinedDense</item>
-
     </style>
 
     <style name="MyThemeOverlayOutlinedDense">

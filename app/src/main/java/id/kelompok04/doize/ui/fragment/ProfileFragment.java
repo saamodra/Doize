@@ -1,5 +1,6 @@
 package id.kelompok04.doize.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -48,6 +49,7 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
     private Button mButtonUpdate;
 
     // Date Format
+    @SuppressLint("SimpleDateFormat")
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public ProfileFragment() {
@@ -105,14 +107,11 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
 
         });
 
-        mBirthDateLayout.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getParentFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment.newInstance(new Date());
-                dialog.setTargetFragment(ProfileFragment.this, 0);
-                dialog.show(fragmentManager, "DialogDate");
-            }
+        mBirthDateLayout.getEditText().setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            DatePickerFragment dialog = DatePickerFragment.newInstance(new Date());
+            dialog.setTargetFragment(ProfileFragment.this, 0);
+            dialog.show(fragmentManager, "DialogDate");
         });
 
         return view;
