@@ -93,6 +93,7 @@ public class ScheduleFragment extends Fragment {
         mScheduleRecyclerView.setAdapter(mAdapter);
 
         mLayoutEmpty = view.findViewById(R.id.layout_empty_data);
+        Log.d(TAG, "onCreateView: " + mScheduleViewModel);
 
         mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         mFloatingAddScheduleButton = view.findViewById(R.id.fab_add_schedule);

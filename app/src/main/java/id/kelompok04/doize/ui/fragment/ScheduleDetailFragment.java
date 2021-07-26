@@ -2,24 +2,29 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.architecture.viewmodel.DetailScheduleViewModel;
+import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
+import id.kelompok04.doize.model.DetailSchedule;
 
 public class ScheduleDetailFragment extends Fragment {
     private static final String TAG = "ScheduleDetailFragment";
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private DetailScheduleViewModel mDetailScheduleViewModel;
 
     private TextView mTvScheduleName;
     private TextView mTvScheduleDesc;
@@ -31,7 +36,7 @@ public class ScheduleDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mDetailScheduleViewModel = new ViewModelProvider(this).get(DetailScheduleViewModel.class);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class ScheduleDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_schedule_detail, container, false);
         mTvScheduleName = view.findViewById(R.id.tv_schedule_name);
         mTvScheduleDesc = view.findViewById(R.id.tv_schedule_description);
-
+        Log.d(TAG, "onCreateView: " + mDetailScheduleViewModel);
         String name = getArguments().getString("name");
         String desc = getArguments().getString("desc");
 
@@ -48,5 +53,12 @@ public class ScheduleDetailFragment extends Fragment {
         mTvScheduleDesc.setText(desc);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mDetailScheduleViewModel.getDetailSchedules();
     }
 }

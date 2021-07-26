@@ -1,5 +1,6 @@
 package id.kelompok04.doize.api;
 
+import id.kelompok04.doize.service.DetailScheduleService;
 import id.kelompok04.doize.service.ScheduleService;
 import id.kelompok04.doize.service.UserService;
 
@@ -18,6 +19,10 @@ public class ApiUtils {
 
     public static ScheduleService getScheduleService() {
         return RetrofitClient.getClient(API_URL).create(ScheduleService.class);
+    }
+
+    public static DetailScheduleService getDetailScheduleService() {
+        return RetrofitClient.getClient(API_URL).create(DetailScheduleService.class);
     }
 }
 
