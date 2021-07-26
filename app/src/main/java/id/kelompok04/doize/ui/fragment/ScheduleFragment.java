@@ -93,7 +93,6 @@ public class ScheduleFragment extends Fragment {
         mScheduleRecyclerView.setAdapter(mAdapter);
 
         mLayoutEmpty = view.findViewById(R.id.layout_empty_data);
-        Log.d(TAG, "onCreateView: " + mScheduleViewModel);
 
         mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         mFloatingAddScheduleButton = view.findViewById(R.id.fab_add_schedule);
@@ -130,7 +129,6 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onChanged(List<Schedule> schedules) {
                 updateUI(schedules);
-                Log.d(TAG, "onChanged: " + schedules);
             }
         });
     }
@@ -156,7 +154,6 @@ public class ScheduleFragment extends Fragment {
         AlertDialog alertDialog = mMaterialAlertDialogBuilder.show();
         Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(v -> {
-            Log.d(TAG, "launchCustomAlertDialog: Added");
             if (validate(view)) {
                 String name = mScheduleNameLayout.getEditText().getText().toString();
                 String desc = mScheduleDescriptionLayout.getEditText().getText().toString();
@@ -222,8 +219,9 @@ public class ScheduleFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Bundle bundle = new Bundle();
-            bundle.putString("name", mSchedule.getNameSchedule());
-            bundle.putString("desc", mSchedule.getDescriptionSchedule());
+            bundle.putString("scheduleId", Integer.toString(mSchedule.getIdSchedule()));
+            bundle.putString("scheduleName", mSchedule.getNameSchedule());
+            bundle.putString("scheduleDesc", mSchedule.getDescriptionSchedule());
             Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
 
         }

@@ -25,24 +25,17 @@
 
             <!-- Title, secondary and supporting text -->
             <TextView
-                android:id="@+id/tv_schedule_name"
+                android:id="@+id/tv_schedule_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Politeknik Astra"
+                tools:text="Sunday"
+                android:layout_marginBottom="10dp"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
-            <TextView
-                android:id="@+id/tv_schedule_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:drawableLeft="@drawable/icon_dot"
-                android:drawablePadding="7dp"
-                tools:text="Jadwal kuliah MI 2019 Politeknik Astra"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_schedule_detail_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

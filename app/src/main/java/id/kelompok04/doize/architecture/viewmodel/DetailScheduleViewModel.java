@@ -15,7 +15,7 @@ public class DetailScheduleViewModel extends ViewModel {
         mDetailScheduleRepository = DetailScheduleRepository.get();
     }
 
-    public LiveData<List<DetailSchedule>> getDetailSchedules() {
-        return mDetailScheduleRepository.getDetailSchedules();
+    public LiveData<List<List<DetailSchedule>>> getDetailSchedules(String idSchedule) {
+        return mDetailScheduleRepository.getDetailSchedules(idSchedule);
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
@@ -38,17 +39,19 @@ public class DetailScheduleRepository {
     }
 
     @SuppressLint("LongLogTag")
-    public LiveData<List<DetailSchedule>> getDetailSchedules() {
+    public LiveData<List<List<DetailSchedule>>> getDetailSchedules(String idSchedule) {
+        MutableLiveData<List<List<DetailSchedule>>> listMutableLiveData = new MutableLiveData<>();
+
         Log.d(TAG, "getDetailSchedules: Called");
-        Call<ListDetailScheduleResponse> call = mDetailScheduleService.getDetailSchedules();
+        Call<ListDetailScheduleResponse> call = mDetailScheduleService.getDetailSchedules(idSchedule);
         call.enqueue(new Callback<ListDetailScheduleResponse>() {
             @Override
             public void onResponse(Call<ListDetailScheduleResponse> call, Response<ListDetailScheduleResponse> response) {
                 ListDetailScheduleResponse listDetailSchedule = response.body();
                 Log.d(TAG, "onResponse: " + listDetailSchedule);
-//                if (listDetailSchedule.getStatus() == 200) {
-//                    mDetailScheduleDao.setListDetailSchedule(listDetailSchedule.getData());
-//                }
+                if (listDetailSchedule.getStatus() == 200) {
+                    listMutableLiveData.setValue(listDetailSchedule.getData());
+                }
             }
 
             @Override
@@ -57,6 +60,6 @@ public class DetailScheduleRepository {
             }
         });
 
-        return null;
+        return listMutableLiveData;
     }
 }

@@ -1,34 +1,44 @@
 package id.kelompok04.doize.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class DetailSchedule {
 
 	@SerializedName("start_time")
+	@Expose
 	private String startTime;
 
 	@SerializedName("id_schedule")
+	@Expose
 	private int idSchedule;
 
 	@SerializedName("creadate")
+	@Expose
 	private String creadate;
 
 	@SerializedName("name_detail_schedule")
+	@Expose
 	private String nameDetailSchedule;
 
 	@SerializedName("day_schedule")
+	@Expose
 	private String daySchedule;
 
 	@SerializedName("end_time")
+	@Expose
 	private String endTime;
 
 	@SerializedName("id_detail_schedule")
+	@Expose
 	private int idDetailSchedule;
 
 	@SerializedName("modidate")
+	@Expose
 	private String modidate;
 
 	@SerializedName("status")
+	@Expose
 	private int status;
 
 	public void setStartTime(String startTime){

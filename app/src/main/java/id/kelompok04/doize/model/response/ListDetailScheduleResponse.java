@@ -1,36 +1,32 @@
 package id.kelompok04.doize.model.response;
 
+import java.util.List;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ListDetailScheduleResponse {
+import id.kelompok04.doize.model.DetailSchedule;
+
+public class ListDetailScheduleResponse{
 
 	@SerializedName("data")
-	private ListDayScheduleResponse data;
+	@Expose
+	private List<List<DetailSchedule>> data;
 
 	@SerializedName("message")
+	@Expose
 	private String message;
 
 	@SerializedName("status")
+	@Expose
 	private int status;
 
-	public void setData(ListDayScheduleResponse data){
-		this.data = data;
-	}
-
-	public ListDayScheduleResponse getData(){
+	public List<List<DetailSchedule>> getData(){
 		return data;
-	}
-
-	public void setMessage(String message){
-		this.message = message;
 	}
 
 	public String getMessage(){
 		return message;
-	}
-
-	public void setStatus(int status){
-		this.status = status;
 	}
 
 	public int getStatus(){
@@ -38,12 +34,11 @@ public class ListDetailScheduleResponse {
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"DetailScheduleResponse{" + 
-			"data = '" + data + '\'' + 
-			",message = '" + message + '\'' + 
-			",status = '" + status + '\'' + 
-			"}";
-		}
+	public String toString() {
+		return "ListDetailScheduleResponse{" +
+				"data=" + data +
+				", message='" + message + '\'' +
+				", status=" + status +
+				'}';
+	}
 }
