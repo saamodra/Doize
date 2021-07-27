@@ -40,8 +40,4 @@ public class DateConverter {
     public static String toDbTimeFrom(SimpleDateFormat formatDateFrom, String date) {
         return toDateString(formatDateFrom, dbTimeFormat, date);
     }
-
-
-
-
 }
