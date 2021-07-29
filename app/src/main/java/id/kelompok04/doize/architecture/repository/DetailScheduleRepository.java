@@ -95,6 +95,33 @@ public class DetailScheduleRepository {
     }
 
     @SuppressLint("LongLogTag")
+    public LiveData<DetailScheduleResponse> updateDetailSchedule(DetailSchedule detailSchedule) {
+        MutableLiveData<DetailScheduleResponse> detailScheduleResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.i(TAG, "editDetailSchedule: " + detailSchedule);
+        Call<DetailScheduleResponse> call = mDetailScheduleService.updateDetailSchedule(detailSchedule.getIdDetailSchedule(), detailSchedule);
+        call.enqueue(new Callback<DetailScheduleResponse>() {
+            @Override
+            public void onResponse(Call<DetailScheduleResponse> call, Response<DetailScheduleResponse> response) {
+                DetailScheduleResponse detailScheduleResponse = response.body();
+
+                if (detailScheduleResponse.getStatus() == 200) {
+                    int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
+                    mDetailScheduleDao.updateDetailSchedule(day, detailScheduleResponse.getDetailSchedule());
+                    detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DetailScheduleResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return detailScheduleResponseMutableLiveData;
+    }
+
+    @SuppressLint("LongLogTag")
     public LiveData<DetailScheduleResponse> deleteDetailSchedule(int id) {
         MutableLiveData<DetailScheduleResponse> detailScheduleResponseMutableLiveData = new MutableLiveData<>();
 

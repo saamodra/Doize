@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,8 @@ import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.DetailScheduleViewModel;
 import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
+import id.kelompok04.doize.helper.DialogType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.DetailSchedule;
@@ -65,8 +69,10 @@ public class ScheduleDetailFragment extends Fragment {
     private TextInputLayout tilScheduleDetailStartTime;
     private TextInputLayout tilScheduleDetailEndTime;
     private AutoCompleteTextView actvScheduleDetailDay;
+    private AlertDialog alertDialog;
 
     private SimpleDateFormat mSimpleTimeFormat = new SimpleDateFormat("HH:mm");
+    private DetailSchedule globalDetailSchedule = new DetailSchedule();
 
     public ScheduleDetailFragment() {
 
@@ -98,33 +104,7 @@ public class ScheduleDetailFragment extends Fragment {
 
         fabAddDetailSchedule = view.findViewById(R.id.fab_add_detail_schedule);
         fabAddDetailSchedule.setOnClickListener(v -> {
-            customAlertDialogView = inflater.inflate(R.layout.dialog_detail_schedule_form, container, false);
-
-            tilScheduleDetailName = customAlertDialogView.findViewById(R.id.til_schedule_detail_name);
-            tilScheduleDetailDay = customAlertDialogView.findViewById(R.id.til_schedule_detail_day);
-            tilScheduleDetailStartTime = customAlertDialogView.findViewById(R.id.til_schedule_detail_start_time);
-            tilScheduleDetailEndTime = customAlertDialogView.findViewById(R.id.til_schedule_detail_end_time);
-
-            tilScheduleDetailStartTime.getEditText().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailStartTime.getEditText(), getContext(), new Date());
-                    dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
-                    dialog.show(fragmentManager, "DialogTime");
-                }
-            });
-
-            tilScheduleDetailEndTime.getEditText().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailEndTime.getEditText(), getContext(), new Date());
-                    dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
-                    dialog.show(fragmentManager, "DialogTime");
-                }
-            });
-            launchCustomAlertDialog();
+            launchCustomAlertDialog(DialogType.ADD, null, saveDetailSchedule);
         });
 
         return view;
@@ -144,29 +124,9 @@ public class ScheduleDetailFragment extends Fragment {
         });
     }
 
-    private void updateUI(List<List<DetailSchedule>> detailSchedule) {
-        mScheduleDetailAdapter = new ScheduleDetailAdapter(detailSchedule);
-        rvScheduleDetail.setAdapter(mScheduleDetailAdapter);
-    }
-
-    private void launchCustomAlertDialog() {
-        mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
-        mMaterialAlertDialogBuilder.setView(customAlertDialogView)
-                .setTitle("Add Detail Schedule")
-                .setMessage("Enter your schedule details")
-                .setPositiveButton("Add", null)
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    dialog.dismiss();
-                });
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.layout_dropdown_item, DoizeConstants.DAY_LIST);
-        actvScheduleDetailDay = customAlertDialogView.findViewById(R.id.actv_schedule_detail_day);
-        actvScheduleDetailDay.setThreshold(1);
-        actvScheduleDetailDay.setAdapter(adapter);
-
-        AlertDialog alertDialog = mMaterialAlertDialogBuilder.show();
-        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positiveButton.setOnClickListener(v -> {
+    private View.OnClickListener saveDetailSchedule = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
             if (validate()) {
                 String name = tilScheduleDetailName.getEditText().getText().toString();
                 String day = tilScheduleDetailDay.getEditText().getText().toString();
@@ -189,7 +149,108 @@ public class ScheduleDetailFragment extends Fragment {
             } else {
                 FancyToast.makeText(getActivity(),"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }
+        }
+    };
+
+    private View.OnClickListener editDetailSchedule = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (validate()) {
+                String name = tilScheduleDetailName.getEditText().getText().toString();
+                String day = tilScheduleDetailDay.getEditText().getText().toString();
+                String startTimeText = tilScheduleDetailStartTime.getEditText().getText().toString();
+                String endTimeText = tilScheduleDetailEndTime.getEditText().getText().toString();
+                String startTime = DateConverter.toDbTimeFrom(mSimpleTimeFormat, startTimeText);
+                String endTime = DateConverter.toDbTimeFrom(mSimpleTimeFormat, endTimeText);
+                int idSchedule = Integer.parseInt(getArguments().getString("scheduleId"));
+
+                globalDetailSchedule.setNameDetailSchedule(name);
+                globalDetailSchedule.setDaySchedule(day);
+                globalDetailSchedule.setIdSchedule(idSchedule);
+                globalDetailSchedule.setStartTime(startTime);
+                globalDetailSchedule.setEndTime(endTime);
+
+//                DetailSchedule detailSchedule = new DetailSchedule(name, day, idSchedule, startTime, endTime);
+                mDetailScheduleViewModel.updateDetailSchedule(globalDetailSchedule).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
+                    if (detailScheduleResponse.getStatus() == 200) {
+                        FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                        globalDetailSchedule = new DetailSchedule();
+                        alertDialog.dismiss();
+                    } else {
+                        FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                    }
+                });
+
+            } else {
+                FancyToast.makeText(getActivity(),"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+            }
+        }
+    };
+
+    private void updateUI(List<List<DetailSchedule>> detailSchedule) {
+        mScheduleDetailAdapter = new ScheduleDetailAdapter(detailSchedule);
+        rvScheduleDetail.setAdapter(mScheduleDetailAdapter);
+    }
+
+    private void launchCustomAlertDialog(DialogType dialogType, DetailSchedule detailScheduleParam, View.OnClickListener onClickListener) {
+        LayoutInflater inflater = getLayoutInflater();
+        customAlertDialogView = inflater.inflate(R.layout.dialog_detail_schedule_form, null);
+
+        tilScheduleDetailName = customAlertDialogView.findViewById(R.id.til_schedule_detail_name);
+        tilScheduleDetailDay = customAlertDialogView.findViewById(R.id.til_schedule_detail_day);
+        tilScheduleDetailStartTime = customAlertDialogView.findViewById(R.id.til_schedule_detail_start_time);
+        tilScheduleDetailEndTime = customAlertDialogView.findViewById(R.id.til_schedule_detail_end_time);
+
+        // Set day adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.layout_dropdown_item, DoizeConstants.DAY_LIST);
+        actvScheduleDetailDay = customAlertDialogView.findViewById(R.id.actv_schedule_detail_day);
+        actvScheduleDetailDay.setThreshold(1);
+        actvScheduleDetailDay.setAdapter(adapter);
+
+        if (dialogType == DialogType.EDIT) {
+            String startTime = DateConverter.fromDbTimeTo(mSimpleTimeFormat, detailScheduleParam.getStartTime());
+            String endTime = DateConverter.fromDbTimeTo(mSimpleTimeFormat, detailScheduleParam.getEndTime());
+
+            tilScheduleDetailName.getEditText().setText(detailScheduleParam.getNameDetailSchedule());
+            actvScheduleDetailDay.setText(detailScheduleParam.getDaySchedule(), false);
+            tilScheduleDetailStartTime.getEditText().setText(startTime);
+            tilScheduleDetailEndTime.getEditText().setText(endTime);
+        }
+
+        tilScheduleDetailStartTime.getEditText().setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            // get time from database
+            Date time = (dialogType == DialogType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
+
+            TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailStartTime.getEditText(), getContext(), time);
+            dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
         });
+
+        tilScheduleDetailEndTime.getEditText().setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            // get time from database
+            Date time = (dialogType == DialogType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
+
+            TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailEndTime.getEditText(), getContext(), time);
+            dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        String title = dialogType == DialogType.ADD ? "Add" : "Update";
+
+        mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+        mMaterialAlertDialogBuilder.setView(customAlertDialogView)
+                .setTitle(title + " Detail Schedule")
+                .setMessage("Enter your schedule details")
+                .setPositiveButton(title, null)
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+        alertDialog = mMaterialAlertDialogBuilder.show();
+        Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(onClickListener);
     }
 
     public class ScheduleDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -303,16 +364,26 @@ public class ScheduleDetailFragment extends Fragment {
                 deleteButton = itemView.findViewById(R.id.del_detail_schedule);
 
                 editButton.setOnClickListener(v -> {
+                    globalDetailSchedule = mDetailSchedule;
+                    launchCustomAlertDialog(DialogType.EDIT, mDetailSchedule, editDetailSchedule);
                 });
 
                 deleteButton.setOnClickListener(v -> {
-                    mDetailScheduleViewModel.deleteDetailSchedule(mDetailSchedule.getIdDetailSchedule()).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
-                        if (detailScheduleResponse.getStatus() == 200) {
-                            FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        } else {
-                            FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                        }
-                    });
+                    new AlertDialog.Builder(getActivity())
+                        .setTitle("Confirmation")
+                        .setMessage("Do you really want to delete this item?")
+                        .setIcon(R.drawable.ic_baseline_warning_amber_24)
+                        .setPositiveButton("Yes", (dialog, whichButton) -> {
+                            mDetailScheduleViewModel.deleteDetailSchedule(mDetailSchedule.getIdDetailSchedule()).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
+                                if (detailScheduleResponse.getStatus() == 200) {
+                                    FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                                } else {
+                                    FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                                }
+                            });
+
+                        })
+                        .setNegativeButton("No", null).show();
                 });
             }
 

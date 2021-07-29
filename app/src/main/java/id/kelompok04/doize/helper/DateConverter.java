@@ -40,4 +40,20 @@ public class DateConverter {
     public static String toDbTimeFrom(SimpleDateFormat formatDateFrom, String date) {
         return toDateString(formatDateFrom, dbTimeFormat, date);
     }
+
+    public static Date fromDbToDate(DateType dateType, String date) {
+        Date dateDb = new Date();
+        try {
+            switch (dateType) {
+                case DATE:
+                    dateDb = dbDateFormat.parse(date);
+                case TIME:
+                    dateDb = dbTimeFormat.parse(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return dateDb;
+    }
 }

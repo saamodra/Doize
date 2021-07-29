@@ -20,8 +20,8 @@ public interface DetailScheduleService {
     @POST("detail-schedule")
     Call<DetailScheduleResponse> addDetailSchedule(@Body DetailSchedule detailSchedule);
 
-    @PUT("detail-schedule")
-    Call<DetailScheduleResponse> updateDetailSchedule(@Body DetailSchedule detailSchedule);
+    @PUT("detail-schedule/{id}")
+    Call<DetailScheduleResponse> updateDetailSchedule(@Path("id") int id, @Body DetailSchedule detailSchedule);
 
     @DELETE("detail-schedule/{id}")
     Call<DetailScheduleResponse> deleteDetailScheduleById(@Path("id") int id);

@@ -69,6 +69,8 @@ public class DetailScheduleDao {
                         int index = detailScheduleDay.indexOf(detailSchedule);
                         detailScheduleDay.set(index, detailScheduleParam);
                         detailScheduleList.set(day, detailScheduleDay);
+                        // Set data to dao
+                        detailSchedules.setValue(detailScheduleList);
                         return;
                     }
                 }

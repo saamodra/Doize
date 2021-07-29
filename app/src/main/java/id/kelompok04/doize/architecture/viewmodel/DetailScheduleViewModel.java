@@ -27,4 +27,8 @@ public class DetailScheduleViewModel extends ViewModel {
     public LiveData<DetailScheduleResponse> deleteDetailSchedule(int id) {
         return mDetailScheduleRepository.deleteDetailSchedule(id);
     }
+
+    public LiveData<DetailScheduleResponse> updateDetailSchedule(DetailSchedule detailSchedule) {
+        return mDetailScheduleRepository.updateDetailSchedule(detailSchedule);
+    }
 }
