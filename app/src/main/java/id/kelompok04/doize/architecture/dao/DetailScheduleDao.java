@@ -1,6 +1,7 @@
 package id.kelompok04.doize.architecture.dao;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
@@ -12,6 +13,7 @@ import id.kelompok04.doize.model.DetailSchedule;
 import id.kelompok04.doize.model.Schedule;
 
 public class DetailScheduleDao {
+    private static final String TAG = "DetailScheduleDao";
     private MutableLiveData<List<List<DetailSchedule>>> detailSchedules = new MutableLiveData<>();
 
     public LiveData<List<List<DetailSchedule>>> getDetailSchedules() {
@@ -39,20 +41,19 @@ public class DetailScheduleDao {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             List<List<DetailSchedule>> detailScheduleList = detailSchedules.getValue();
             if(detailScheduleList != null) {
-//                int index = 0;
-                // Loop Day
-//                for (List<DetailSchedule> detailScheduleDay : detailScheduleList) {
                 List<DetailSchedule> detailScheduleDay = detailScheduleList.get(day);
                 // Loop schedule by day
                 for (DetailSchedule detailSchedule : detailScheduleDay) {
                     if (detailSchedule.getIdDetailSchedule() == detailScheduleId) {
-                        int index = detailScheduleList.indexOf(detailScheduleDay);
-                        detailScheduleDay.remove(detailSchedule);
+                        int index = detailScheduleDay.indexOf(detailSchedule);
+                        detailScheduleDay.remove(index);
                         detailScheduleList.set(index, detailScheduleDay);
+
+                        // Set data to dao
+                        detailSchedules.setValue(detailScheduleList);
+                        return;
                     }
                 }
-//                    index += 1;
-//                }
             }
         }
     }
@@ -61,19 +62,22 @@ public class DetailScheduleDao {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             List<List<DetailSchedule>> detailScheduleList = detailSchedules.getValue();
             if(detailScheduleList != null) {
-
                 List<DetailSchedule> detailScheduleDay = detailScheduleList.get(day);
 
                 for (DetailSchedule detailSchedule : detailScheduleDay) {
                     if (detailSchedule.getIdDetailSchedule() == detailScheduleParam.getIdDetailSchedule()) {
-                        int index = detailScheduleList.indexOf(detailScheduleDay);
-                        detailScheduleDay.remove(detailSchedule);
-                        detailScheduleList.set(index, detailScheduleDay);
+                        int index = detailScheduleDay.indexOf(detailSchedule);
+                        detailScheduleDay.set(index, detailScheduleParam);
+                        detailScheduleList.set(day, detailScheduleDay);
                         return;
                     }
                 }
 
                 detailScheduleDay.add(detailScheduleParam);
+                detailScheduleList.set(day, detailScheduleDay);
+
+                // Set data to dao
+                detailSchedules.setValue(detailScheduleList);
             }
 
         }

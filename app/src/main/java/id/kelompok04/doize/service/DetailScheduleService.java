@@ -23,6 +23,6 @@ public interface DetailScheduleService {
     @PUT("detail-schedule")
     Call<DetailScheduleResponse> updateDetailSchedule(@Body DetailSchedule detailSchedule);
 
-    @DELETE("detail-schedule")
-    Call<DetailScheduleResponse> deleteDetailScheduleById(@Query("id") String id);
+    @DELETE("detail-schedule/{id}")
+    Call<DetailScheduleResponse> deleteDetailScheduleById(@Path("id") int id);
 }

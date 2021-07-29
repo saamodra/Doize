@@ -55,7 +55,6 @@ public class DetailScheduleRepository {
                 Log.d(TAG, "onResponse: " + listDetailSchedule);
                 if (listDetailSchedule.getStatus() == 200) {
                     mDetailScheduleDao.setDetailSchedules(listDetailSchedule.getData());
-//                    listMutableLiveData.setValue(listDetailSchedule.getData());
                 }
             }
 
@@ -89,6 +88,36 @@ public class DetailScheduleRepository {
             @Override
             public void onFailure(Call<DetailScheduleResponse> call, Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return detailScheduleResponseMutableLiveData;
+    }
+
+    @SuppressLint("LongLogTag")
+    public LiveData<DetailScheduleResponse> deleteDetailSchedule(int id) {
+        MutableLiveData<DetailScheduleResponse> detailScheduleResponseMutableLiveData = new MutableLiveData<>();
+
+        Call<DetailScheduleResponse> call = mDetailScheduleService.deleteDetailScheduleById(id);
+        call.enqueue(new Callback<DetailScheduleResponse>() {
+            @Override
+            public void onResponse(Call<DetailScheduleResponse> call, Response<DetailScheduleResponse> response) {
+                DetailScheduleResponse detailScheduleResponse = response.body();
+
+                if (detailScheduleResponse.getStatus() == 200) {
+                    DetailSchedule detailSchedule = detailScheduleResponse.getDetailSchedule();
+                    Log.d(TAG, "onResponse: " + mDetailScheduleDao.getDetailSchedules().getValue());
+                    int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
+                    mDetailScheduleDao.deleteDetailSchedule(day, detailSchedule.getIdDetailSchedule());
+                    Log.e(TAG, "onResponse: " + mDetailScheduleDao.getDetailSchedules().getValue());
+
+                    detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DetailScheduleResponse> call, Throwable t) {
+
             }
         });
 

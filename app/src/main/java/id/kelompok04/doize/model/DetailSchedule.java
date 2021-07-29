@@ -37,10 +37,6 @@ public class DetailSchedule {
 	@Expose
 	private String modidate;
 
-	@SerializedName("status")
-	@Expose
-	private int status;
-
 	public DetailSchedule() {
 	}
 
@@ -116,14 +112,6 @@ public class DetailSchedule {
 		return modidate;
 	}
 
-	public void setStatus(int status){
-		this.status = status;
-	}
-
-	public int getStatus(){
-		return status;
-	}
-
 	@Override
  	public String toString(){
 		return 
@@ -135,8 +123,7 @@ public class DetailSchedule {
 			",day_schedule = '" + daySchedule + '\'' + 
 			",end_time = '" + endTime + '\'' + 
 			",id_detail_schedule = '" + idDetailSchedule + '\'' + 
-			",modidate = '" + modidate + '\'' + 
-			",status = '" + status + '\'' + 
+			",modidate = '" + modidate + '\'' +
 			"}";
 		}
 }
