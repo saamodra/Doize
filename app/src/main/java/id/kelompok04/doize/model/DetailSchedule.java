@@ -41,6 +41,17 @@ public class DetailSchedule {
 	@Expose
 	private int status;
 
+	public DetailSchedule() {
+	}
+
+	public DetailSchedule(String nameDetailSchedule, String daySchedule, int idSchedule, String startTime, String endTime) {
+		this.startTime = startTime;
+		this.idSchedule = idSchedule;
+		this.nameDetailSchedule = nameDetailSchedule;
+		this.daySchedule = daySchedule;
+		this.endTime = endTime;
+	}
+
 	public void setStartTime(String startTime){
 		this.startTime = startTime;
 	}

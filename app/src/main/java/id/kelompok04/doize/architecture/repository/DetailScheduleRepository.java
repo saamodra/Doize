@@ -10,8 +10,13 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 import id.kelompok04.doize.api.ApiUtils;
+import id.kelompok04.doize.architecture.dao.DetailScheduleDao;
+import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.DetailSchedule;
+import id.kelompok04.doize.model.Schedule;
+import id.kelompok04.doize.model.response.DetailScheduleResponse;
 import id.kelompok04.doize.model.response.ListDetailScheduleResponse;
+import id.kelompok04.doize.model.response.ScheduleResponse;
 import id.kelompok04.doize.service.DetailScheduleService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,6 +27,7 @@ public class DetailScheduleRepository {
 
     private static DetailScheduleRepository INSTANCE;
     private DetailScheduleService mDetailScheduleService;
+    private static DetailScheduleDao mDetailScheduleDao;
 
     private DetailScheduleRepository(Context context) {
         mDetailScheduleService = ApiUtils.getDetailScheduleService();
@@ -29,7 +35,7 @@ public class DetailScheduleRepository {
 
     public static void initialize(Context context) {
         if (INSTANCE == null) {
-//            mScheduleDao = new ScheduleDao();
+            mDetailScheduleDao = new DetailScheduleDao();
             INSTANCE = new DetailScheduleRepository(context);
         }
     }
@@ -40,8 +46,6 @@ public class DetailScheduleRepository {
 
     @SuppressLint("LongLogTag")
     public LiveData<List<List<DetailSchedule>>> getDetailSchedules(String idSchedule) {
-        MutableLiveData<List<List<DetailSchedule>>> listMutableLiveData = new MutableLiveData<>();
-
         Log.d(TAG, "getDetailSchedules: Called");
         Call<ListDetailScheduleResponse> call = mDetailScheduleService.getDetailSchedules(idSchedule);
         call.enqueue(new Callback<ListDetailScheduleResponse>() {
@@ -50,7 +54,8 @@ public class DetailScheduleRepository {
                 ListDetailScheduleResponse listDetailSchedule = response.body();
                 Log.d(TAG, "onResponse: " + listDetailSchedule);
                 if (listDetailSchedule.getStatus() == 200) {
-                    listMutableLiveData.setValue(listDetailSchedule.getData());
+                    mDetailScheduleDao.setDetailSchedules(listDetailSchedule.getData());
+//                    listMutableLiveData.setValue(listDetailSchedule.getData());
                 }
             }
 
@@ -60,6 +65,35 @@ public class DetailScheduleRepository {
             }
         });
 
-        return listMutableLiveData;
+        return mDetailScheduleDao.getDetailSchedules();
     }
+
+    @SuppressLint("LongLogTag")
+    public LiveData<DetailScheduleResponse> addDetailSchedule(DetailSchedule detailSchedule) {
+        MutableLiveData<DetailScheduleResponse> detailScheduleResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.i(TAG, "addDetailSchedule: " + detailSchedule);
+        Call<DetailScheduleResponse> call = mDetailScheduleService.addDetailSchedule(detailSchedule);
+        call.enqueue(new Callback<DetailScheduleResponse>() {
+            @Override
+            public void onResponse(Call<DetailScheduleResponse> call, Response<DetailScheduleResponse> response) {
+                DetailScheduleResponse detailScheduleResponse = response.body();
+
+                if (detailScheduleResponse.getStatus() == 200) {
+                    int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
+                    mDetailScheduleDao.updateDetailSchedule(day, detailScheduleResponse.getDetailSchedule());
+                    detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DetailScheduleResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return detailScheduleResponseMutableLiveData;
+    }
+
+
 }
