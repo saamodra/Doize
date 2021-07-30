@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,12 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -38,6 +42,7 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Schedule;
+import id.kelompok04.doize.model.response.AssignmentResponse;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,21 +93,7 @@ public class AssignmentFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-
-                switch (position) {
-                    case 0:
-                        rvAssignmentAdapter = new AssignmentAdapter(getActiveAssignment(mAssignmentListFragment));
-                        rvAssignment.setAdapter(rvAssignmentAdapter);
-                        break;
-                    case 1:
-                        rvAssignmentAdapter = new AssignmentAdapter(getDoneAssignment(mAssignmentListFragment));
-                        rvAssignment.setAdapter(rvAssignmentAdapter);
-                        break;
-                    case 2:
-                        rvAssignmentAdapter = new AssignmentAdapter(getPriorityAssignment(mAssignmentListFragment));
-                        rvAssignment.setAdapter(rvAssignmentAdapter);
-                        break;
-                }
+                setTabValue(position);
             }
 
             @Override
@@ -149,10 +140,26 @@ public class AssignmentFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateUI(List<Assignment> assignments) {
-        rvAssignmentAdapter = new AssignmentAdapter(getActiveAssignment(assignments));
+    private void setTabValue(int tabPosition) {
+        switch (tabPosition) {
+            case 0:
+                rvAssignmentAdapter = new AssignmentAdapter(getActiveAssignment(mAssignmentListFragment));
+                break;
+            case 1:
+                rvAssignmentAdapter = new AssignmentAdapter(getDoneAssignment(mAssignmentListFragment));
+                break;
+            case 2:
+                rvAssignmentAdapter = new AssignmentAdapter(getPriorityAssignment(mAssignmentListFragment));
+                break;
+        }
         rvAssignment.setAdapter(rvAssignmentAdapter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateUI(List<Assignment> assignments) {
         mAssignmentListFragment = assignments;
+        int tab_position = tlAssignment.getSelectedTabPosition();
+        setTabValue(tab_position);
     }
 
     private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentHolder> {
@@ -188,7 +195,8 @@ public class AssignmentFragment extends Fragment {
             private TextView mAssignmentCourse;
             private TextView mAssignmentTime;
             private ImageView mStarButton;
-            private CheckBox mCheckbox;
+            private ImageView mCheckButton;
+            private FrameLayout borderLeft;
             private Assignment mAssignment;
 
             public AssignmentHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -199,24 +207,43 @@ public class AssignmentFragment extends Fragment {
                 mAssignmentCourse = itemView.findViewById(R.id.tv_assignment_course);
                 mAssignmentTime = itemView.findViewById(R.id.tv_assignment_time);
                 mStarButton = itemView.findViewById(R.id.star_icon);
-                mCheckbox = itemView.findViewById(R.id.cb_check_assignment);
-
+                mCheckButton = itemView.findViewById(R.id.iv_check_assignment);
+                borderLeft = itemView.findViewById(R.id.border_left_card_assignment);
 
                 mStarButton.setOnClickListener(v -> {
+                    int priority = mAssignment.getPriority() == 0 ? 1 : 0;
+                    mAssignment.setPriority(priority);
+                    mAssignmentViewModel.updateAssignment(mAssignment);
+                });
 
+                mCheckButton.setOnClickListener(v -> {
+                    int workingStatus = mAssignment.getWorkingStatus() == 0 ? 1 : 0;
+                    mAssignment.setWorkingStatus(workingStatus);
+                    mAssignmentViewModel.updateAssignment(mAssignment);
                 });
 
             }
 
+            @SuppressLint("UseCompatLoadingForDrawables")
             public void bind(Assignment assignment) {
                 mAssignment = assignment;
                 mAssignmentName.setText(assignment.getNameAssignment());
                 mAssignmentCourse.setText(assignment.getCourse());
 
+                Drawable borderLeftSrc = getResources()
+                        .getDrawable((mAssignment.getWorkingStatus() == 0) ? R.drawable.border_left_purple : R.drawable.border_left_green);
+                Drawable checkSrc = getResources()
+                        .getDrawable((mAssignment.getWorkingStatus() == 0) ? R.drawable.ic_checked_false : R.drawable.ic_checked_true);
+
+                mAssignmentName.setPaintFlags(mAssignment.getWorkingStatus() == 0 ? 0 : (mAssignmentName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG));
+
+                borderLeft.setBackground(borderLeftSrc);
+                mCheckButton.setImageDrawable(checkSrc);
+
                 String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.fullFormat, assignment.getDuedateAssignment());
                 mAssignmentTime.setText(dueDate);
 
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable star = getResources()
+                Drawable star = getResources()
                         .getDrawable((mAssignment.getPriority() == 0) ? R.drawable.ic_star_bordered : R.drawable.ic_star_filled);
 
                 mStarButton.setImageDrawable(star);

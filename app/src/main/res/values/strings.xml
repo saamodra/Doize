@@ -29,4 +29,5 @@
     <string name="delete_detail_schedule">Delete Detail Schedule</string>
     <string name="edit">Edit</string>
     <string name="priority">Priority</string>
+    <string name="check_assignment">Check Assignment</string>
 </resources>
