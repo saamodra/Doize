@@ -11,14 +11,13 @@ import id.kelompok04.doize.api.ApiUtils;
 import id.kelompok04.doize.architecture.dao.DailyActivityDao;
 import id.kelompok04.doize.model.DailyActivity;
 import id.kelompok04.doize.model.response.ListDailyActivityResponse;
-import id.kelompok04.doize.model.response.ListScheduleResponse;
 import id.kelompok04.doize.service.DailyActivityService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DailyActivityRepository {
-    private static final String TAG = "ScheduleRepository";
+    private static final String TAG = "DailyActivityRepository";
 
     private static DailyActivityRepository INSTANCE;
     private DailyActivityService mDailyActivityService;

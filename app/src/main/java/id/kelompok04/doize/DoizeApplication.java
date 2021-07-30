@@ -2,6 +2,7 @@ package id.kelompok04.doize;
 
 import android.app.Application;
 
+import id.kelompok04.doize.architecture.repository.DailyActivityRepository;
 import id.kelompok04.doize.architecture.repository.DetailScheduleRepository;
 import id.kelompok04.doize.architecture.repository.ScheduleRepository;
 import id.kelompok04.doize.architecture.repository.UserRepository;
@@ -13,5 +14,6 @@ public class DoizeApplication extends Application {
         UserRepository.initialize(this);
         ScheduleRepository.initialize(this);
         DetailScheduleRepository.initialize(this);
+        DailyActivityRepository.initialize(this);
     }
 }

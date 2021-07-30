@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 import id.kelompok04.doize.model.DailyActivity;
-import id.kelompok04.doize.model.Schedule;
 
 public class DailyActivityDao {
     private MutableLiveData<List<DailyActivity>> dailyActivities = new MutableLiveData<>();

@@ -28,4 +28,7 @@
     <string name="search">Search</string>
     <string name="edit_detail_schedule">Edit Detail Schedule</string>
     <string name="delete_detail_schedule">Delete Detail Schedule</string>
+
+    <string name="edit_daily_activity">Edit Daily Activity</string>
+    <string name="delete_daily_activity">Delete Daily Activity</string>
 </resources>

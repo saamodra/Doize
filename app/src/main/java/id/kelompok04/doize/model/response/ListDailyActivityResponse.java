@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import id.kelompok04.doize.model.DailyActivity;
-import id.kelompok04.doize.model.Schedule;
 
 public class ListDailyActivityResponse{
 

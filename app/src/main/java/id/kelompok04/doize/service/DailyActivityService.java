@@ -5,6 +5,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface DailyActivityService {
-    @GET("daily_activity")
+    @GET("daily-activity")
     Call<ListDailyActivityResponse> getDailyActivities();
 }

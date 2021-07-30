@@ -1,16 +1,40 @@
 package id.kelompok04.doize.model;
 
-public class DailyActivity {
+import com.google.gson.annotations.SerializedName;
+
+public class DailyActivity{
+
+	@SerializedName("id_daily_activity")
 	private int idDailyActivity;
+
+	@SerializedName("creadate")
 	private String creadate;
+
+	@SerializedName("reminder_at")
 	private String reminderAt;
+
+	@SerializedName("description_daily_activity")
 	private String descriptionDailyActivity;
+
+	@SerializedName("name_daily_activity")
 	private String nameDailyActivity;
+
+	@SerializedName("working_status")
 	private int workingStatus;
+
+	@SerializedName("id_user")
 	private int idUser;
+
+	@SerializedName("modidate")
 	private String modidate;
+
+	@SerializedName("priority")
 	private int priority;
+
+	@SerializedName("duedate_daily_activity")
 	private String duedateDailyActivity;
+
+	@SerializedName("status")
 	private int status;
 
 	public void setIdDailyActivity(int idDailyActivity){
@@ -104,7 +128,7 @@ public class DailyActivity {
 	@Override
  	public String toString(){
 		return 
-			"DataItem{" + 
+			"DailyActivity{" + 
 			"id_daily_activity = '" + idDailyActivity + '\'' + 
 			",creadate = '" + creadate + '\'' + 
 			",reminder_at = '" + reminderAt + '\'' + 
