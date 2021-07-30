@@ -30,4 +30,12 @@
     <string name="edit">Edit</string>
     <string name="priority">Priority</string>
     <string name="check_assignment">Check Assignment</string>
+    <string name="assignment_name">Assignment Name</string>
+    <string name="course">Course</string>
+    <string name="subject">Subject</string>
+    <string name="due_time">Due Time</string>
+    <string name="due_date">Due Date</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="reminder_date">Reminder Date</string>
+    <string name="description">Description</string>
 </resources>

@@ -23,6 +23,13 @@
         <item name="android:textSize">10sp</item>
     </style>
 
+    <style name="FormDialog" parent="Widget.AppCompat.EditText">
+        <item name="android:clickable">false</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
+    </style>
+
     <style name="MyDenseOutlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="materialThemeOverlay">@style/MyThemeOverlayOutlinedDense</item>
     </style>
@@ -44,5 +51,27 @@
 
     <style name="Button.Primary" parent="Button">
         <item name="backgroundTint">@color/purple</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/purple</item>
+        <item name="colorPrimaryDark">@color/darkPurple</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:colorBackground">@color/pink</item>
+    </style>
+
+    <style name="AppTheme.FullScreenDialog" parent="Theme.MaterialComponents.Light.Dialog">
+        <item name="colorPrimaryDark">@color/darkPurple</item>
+        <item name="colorAccent">@color/pink</item>
+        <item name="colorPrimary">@color/purple</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@style/AppTheme.Slide</item>
+        <item name="actionMenuTextColor">@color/pink</item>
+    </style>
+
+    <style name="AppTheme.Slide">
+        <item name="android:windowEnterAnimation">@anim/slide_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_right</item>
     </style>
 </resources>

@@ -2,17 +2,22 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import id.kelompok04.doize.R;
 
@@ -20,16 +25,18 @@ public class DatePickerFragment extends DialogFragment {
     private static final String TAG = "DatePickerFragment";
     private static final String ARG_DATE = "date";
 
-    public Callbacks callbacks;
+    private EditText textInputEditText;
+    private Context mContext;
 
-    public interface Callbacks {
-        void onDateSelected(Date date);
+    public DatePickerFragment(EditText textInputEditText, Context context) {
+        this.textInputEditText = textInputEditText;
+        this.mContext = context;
     }
 
-    public static DatePickerFragment newInstance(Date date) {
+    public static DatePickerFragment newInstance(EditText textInputEditText, Context context, Date date) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_DATE, date);
-        DatePickerFragment fragment = new DatePickerFragment();
+        DatePickerFragment fragment = new DatePickerFragment(textInputEditText, context);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,8 +49,10 @@ public class DatePickerFragment extends DialogFragment {
         dateListener = (view, year, month, dayOfMonth) -> {
             Date resultDate = new GregorianCalendar(year, month, dayOfMonth).getTime();
 
-            callbacks = (Callbacks) getTargetFragment();
-            callbacks.onDateSelected(resultDate);
+            Format formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+
+            String resultDateString = formatter.format(resultDate);
+            textInputEditText.setText(resultDateString);
         };
 
 
@@ -69,7 +78,6 @@ public class DatePickerFragment extends DialogFragment {
         super.onStart();
 
         int darkPurple = getResources().getColor(R.color.darkPurple);
-        int white = getResources().getColor(R.color.white);
 
         Button positiveButton = ((DatePickerDialog) getDialog()).getButton(DatePickerDialog.BUTTON_POSITIVE);
         positiveButton.setTextColor(darkPurple);

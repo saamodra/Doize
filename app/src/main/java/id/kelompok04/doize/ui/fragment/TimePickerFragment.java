@@ -1,9 +1,11 @@
 package id.kelompok04.doize.ui.fragment;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -21,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import id.kelompok04.doize.R;
 
 public class TimePickerFragment extends DialogFragment {
     private static final String ARG_TIME = "time";
@@ -66,6 +70,7 @@ public class TimePickerFragment extends DialogFragment {
 
         return new TimePickerDialog(
                 requireContext(),
+                R.style.DialogTheme,
                 timeListener,
                 initialHour,
                 initialMinute,
@@ -73,4 +78,16 @@ public class TimePickerFragment extends DialogFragment {
         );
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        int darkPurple = getResources().getColor(R.color.darkPurple);
+
+        Button positiveButton = ((DatePickerDialog) getDialog()).getButton(DatePickerDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(darkPurple);
+
+        Button negativeButton = ((DatePickerDialog) getDialog()).getButton(DatePickerDialog.BUTTON_NEGATIVE);
+        negativeButton.setTextColor(darkPurple);
+    }
 }

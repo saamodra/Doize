@@ -107,6 +107,11 @@ public class AssignmentFragment extends Fragment {
             }
         });
 
+        fabAddAssignment = view.findViewById(R.id.fab_add_assignment);
+        fabAddAssignment.setOnClickListener(v -> {
+            AssignmentDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
+        });
+
 
         return view;
     }

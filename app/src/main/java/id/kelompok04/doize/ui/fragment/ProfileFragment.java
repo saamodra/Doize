@@ -35,7 +35,7 @@ import id.kelompok04.doize.model.response.UserResponse;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment implements DatePickerFragment.Callbacks {
+public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
     // View Model
@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
 
         mBirthDateLayout.getEditText().setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
-            DatePickerFragment dialog = DatePickerFragment.newInstance(new Date());
+            DatePickerFragment dialog = DatePickerFragment.newInstance(mBirthDateLayout.getEditText(), getContext(),  new Date());
             dialog.setTargetFragment(ProfileFragment.this, 0);
             dialog.show(fragmentManager, "DialogDate");
         });
@@ -132,11 +132,5 @@ public class ProfileFragment extends Fragment implements DatePickerFragment.Call
                 mBirthDateLayout.getEditText().setText(newBirthDate);
             }
         });
-    }
-
-    @Override
-    public void onDateSelected(Date date) {
-        String birthDate = mSimpleDateFormat.format(date);
-        mBirthDateLayout.getEditText().setText(birthDate);
     }
 }
