@@ -22,9 +22,9 @@ public interface ScheduleService {
     @POST("schedule")
     Call<ScheduleResponse> addSchedule(@Body Schedule schedule);
 
-    @PUT("schedule")
-    Call<ScheduleResponse> updateSchedule(@Body Schedule schedule);
+    @PUT("schedule/{id}")
+    Call<ScheduleResponse> updateSchedule(@Path("id") int id, @Body Schedule schedule);
 
-    @DELETE("schedule")
-    Call<ScheduleResponse> deleteScheduleById(@Query("id") String id);
+    @DELETE("schedule/{id}")
+    Call<ScheduleResponse> deleteScheduleById(@Path("id") int id);
 }
