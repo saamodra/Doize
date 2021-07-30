@@ -45,6 +45,13 @@
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
             app:popExitAnim="@anim/slide_right" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_assignmentFragment"
+            app:destination="@id/assignmentFragment"
+            app:enterAnim="@anim/wait_anim"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/slide_left"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDetailFragment"
@@ -61,4 +68,9 @@
         android:name="id.kelompok04.doize.ui.fragment.DetailDailyActivityFragment"
         android:label="fragment_detail_daily_activity"
         tools:layout="@layout/fragment_detail_daily_activity" />
+    <fragment
+        android:id="@+id/assignmentFragment"
+        android:name="id.kelompok04.doize.ui.fragment.AssignmentFragment"
+        android:label="fragment_assignment"
+        tools:layout="@layout/fragment_assignment" />
 </navigation>

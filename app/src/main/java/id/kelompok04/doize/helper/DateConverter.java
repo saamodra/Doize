@@ -14,6 +14,9 @@ public class DateConverter {
     @SuppressLint("SimpleDateFormat")
     private static SimpleDateFormat dbTimeFormat = new SimpleDateFormat("HH:mm:ss");
 
+    @SuppressLint("SimpleDateFormat")
+    private static SimpleDateFormat fullDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public static String toDateString(SimpleDateFormat formatDateFrom, SimpleDateFormat formatDateTo, String date) {
         Date dateDb = new Date();
         try {
@@ -27,6 +30,10 @@ public class DateConverter {
 
     public static String fromDbTo(SimpleDateFormat formatDateTo, String date) {
         return toDateString(dbDateFormat, formatDateTo, date);
+    }
+
+    public static String fromDbDateTimeTo(SimpleDateFormat formatDateTo, String date) {
+        return toDateString(fullDateFormat, formatDateTo, date);
     }
 
     public static String toDbFrom(SimpleDateFormat formatDateFrom, String date) {

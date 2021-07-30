@@ -1,5 +1,5 @@
 package id.kelompok04.doize.helper;
 
-public enum DialogType {
+public enum CrudType {
     ADD, EDIT
 }

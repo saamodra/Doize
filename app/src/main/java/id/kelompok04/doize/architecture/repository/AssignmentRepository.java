@@ -1,0 +1,63 @@
+package id.kelompok04.doize.architecture.repository;
+
+import android.content.Context;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
+import id.kelompok04.doize.api.ApiUtils;
+import id.kelompok04.doize.architecture.dao.AssignmentDao;
+import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.response.ListAssignmentResponse;
+import id.kelompok04.doize.service.AssignmentService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class AssignmentRepository {
+    private static final String TAG = "AssignmentRepository";
+
+    private static AssignmentRepository INSTANCE;
+    private AssignmentService mAssignmentService;
+    private static AssignmentDao mAssignmentDao;
+
+    private AssignmentRepository(Context context) {
+        mAssignmentService = ApiUtils.getAssignmentService();
+    }
+
+    public static void initialize(Context context) {
+        if (INSTANCE == null) {
+            mAssignmentDao = new AssignmentDao();
+            INSTANCE = new AssignmentRepository(context);
+        }
+    }
+
+    public static AssignmentRepository get() {
+        return INSTANCE;
+    }
+
+    public LiveData<List<Assignment>> getAssignments() {
+        Log.d(TAG, "getAssignments: Called");
+        Call<ListAssignmentResponse> call = mAssignmentService.getAssignments();
+        call.enqueue(new Callback<ListAssignmentResponse>() {
+            @Override
+            public void onResponse(Call<ListAssignmentResponse> call, Response<ListAssignmentResponse> response) {
+                ListAssignmentResponse listAssignment = response.body();
+                Log.d(TAG, "onResponse: " + listAssignment);
+                if (listAssignment.getStatus() == 200) {
+                    mAssignmentDao.setListAssignment(listAssignment.getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListAssignmentResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return mAssignmentDao.getListAssignment();
+    }
+
+}

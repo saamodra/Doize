@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_baseline_list_24"
         android:title="To Do" />
     <item
-        android:id="@id/scheduleFragment"
+        android:id="@id/assignmentFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_calendar_today_24"
         android:title="Assignment" />
