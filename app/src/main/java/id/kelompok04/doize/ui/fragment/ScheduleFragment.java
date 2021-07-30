@@ -68,10 +68,6 @@ public class ScheduleFragment extends Fragment {
 
     public static ScheduleFragment newInstance() {
         ScheduleFragment fragment = new ScheduleFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -80,7 +76,6 @@ public class ScheduleFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mScheduleViewModel = new ViewModelProvider(this).get(ScheduleViewModel.class);
-
     }
 
     @Override
@@ -129,7 +124,6 @@ public class ScheduleFragment extends Fragment {
             @Override
             public void onChanged(List<Schedule> schedules) {
                 updateUI(schedules);
-                Log.d(TAG, "onChanged: " + schedules);
             }
         });
     }
@@ -155,7 +149,6 @@ public class ScheduleFragment extends Fragment {
         AlertDialog alertDialog = mMaterialAlertDialogBuilder.show();
         Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(v -> {
-            Log.d(TAG, "launchCustomAlertDialog: Added");
             if (validate(view)) {
                 String name = mScheduleNameLayout.getEditText().getText().toString();
                 String desc = mScheduleDescriptionLayout.getEditText().getText().toString();
@@ -197,37 +190,6 @@ public class ScheduleFragment extends Fragment {
         mAdapter.filterList(filtered);
     }
 
-
-    private class ScheduleHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private TextView mScheduleName;
-        private TextView mScheduleDesc;
-        private Schedule mSchedule;
-
-        public ScheduleHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.item_row_schedule, parent, false));
-            itemView.setOnClickListener(this);
-
-            mScheduleName = itemView.findViewById(R.id.tv_schedule_name);
-            mScheduleDesc = itemView.findViewById(R.id.tv_schedule_description);
-        }
-
-        public void bind(Schedule schedule) {
-            mSchedule = schedule;
-            mScheduleName.setText(schedule.getNameSchedule());
-            mScheduleDesc.setText(schedule.getDescriptionSchedule());
-        }
-
-        @Override
-        public void onClick(View v) {
-            Bundle bundle = new Bundle();
-            bundle.putString("name", mSchedule.getNameSchedule());
-            bundle.putString("desc", mSchedule.getDescriptionSchedule());
-            Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
-
-        }
-    }
-
     private class ScheduleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private List<Schedule> mSchedules;
@@ -266,6 +228,37 @@ public class ScheduleFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mSchedules.size();
+        }
+
+        private class ScheduleHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+            private TextView mScheduleName;
+            private TextView mScheduleDesc;
+            private Schedule mSchedule;
+
+            public ScheduleHolder(LayoutInflater inflater, ViewGroup parent) {
+                super(inflater.inflate(R.layout.item_row_schedule, parent, false));
+                itemView.setOnClickListener(this);
+
+                mScheduleName = itemView.findViewById(R.id.tv_schedule_name);
+                mScheduleDesc = itemView.findViewById(R.id.tv_schedule_description);
+            }
+
+            public void bind(Schedule schedule) {
+                mSchedule = schedule;
+                mScheduleName.setText(schedule.getNameSchedule());
+                mScheduleDesc.setText(schedule.getDescriptionSchedule());
+            }
+
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("scheduleId", Integer.toString(mSchedule.getIdSchedule()));
+                bundle.putString("scheduleName", mSchedule.getNameSchedule());
+                bundle.putString("scheduleDesc", mSchedule.getDescriptionSchedule());
+                Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
+
+            }
         }
     }
 }
