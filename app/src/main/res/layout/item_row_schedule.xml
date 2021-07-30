@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <FrameLayout
-            android:background="@drawable/border_left"
+            android:background="@drawable/border_left_purple"
             android:layout_width="4dp"
             android:layout_height="match_parent"/>
 
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
+                app:layout_constraintEnd_toStartOf="@+id/btn_edit_schedule"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

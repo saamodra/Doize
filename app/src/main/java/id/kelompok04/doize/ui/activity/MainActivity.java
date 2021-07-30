@@ -85,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         mNavController.navigate(R.id.dailyActivityFragment);
                         break;
 
+                    case R.id.assignmentFragment:
+                        mNavController.navigate(R.id.assignmentFragment);
+                        break;
+
                     case R.id.scheduleFragment:
                         mNavController.navigate(R.id.scheduleFragment);
                         break;

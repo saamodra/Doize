@@ -13,7 +13,7 @@
         android:layout_margin="8dp">
 
         <FrameLayout
-            android:background="@drawable/border_left"
+            android:background="@drawable/border_left_purple"
             android:layout_width="4dp"
             android:layout_height="match_parent"/>
 

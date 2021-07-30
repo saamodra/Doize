@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginButton.setOnClickListener(v -> {
             String email = mEmailTxt.getText().toString();
             String password = mPasswordTxt.getText().toString();
+            ProgressDialog progressDialog = ProgressDialog.show(this, "Sign In", "Signing in...");
 
             if (validate(v)) {
                 mUserViewModel.login(email, password).observe(this, new Observer<LoginResponse>() {
@@ -76,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+
+                        progressDialog.dismiss();
                     }
                 });
             }
