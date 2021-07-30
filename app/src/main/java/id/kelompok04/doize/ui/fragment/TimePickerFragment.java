@@ -28,12 +28,6 @@ public class TimePickerFragment extends DialogFragment {
     private Context context;
 
 
-//    private Callbacks callbacks;
-
-//    public interface Callbacks {
-//        void onTimeSelected(Date date);
-//    }
-
     public TimePickerFragment(EditText textInputEditText, Context context) {
         this.textInputEditText = textInputEditText;
         this.context = context;
@@ -62,9 +56,6 @@ public class TimePickerFragment extends DialogFragment {
 
             String resultTimeString = formatter.format(resultTime);
             textInputEditText.setText(resultTimeString);
-
-//            callbacks = (Callbacks) getTargetFragment();
-//            callbacks.onTimeSelected(resultTime);
         };
 
         Date date = (Date) getArguments().getSerializable(ARG_TIME);

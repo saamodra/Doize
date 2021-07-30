@@ -26,4 +26,6 @@
     <string name="sorry_there_are_no_results">Sorry, there are no results.</string>
     <string name="oopss_no_data_found">Oopss! No data found.</string>
     <string name="search">Search</string>
+    <string name="edit_detail_schedule">Edit Detail Schedule</string>
+    <string name="delete_detail_schedule">Delete Detail Schedule</string>
 </resources>

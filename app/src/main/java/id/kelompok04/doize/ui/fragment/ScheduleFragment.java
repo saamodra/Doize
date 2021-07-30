@@ -93,7 +93,7 @@ public class ScheduleFragment extends Fragment {
         mFloatingAddScheduleButton = view.findViewById(R.id.fab_add_schedule);
         mFloatingAddScheduleButton.setOnClickListener(v -> {
             customAlertDialogView = inflater.inflate(R.layout.dialog_schedule_form, container, false);
-            launchCustomAlertDialog(v);
+            launchCustomAlertDialog();
         });
 
         mScheduleSearchLayout = view.findViewById(R.id.til_schedule_search);
@@ -134,7 +134,7 @@ public class ScheduleFragment extends Fragment {
         mSchedulesFragment = schedules;
     }
 
-    private void launchCustomAlertDialog(View view) {
+    private void launchCustomAlertDialog() {
         mScheduleNameLayout = customAlertDialogView.findViewById(R.id.til_schedule_name);
         mScheduleDescriptionLayout = customAlertDialogView.findViewById(R.id.til_schedule_desc);
 
@@ -149,7 +149,7 @@ public class ScheduleFragment extends Fragment {
         AlertDialog alertDialog = mMaterialAlertDialogBuilder.show();
         Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(v -> {
-            if (validate(view)) {
+            if (validate()) {
                 String name = mScheduleNameLayout.getEditText().getText().toString();
                 String desc = mScheduleDescriptionLayout.getEditText().getText().toString();
                 int idUser = 1;
@@ -170,7 +170,7 @@ public class ScheduleFragment extends Fragment {
         });
     }
 
-    public boolean validate(View v) {
+    public boolean validate() {
         boolean nameValidation = ValidationHelper.requiredTextInputValidation(mScheduleNameLayout);
         boolean descValidation = ValidationHelper.requiredTextInputValidation(mScheduleDescriptionLayout);
 
