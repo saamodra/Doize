@@ -1,7 +1,6 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,11 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +21,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -41,15 +35,12 @@ import java.util.List;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.DetailScheduleViewModel;
-import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
-import id.kelompok04.doize.helper.DialogType;
+import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.DetailSchedule;
-import id.kelompok04.doize.model.Schedule;
-import id.kelompok04.doize.model.response.DetailScheduleResponse;
 
 public class ScheduleDetailFragment extends Fragment {
     private static final String TAG = "ScheduleDetailFragment";
@@ -104,7 +95,7 @@ public class ScheduleDetailFragment extends Fragment {
 
         fabAddDetailSchedule = view.findViewById(R.id.fab_add_detail_schedule);
         fabAddDetailSchedule.setOnClickListener(v -> {
-            launchCustomAlertDialog(DialogType.ADD, null, saveDetailSchedule);
+            launchCustomAlertDialog(CrudType.ADD, null, saveDetailSchedule);
         });
 
         return view;
@@ -192,7 +183,7 @@ public class ScheduleDetailFragment extends Fragment {
         rvScheduleDetail.setAdapter(mScheduleDetailAdapter);
     }
 
-    private void launchCustomAlertDialog(DialogType dialogType, DetailSchedule detailScheduleParam, View.OnClickListener onClickListener) {
+    private void launchCustomAlertDialog(CrudType dialogType, DetailSchedule detailScheduleParam, View.OnClickListener onClickListener) {
         LayoutInflater inflater = getLayoutInflater();
         customAlertDialogView = inflater.inflate(R.layout.dialog_detail_schedule_form, null);
 
@@ -207,7 +198,7 @@ public class ScheduleDetailFragment extends Fragment {
         actvScheduleDetailDay.setThreshold(1);
         actvScheduleDetailDay.setAdapter(adapter);
 
-        if (dialogType == DialogType.EDIT) {
+        if (dialogType == CrudType.EDIT) {
             String startTime = DateConverter.fromDbTimeTo(mSimpleTimeFormat, detailScheduleParam.getStartTime());
             String endTime = DateConverter.fromDbTimeTo(mSimpleTimeFormat, detailScheduleParam.getEndTime());
 
@@ -220,7 +211,7 @@ public class ScheduleDetailFragment extends Fragment {
         tilScheduleDetailStartTime.getEditText().setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
             // get time from database
-            Date time = (dialogType == DialogType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
+            Date time = (dialogType == CrudType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
 
             TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailStartTime.getEditText(), getContext(), time);
             dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
@@ -230,14 +221,14 @@ public class ScheduleDetailFragment extends Fragment {
         tilScheduleDetailEndTime.getEditText().setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
             // get time from database
-            Date time = (dialogType == DialogType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
+            Date time = (dialogType == CrudType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
 
             TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailEndTime.getEditText(), getContext(), time);
             dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
             dialog.show(fragmentManager, "DialogTime");
         });
 
-        String title = dialogType == DialogType.ADD ? "Add" : "Update";
+        String title = dialogType == CrudType.ADD ? "Add" : "Update";
 
         mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         mMaterialAlertDialogBuilder.setView(customAlertDialogView)
@@ -365,7 +356,7 @@ public class ScheduleDetailFragment extends Fragment {
 
                 editButton.setOnClickListener(v -> {
                     globalDetailSchedule = mDetailSchedule;
-                    launchCustomAlertDialog(DialogType.EDIT, mDetailSchedule, editDetailSchedule);
+                    launchCustomAlertDialog(CrudType.EDIT, mDetailSchedule, editDetailSchedule);
                 });
 
                 deleteButton.setOnClickListener(v -> {

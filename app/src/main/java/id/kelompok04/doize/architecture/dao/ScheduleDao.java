@@ -1,6 +1,7 @@
 package id.kelompok04.doize.architecture.dao;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
@@ -11,6 +12,7 @@ import java.util.List;
 import id.kelompok04.doize.model.Schedule;
 
 public class ScheduleDao {
+    private static final String TAG = "ScheduleDao";
     private MutableLiveData<List<Schedule>> schedules = new MutableLiveData<>();
 
     public LiveData<List<Schedule>> getListSchedule() {
@@ -46,6 +48,16 @@ public class ScheduleDao {
         }
     }
 
+    public void addToPosition(int position, Schedule schedule) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            List<Schedule> scheduleList = schedules.getValue();
+            if(scheduleList != null) {
+                scheduleList.add(position, schedule);
+                schedules.setValue(scheduleList);
+            }
+        }
+    }
+
     public void updateSchedule(Schedule schedule) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             List<Schedule> scheduleList = schedules.getValue();
@@ -55,11 +67,15 @@ public class ScheduleDao {
                 if(selectedSchedule != null) {
                     int index = scheduleList.indexOf(selectedSchedule);
                     scheduleList.set(index, schedule);
-                } else {
-                    scheduleList.add(schedule);
+                    schedules.setValue(scheduleList);
                 }
-                schedules.setValue(scheduleList);
             }
         }
+    }
+
+    public void addSchedule(Schedule schedule) {
+        List<Schedule> schedulesList = schedules.getValue();
+        schedulesList.add(schedule);
+        schedules.setValue(schedulesList);
     }
 }
