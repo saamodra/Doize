@@ -1,16 +1,10 @@
 package id.kelompok04.doize.ui.activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
@@ -23,14 +17,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 
 import id.kelompok04.doize.R;
-import id.kelompok04.doize.model.DailyActivity;
-import id.kelompok04.doize.model.User;
-import id.kelompok04.doize.ui.fragment.DailyActivityFragment;
-import id.kelompok04.doize.ui.fragment.DashboardFragment;
-import id.kelompok04.doize.ui.fragment.ScheduleFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -135,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.to_do_drawer:
                 mNavController.navigate(R.id.action_dashboardFragment_to_dailyActivityFragment);
+                break;
+
+            case R.id.assignment_drawer:
+                mNavController.navigate(R.id.action_dashboardFragment_to_assignmentFragment);
                 break;
 
             case R.id.schedule_drawer:

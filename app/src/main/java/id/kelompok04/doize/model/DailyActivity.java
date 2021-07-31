@@ -1,16 +1,54 @@
 package id.kelompok04.doize.model;
 
-public class DailyActivity {
+import java.util.List;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class DailyActivity{
+
+	@SerializedName("id_daily_activity")
+	@Expose
 	private int idDailyActivity;
+
+	@SerializedName("creadate")
+	@Expose
 	private String creadate;
+
+	@SerializedName("reminder_at")
+	@Expose
 	private String reminderAt;
+
+	@SerializedName("description_daily_activity")
+	@Expose
 	private String descriptionDailyActivity;
+
+	@SerializedName("name_daily_activity")
+	@Expose
 	private String nameDailyActivity;
+
+	@SerializedName("working_status")
+	@Expose
 	private int workingStatus;
+
+	@SerializedName("id_user")
+	@Expose
 	private int idUser;
+
+	@SerializedName("modidate")
+	@Expose
 	private String modidate;
+
+	@SerializedName("priority")
+	@Expose
 	private int priority;
+
+	@SerializedName("duedate_daily_activity")
+	@Expose
 	private String duedateDailyActivity;
+
+	@SerializedName("status")
+	@Expose
 	private int status;
 
 	public void setIdDailyActivity(int idDailyActivity){
@@ -102,20 +140,20 @@ public class DailyActivity {
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"DataItem{" + 
-			"id_daily_activity = '" + idDailyActivity + '\'' + 
-			",creadate = '" + creadate + '\'' + 
-			",reminder_at = '" + reminderAt + '\'' + 
-			",description_daily_activity = '" + descriptionDailyActivity + '\'' + 
-			",name_daily_activity = '" + nameDailyActivity + '\'' + 
-			",working_status = '" + workingStatus + '\'' + 
-			",id_user = '" + idUser + '\'' + 
-			",modidate = '" + modidate + '\'' + 
-			",priority = '" + priority + '\'' + 
-			",duedate_daily_activity = '" + duedateDailyActivity + '\'' + 
-			",status = '" + status + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"DailyActivityItem{" +
+						"id_daily_activity = '" + idDailyActivity + '\'' +
+						",creadate = '" + creadate + '\'' +
+						",reminder_at = '" + reminderAt + '\'' +
+						",description_daily_activity = '" + descriptionDailyActivity + '\'' +
+						",name_daily_activity = '" + nameDailyActivity + '\'' +
+						",working_status = '" + workingStatus + '\'' +
+						",id_user = '" + idUser + '\'' +
+						",modidate = '" + modidate + '\'' +
+						",priority = '" + priority + '\'' +
+						",duedate_daily_activity = '" + duedateDailyActivity + '\'' +
+						",status = '" + status + '\'' +
+						"}";
+	}
 }

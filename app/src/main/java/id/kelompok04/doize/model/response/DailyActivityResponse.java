@@ -1,29 +1,25 @@
 package id.kelompok04.doize.model.response;
 
-import java.util.List;
-
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import id.kelompok04.doize.model.DailyActivity;
 
-public class ListDailyActivityResponse{
+public class DailyActivityResponse{
 
 	@SerializedName("data")
-	private List<DailyActivity> data;
+	private DailyActivity data;
 
 	@SerializedName("message")
 	private String message;
 
 	@SerializedName("status")
-	@Expose
 	private int status;
 
-	public void setData(List<DailyActivity> data){
+	public void setData(DailyActivity data){
 		this.data = data;
 	}
 
-	public List<DailyActivity> getData(){
+	public DailyActivity getData(){
 		return data;
 	}
 
@@ -46,7 +42,7 @@ public class ListDailyActivityResponse{
 	@Override
  	public String toString(){
 		return 
-			"ListDailyActivityResponse{" + 
+			"DailyActivityResponse{" + 
 			"data = '" + data + '\'' + 
 			",message = '" + message + '\'' + 
 			",status = '" + status + '\'' + 
