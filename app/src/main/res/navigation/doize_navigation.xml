@@ -9,11 +9,7 @@
         android:id="@+id/dailyActivityFragment"
         android:name="id.kelompok04.doize.ui.fragment.DailyActivityFragment"
         android:label="fragment_daily_activity"
-        tools:layout="@layout/fragment_daily_activity" >
-        <action
-            android:id="@+id/action_dailyActivityFragment_to_detailDailyActivityFragment"
-            app:destination="@id/detailDailyActivityFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_daily_activity" />
     <fragment
         android:id="@+id/scheduleFragment"
         android:name="id.kelompok04.doize.ui.fragment.ScheduleFragment"
@@ -63,11 +59,6 @@
         android:name="id.kelompok04.doize.ui.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
-    <fragment
-        android:id="@+id/detailDailyActivityFragment"
-        android:name="id.kelompok04.doize.ui.fragment.DetailDailyActivityFragment"
-        android:label="fragment_detail_daily_activity"
-        tools:layout="@layout/fragment_detail_daily_activity" />
     <fragment
         android:id="@+id/assignmentFragment"
         android:name="id.kelompok04.doize.ui.fragment.AssignmentFragment"

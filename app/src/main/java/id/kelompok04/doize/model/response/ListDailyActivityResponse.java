@@ -1,9 +1,9 @@
 package id.kelompok04.doize.model.response;
 
+import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 import id.kelompok04.doize.model.DailyActivity;
 
@@ -13,7 +13,6 @@ public class ListDailyActivityResponse{
 	private List<DailyActivity> data;
 
 	@SerializedName("message")
-	@Expose
 	private String message;
 
 	@SerializedName("status")

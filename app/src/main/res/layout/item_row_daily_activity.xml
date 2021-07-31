@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_margin="3dp"
@@ -15,6 +16,7 @@
         android:layout_height="wrap_content">
 
         <FrameLayout
+            android:id="@+id/border_left_card_daily_activity"
             android:background="@drawable/border_left_purple"
             android:layout_width="4dp"
             android:layout_height="match_parent"/>
@@ -25,27 +27,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <CheckBox
-                android:id="@+id/cb_check_daily_activity"
+            <ImageView
+                android:id="@+id/iv_check_daily_activity"
                 android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:enabled="false"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_checked_false"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/check_daily_activity" />
 
             <!-- Title, secondary and supporting text -->
             <TextView
                 android:id="@+id/tv_daily_activity_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginEnd="20dp"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textSize="17sp"
                 app:layout_constraintEnd_toStartOf="@+id/star_icon"
-                app:layout_constraintStart_toEndOf="@+id/cb_check_daily_activity"
+                app:layout_constraintStart_toEndOf="@+id/iv_check_daily_activity"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Olahraga" />
 

@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,39 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import id.kelompok04.doize.R;
-import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
 import id.kelompok04.doize.architecture.viewmodel.DailyActivityViewModel;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
-import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
-import id.kelompok04.doize.model.Schedule;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -92,21 +82,7 @@ public class DailyActivityFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
-
-                switch (position) {
-                    case 0:
-                        rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getActiveDailyActivity(mDailyActivityListFragment));
-                        rvDailyActivity.setAdapter(rvDailyActivityAdapter);
-                        break;
-                    case 1:
-                        rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getDoneDailyActivity(mDailyActivityListFragment));
-                        rvDailyActivity.setAdapter(rvDailyActivityAdapter);
-                        break;
-                    case 2:
-                        rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getPriorityDailyActivity(mDailyActivityListFragment));
-                        rvDailyActivity.setAdapter(rvDailyActivityAdapter);
-                        break;
-                }
+                setTabValue(position);
             }
 
             @Override
@@ -120,11 +96,13 @@ public class DailyActivityFragment extends Fragment {
             }
         });
 
+        fabAddDailyActivity = view.findViewById(R.id.fab_add_daily_activity);
+        fabAddDailyActivity.setOnClickListener(v -> {
+//            AssignmentDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
+        });
 
         return view;
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -155,13 +133,28 @@ public class DailyActivityFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateUI(List<DailyActivity> dailyActivities) {
-        rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getActiveDailyActivity(dailyActivities));
+    private void setTabValue(int tabPosition) {
+        switch (tabPosition) {
+            case 0:
+                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getActiveDailyActivity(mDailyActivityListFragment));
+                break;
+            case 1:
+                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getDoneDailyActivity(mDailyActivityListFragment));
+                break;
+            case 2:
+                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getPriorityDailyActivity(mDailyActivityListFragment));
+                break;
+        }
         rvDailyActivity.setAdapter(rvDailyActivityAdapter);
-        mDailyActivityListFragment = dailyActivities;
     }
 
-    // Class Adapter
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateUI(List<DailyActivity> dailyActivities) {
+        mDailyActivityListFragment = dailyActivities;
+        int tab_position = tlDailyActivity.getSelectedTabPosition();
+        setTabValue(tab_position);
+    }
+
     private class DailyActivityAdapter extends RecyclerView.Adapter<DailyActivityFragment.DailyActivityAdapter.DailyActivityHolder> {
 
         private List<DailyActivity> mDailyActivities;
@@ -194,7 +187,8 @@ public class DailyActivityFragment extends Fragment {
             private TextView mDailyActivityName;
             private TextView mDailyActivityTime;
             private ImageView mStarButton;
-            private CheckBox mCheckbox;
+            private ImageView mCheckButton;
+            private FrameLayout borderLeft;
             private DailyActivity mDailyActivity;
 
             public DailyActivityHolder(LayoutInflater inflater, ViewGroup parent) {
@@ -204,23 +198,42 @@ public class DailyActivityFragment extends Fragment {
                 mDailyActivityName = itemView.findViewById(R.id.tv_daily_activity_name);
                 mDailyActivityTime = itemView.findViewById(R.id.tv_daily_activity_time);
                 mStarButton = itemView.findViewById(R.id.star_icon);
-                mCheckbox = itemView.findViewById(R.id.cb_check_daily_activity);
-
+                mCheckButton = itemView.findViewById(R.id.iv_check_daily_activity);
+                borderLeft = itemView.findViewById(R.id.border_left_card_daily_activity);
 
                 mStarButton.setOnClickListener(v -> {
+                    int priority = mDailyActivity.getPriority() == 0 ? 1 : 0;
+                    mDailyActivity.setPriority(priority);
+                    mDailyActivityViewModel.updateDailyActivity(mDailyActivity);
+                });
 
+                mCheckButton.setOnClickListener(v -> {
+                    int workingStatus = mDailyActivity.getWorkingStatus() == 0 ? 1 : 0;
+                    mDailyActivity.setWorkingStatus(workingStatus);
+                    mDailyActivityViewModel.updateDailyActivity(mDailyActivity);
                 });
 
             }
 
+            @SuppressLint("UseCompatLoadingForDrawables")
             public void bind(DailyActivity dailyActivity) {
                 mDailyActivity = dailyActivity;
                 mDailyActivityName.setText(dailyActivity.getNameDailyActivity());
 
+                Drawable borderLeftSrc = getResources()
+                        .getDrawable((mDailyActivity.getWorkingStatus() == 0) ? R.drawable.border_left_purple : R.drawable.border_left_green);
+                Drawable checkSrc = getResources()
+                        .getDrawable((mDailyActivity.getWorkingStatus() == 0) ? R.drawable.ic_checked_false : R.drawable.ic_checked_true);
+
+                mDailyActivityName.setPaintFlags(mDailyActivity.getWorkingStatus() == 0 ? 0 : (mDailyActivityName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG));
+
+                borderLeft.setBackground(borderLeftSrc);
+                mCheckButton.setImageDrawable(checkSrc);
+
                 String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.fullFormat, dailyActivity.getDuedateDailyActivity());
                 mDailyActivityTime.setText(dueDate);
 
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable star = getResources()
+                Drawable star = getResources()
                         .getDrawable((mDailyActivity.getPriority() == 0) ? R.drawable.ic_star_bordered : R.drawable.ic_star_filled);
 
                 mStarButton.setImageDrawable(star);
