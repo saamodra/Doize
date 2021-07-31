@@ -96,6 +96,8 @@ public class AssignmentDialogFragment extends DialogFragment {
         cbPriority = view.findViewById(R.id.cb_priority);
         btnSave = view.findViewById(R.id.btn_save_assignment);
 
+//        String assignmentName = "", assignmentSubject = "", dueDate = "", reminderDate = "", description = "";
+
         if (mAssignment != null) {
             String assignmentName = DoizeHelper.getString(mAssignment.getNameAssignment());
             String assignmentSubject = DoizeHelper.getString(mAssignment.getCourse());
@@ -114,13 +116,15 @@ public class AssignmentDialogFragment extends DialogFragment {
         FragmentManager fragmentManager = getParentFragmentManager();
 
         tilDueDate.getEditText().setOnClickListener(v -> {
-            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilDueDate.getEditText(), new Date());
+            Date dateDueDate = DateConverter.fromDbToDate(DateType.DATETIME, DoizeHelper.getString(mAssignment.getDuedateAssignment()));
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilDueDate.getEditText(), dateDueDate);
             dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
             dialog.show(fragmentManager, "DialogTime");
         });
 
         tilReminderDate.getEditText().setOnClickListener(v -> {
-            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilReminderDate.getEditText(), new Date());
+            Date dateReminderDate = DateConverter.fromDbToDate(DateType.DATETIME, DoizeHelper.getString(mAssignment.getReminderAt()));
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilReminderDate.getEditText(), dateReminderDate);
             dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
             dialog.show(fragmentManager, "DialogTime");
         });

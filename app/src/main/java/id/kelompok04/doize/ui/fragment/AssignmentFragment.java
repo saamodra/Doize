@@ -307,12 +307,7 @@ public class AssignmentFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-//                bundle.putString("scheduleId", Integer.toString(mSchedule.getIdSchedule()));
-//                bundle.putString("scheduleName", mSchedule.getNameSchedule());
-//                bundle.putString("scheduleDesc", mSchedule.getDescriptionSchedule());
-//                Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
-
+                AssignmentDialogFragment.display(CrudType.EDIT, mAssignment, getActivity().getSupportFragmentManager());
             }
         }
     }
