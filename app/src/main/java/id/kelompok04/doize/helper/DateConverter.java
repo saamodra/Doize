@@ -48,6 +48,10 @@ public class DateConverter {
         return toDateString(formatDateFrom, dbTimeFormat, date);
     }
 
+    public static String toDbDatetimeFrom(SimpleDateFormat formatDateFrom, String date) {
+        return toDateString(formatDateFrom, fullDateFormat, date);
+    }
+
     public static Date fromDbToDate(DateType dateType, String date) {
         Date dateDb = new Date();
         try {
@@ -56,6 +60,8 @@ public class DateConverter {
                     dateDb = dbDateFormat.parse(date);
                 case TIME:
                     dateDb = dbTimeFormat.parse(date);
+                case DATETIME:
+                    dateDb = fullDateFormat.parse(date);
             }
         } catch (ParseException e) {
             e.printStackTrace();

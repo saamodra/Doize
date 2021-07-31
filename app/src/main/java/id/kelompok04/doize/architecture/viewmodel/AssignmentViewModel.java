@@ -22,6 +22,10 @@ public class AssignmentViewModel extends ViewModel {
         return mAssignmentRepository.getAssignments();
     }
 
+    public LiveData<AssignmentResponse> addAssignment(Assignment assignment) {
+        return mAssignmentRepository.addAssignment(assignment);
+    }
+
     public LiveData<AssignmentResponse> updateAssignment(Assignment assignment) {
         return mAssignmentRepository.updateAssignment(assignment);
     }
