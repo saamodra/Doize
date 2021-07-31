@@ -42,10 +42,7 @@ public class DailyActivityFragment extends Fragment {
 
     private DailyActivityViewModel mDailyActivityViewModel;
     private RecyclerView mDailyActivityRecyclerView;
-    private MaterialAlertDialogBuilder mMaterialAlertDialogBuilder;
-    private FloatingActionButton mFloatingAddDailyActivityButton;
     private View mLayoutEmpty;
-    private View customAlertDialogView;
 
     private DailyActivityFragment.DailyActivityAdapter mDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(Collections.emptyList());
 
