@@ -13,7 +13,7 @@ public class AssignmentResponse{
 	private String message;
 
 	@SerializedName("status")
-	private String status;
+	private int status;
 
 	public void setAssignment(Assignment data){
 		this.data = data;
@@ -31,11 +31,11 @@ public class AssignmentResponse{
 		return message;
 	}
 
-	public void setStatus(String status){
+	public void setStatus(int status){
 		this.status = status;
 	}
 
-	public String getStatus(){
+	public int getStatus(){
 		return status;
 	}
 

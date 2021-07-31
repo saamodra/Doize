@@ -22,17 +22,9 @@ public class AssignmentViewModel extends ViewModel {
         return mAssignmentRepository.getAssignments();
     }
 
-//    public LiveData<AssignmentResponse> addAssignment(Assignment schedule) {
-//        return mAssignmentRepository.(schedule);
-//    }
-//
-//    public LiveData<AssignmentResponse> addToPosition(int position, Assignment schedule) {
-//        return mAssignmentRepository.updateAssignment(CrudType.ADD, position, schedule);
-//    }
-//
-//    public LiveData<AssignmentResponse> updateAssignment(Assignment schedule) {
-//        return mAssignmentRepository.updateAssignment(CrudType.EDIT, -1, schedule);
-//    }
+    public LiveData<AssignmentResponse> updateAssignment(Assignment assignment) {
+        return mAssignmentRepository.updateAssignment(assignment);
+    }
 //
 //    public LiveData<AssignmentResponse> deleteAssignment(int id) {
 //        return mAssignmentRepository.deleteAssignment(id);

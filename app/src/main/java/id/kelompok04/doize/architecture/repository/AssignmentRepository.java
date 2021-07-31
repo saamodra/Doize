@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
 import id.kelompok04.doize.api.ApiUtils;
 import id.kelompok04.doize.architecture.dao.AssignmentDao;
 import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.response.AssignmentResponse;
 import id.kelompok04.doize.model.response.ListAssignmentResponse;
 import id.kelompok04.doize.service.AssignmentService;
 import retrofit2.Call;
@@ -60,4 +62,29 @@ public class AssignmentRepository {
         return mAssignmentDao.getListAssignment();
     }
 
+    public LiveData<AssignmentResponse> updateAssignment(Assignment assignment) {
+        MutableLiveData<AssignmentResponse> assignmentResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.d(TAG, "getAssignments: Called");
+        Call<AssignmentResponse> call = mAssignmentService.updateAssignment(assignment.getIdAssignment(), assignment);
+        call.enqueue(new Callback<AssignmentResponse>() {
+            @Override
+            public void onResponse(Call<AssignmentResponse> call, Response<AssignmentResponse> response) {
+                AssignmentResponse assignmentResponse = response.body();
+                assignmentResponseMutableLiveData.setValue(assignmentResponse);
+                Log.d(TAG, "onResponse: " + assignmentResponse);
+
+                if (assignmentResponse.getStatus() == 200) {
+                    mAssignmentDao.updateAssignment(assignment);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AssignmentResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return assignmentResponseMutableLiveData;
+    }
 }
