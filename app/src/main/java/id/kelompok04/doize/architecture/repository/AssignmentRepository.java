@@ -10,9 +10,11 @@ import java.util.List;
 
 import id.kelompok04.doize.api.ApiUtils;
 import id.kelompok04.doize.architecture.dao.AssignmentDao;
+import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.response.AssignmentResponse;
 import id.kelompok04.doize.model.response.ListAssignmentResponse;
+import id.kelompok04.doize.model.response.ScheduleResponse;
 import id.kelompok04.doize.service.AssignmentService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,7 +90,7 @@ public class AssignmentRepository {
         return assignmentResponseMutableLiveData;
     }
 
-    public LiveData<AssignmentResponse> updateAssignment(Assignment assignment) {
+    public LiveData<AssignmentResponse> updateAssignment(CrudType crudType, int position, Assignment assignment) {
         MutableLiveData<AssignmentResponse> assignmentResponseMutableLiveData = new MutableLiveData<>();
 
         Log.d(TAG, "getAssignments: Called");
@@ -101,7 +103,35 @@ public class AssignmentRepository {
                 Log.d(TAG, "onResponse: " + assignmentResponse);
 
                 if (assignmentResponse.getStatus() == 200) {
-                    mAssignmentDao.updateAssignment(assignmentResponse.getAssignment());
+                    if (crudType == CrudType.ADD) {
+                        mAssignmentDao.addToPosition(position, assignmentResponse.getAssignment());
+                    } else {
+                        mAssignmentDao.updateAssignment(assignmentResponse.getAssignment());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AssignmentResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return assignmentResponseMutableLiveData;
+    }
+
+    public LiveData<AssignmentResponse> deleteAssignment(int id) {
+        MutableLiveData<AssignmentResponse> assignmentResponseMutableLiveData = new MutableLiveData<>();
+
+        Call<AssignmentResponse> call = mAssignmentService.deleteAssignment(id);
+        call.enqueue(new Callback<AssignmentResponse>() {
+            @Override
+            public void onResponse(Call<AssignmentResponse> call, Response<AssignmentResponse> response) {
+                AssignmentResponse assignmentResponse = response.body();
+                assignmentResponseMutableLiveData.setValue(assignmentResponse);
+
+                if (assignmentResponse.getStatus() == 200) {
+                    mAssignmentDao.deleteAssignment(id);
                 }
             }
 

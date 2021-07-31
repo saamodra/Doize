@@ -138,7 +138,7 @@ public class AssignmentDialogFragment extends DialogFragment {
                     }
                 });
             } else {
-                mAssignmentViewModel.updateAssignment(assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                mAssignmentViewModel.updateAssignment(-1, assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
                     if (assignmentResponse.getStatus() == 200) {
                         FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
                         dismiss();

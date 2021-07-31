@@ -77,11 +77,6 @@ public class ScheduleFragment extends Fragment {
     private List<Schedule> mSchedulesFragment;
     private Schedule globalSchedule;
 
-    public static ScheduleFragment newInstance() {
-        ScheduleFragment fragment = new ScheduleFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
