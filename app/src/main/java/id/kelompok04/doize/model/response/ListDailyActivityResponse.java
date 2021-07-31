@@ -10,7 +10,6 @@ import id.kelompok04.doize.model.DailyActivity;
 public class ListDailyActivityResponse{
 
 	@SerializedName("data")
-	@Expose
 	private List<DailyActivity> data;
 
 	@SerializedName("message")

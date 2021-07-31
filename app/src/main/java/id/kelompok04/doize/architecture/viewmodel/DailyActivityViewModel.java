@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
+import id.kelompok04.doize.architecture.repository.AssignmentRepository;
 import id.kelompok04.doize.architecture.repository.DailyActivityRepository;
+import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
 
 public class DailyActivityViewModel extends ViewModel {
@@ -18,4 +20,5 @@ public class DailyActivityViewModel extends ViewModel {
     public LiveData<List<DailyActivity>> getDailyActivities() {
         return mDailyActivityRepository.getDailyActivities();
     }
+    
 }
