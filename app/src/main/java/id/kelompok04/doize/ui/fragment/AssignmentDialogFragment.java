@@ -2,10 +2,13 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +19,12 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.model.Assignment;
@@ -94,11 +99,37 @@ public class AssignmentDialogFragment extends DialogFragment {
 
             tilAssignmentName.getEditText().setText(assignmentName);
             tilAssignmentSubject.getEditText().setText(assignmentSubject);
-            tilDueDate.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.dateFormat, dueDate));
-            tilDueTime.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.timeFormat, dueDate));
-            tilReminderDate.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.dateFormat, reminderDate));
-            tilReminderTime.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.timeFormat, reminderDate));
+            tilDueDate.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.DATE_FORMAT, dueDate));
+            tilDueTime.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.TIME_FORMAT, dueDate));
+            tilReminderDate.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.DATE_FORMAT, reminderDate));
+            tilReminderTime.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.TIME_FORMAT, reminderDate));
         }
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        tilDueDate.getEditText().setOnClickListener(v -> {
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilDueDate.getEditText(), new Date());
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        tilDueTime.getEditText().setOnClickListener(v -> {
+            TimePickerFragment dialog = TimePickerFragment.newInstance(DateType.TIME, tilDueTime.getEditText(), new Date());
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        tilReminderDate.getEditText().setOnClickListener(v -> {
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilReminderDate.getEditText(), new Date());
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        tilReminderTime.getEditText().setOnClickListener(v -> {
+            TimePickerFragment dialog = TimePickerFragment.newInstance(DateType.TIME, tilReminderTime.getEditText(), new Date());
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
 
         return view;
     }
@@ -109,9 +140,7 @@ public class AssignmentDialogFragment extends DialogFragment {
         toolbar.setNavigationOnClickListener(v -> dismiss());
         toolbar.setTitle(title);
         toolbar.inflateMenu(R.menu.assignment_dialog_menu);
-        toolbar.setOnMenuItemClickListener(item -> {
-            dismiss();
-            return true;
-        });
+        toolbar.setOnMenuItemClickListener(item -> true);
     }
+
 }

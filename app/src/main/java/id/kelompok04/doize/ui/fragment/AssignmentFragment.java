@@ -245,7 +245,7 @@ public class AssignmentFragment extends Fragment {
                 borderLeft.setBackground(borderLeftSrc);
                 mCheckButton.setImageDrawable(checkSrc);
 
-                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.fullFormat, assignment.getDuedateAssignment());
+                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, assignment.getDuedateAssignment());
                 mAssignmentTime.setText(dueDate);
 
                 Drawable star = getResources()

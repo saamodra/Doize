@@ -161,7 +161,6 @@ public class ScheduleDetailFragment extends Fragment {
                 globalDetailSchedule.setStartTime(startTime);
                 globalDetailSchedule.setEndTime(endTime);
 
-//                DetailSchedule detailSchedule = new DetailSchedule(name, day, idSchedule, startTime, endTime);
                 mDetailScheduleViewModel.updateDetailSchedule(globalDetailSchedule).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
                     if (detailScheduleResponse.getStatus() == 200) {
                         FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
@@ -213,7 +212,7 @@ public class ScheduleDetailFragment extends Fragment {
             // get time from database
             Date time = (dialogType == CrudType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
 
-            TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailStartTime.getEditText(), getContext(), time);
+            TimePickerFragment dialog = TimePickerFragment.newInstance(DateType.TIME, tilScheduleDetailStartTime.getEditText(), time);
             dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
             dialog.show(fragmentManager, "DialogTime");
         });
@@ -223,7 +222,7 @@ public class ScheduleDetailFragment extends Fragment {
             // get time from database
             Date time = (dialogType == CrudType.EDIT ? DateConverter.fromDbToDate(DateType.TIME, detailScheduleParam.getStartTime()) : new Date());
 
-            TimePickerFragment dialog = TimePickerFragment.newInstance(tilScheduleDetailEndTime.getEditText(), getContext(), time);
+            TimePickerFragment dialog = TimePickerFragment.newInstance(DateType.TIME, tilScheduleDetailEndTime.getEditText(), time);
             dialog.setTargetFragment(ScheduleDetailFragment.this, 0);
             dialog.show(fragmentManager, "DialogTime");
         });

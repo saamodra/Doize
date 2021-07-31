@@ -13,12 +13,15 @@
             android:id="@+id/toolbar"
             app:elevation="10dp"
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:backgroundTint="@color/darkPurple"
+            app:titleTextColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:paddingEnd="16dp"
             android:paddingStart="6dp"
             app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="@drawable/ic_baseline_close_24"
+            app:navigationIconTint="@color/white"
             app:title="Add Assignment">
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -92,6 +95,7 @@
                         android:id="@+id/tie_duedate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -112,6 +116,7 @@
                         android:id="@+id/tie_duetime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14sp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -138,6 +143,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/FormDialog"
                         android:id="@+id/tie_reminder_date"
+                        android:textSize="14sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text" />
@@ -158,6 +164,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         style="@style/FormDialog"
                         android:id="@+id/tie_reminder_time"
+                        android:textSize="14sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text" />
@@ -168,7 +175,7 @@
 
             <CheckBox
                 android:id="@+id/cb_priority"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -180,17 +187,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                app:startIconDrawable="@drawable/ic_document"
                 app:startIconTint="@color/darkPurple"
                 android:hint="@string/description"
-                android:textColorHint="@color/darkPurple"
+                android:gravity="top"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_assignment_desc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="top"
                     android:singleLine="false"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:lines="6"
                     android:inputType="textMultiLine"/>
 
             </com.google.android.material.textfield.TextInputLayout>

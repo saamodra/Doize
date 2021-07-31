@@ -25,22 +25,23 @@ import java.util.Date;
 import java.util.Locale;
 
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.helper.DateType;
+import id.kelompok04.doize.helper.DoizeConstants;
 
 public class TimePickerFragment extends DialogFragment {
     private static final String ARG_TIME = "time";
     private EditText textInputEditText;
-    private Context context;
+    private DateType mDateType;
 
-
-    public TimePickerFragment(EditText textInputEditText, Context context) {
+    public TimePickerFragment(DateType dateType, EditText textInputEditText) {
         this.textInputEditText = textInputEditText;
-        this.context = context;
+        mDateType = dateType;
     }
 
-    public static TimePickerFragment newInstance(EditText textInputEditText, Context context, Date date) {
+    public static TimePickerFragment newInstance(DateType dateType, EditText textInputEditText, Date date) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_TIME, date);
-        TimePickerFragment fragment = new TimePickerFragment(textInputEditText, context);
+        TimePickerFragment fragment = new TimePickerFragment(dateType, textInputEditText);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,19 +51,21 @@ public class TimePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         TimePickerDialog.OnTimeSetListener timeListener;
 
+        Date date = (Date) getArguments().getSerializable(ARG_TIME);
+
         timeListener = (view, hourOfDay, minute) -> {
             Calendar time = Calendar.getInstance();
+            time.setTime(date);
             time.set(Calendar.HOUR_OF_DAY, hourOfDay);
             time.set(Calendar.MINUTE, minute);
 
             Date resultTime = time.getTime();
-            Format formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+            Format formatter = (mDateType == DateType.TIME ? DoizeConstants.TIME_FORMAT : DoizeConstants.FULL_FORMAT);
 
             String resultTimeString = formatter.format(resultTime);
             textInputEditText.setText(resultTimeString);
         };
 
-        Date date = (Date) getArguments().getSerializable(ARG_TIME);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int initialHour = calendar.get(Calendar.HOUR);
@@ -84,10 +87,10 @@ public class TimePickerFragment extends DialogFragment {
 
         int darkPurple = getResources().getColor(R.color.darkPurple);
 
-        Button positiveButton = ((DatePickerDialog) getDialog()).getButton(DatePickerDialog.BUTTON_POSITIVE);
+        Button positiveButton = ((TimePickerDialog) getDialog()).getButton(TimePickerDialog.BUTTON_POSITIVE);
         positiveButton.setTextColor(darkPurple);
 
-        Button negativeButton = ((DatePickerDialog) getDialog()).getButton(DatePickerDialog.BUTTON_NEGATIVE);
+        Button negativeButton = ((TimePickerDialog) getDialog()).getButton(TimePickerDialog.BUTTON_NEGATIVE);
         negativeButton.setTextColor(darkPurple);
     }
 }
