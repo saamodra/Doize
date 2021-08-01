@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -9,8 +10,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +38,7 @@ import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.DailyActivity;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +46,6 @@ import id.kelompok04.doize.model.DailyActivity;
  * create an instance of this fragment.
  */
 public class DailyActivityFragment extends Fragment {
-
     private static final String TAG = "DailyActivityFragment";
 
     // Components
@@ -102,8 +107,54 @@ public class DailyActivityFragment extends Fragment {
             DailyActivityDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
+        itemTouchHelper.attachToRecyclerView(rvDailyActivity);
+
         return view;
     }
+
+    ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            DailyActivity dailyActivity = rvDailyActivityAdapter.mDailyActivities.get(position);
+
+            switch (direction) {
+                case ItemTouchHelper.LEFT:
+                    mDailyActivityViewModel.deleteDailyActivity(dailyActivity.getIdDailyActivity()).observe(getViewLifecycleOwner(), dailyActivityResponse -> {
+                        if (dailyActivityResponse.getStatus() == 200) {
+                            rvDailyActivityAdapter.notifyItemRemoved(position);
+                            Snackbar.make(rvDailyActivity, dailyActivity.getNameDailyActivity() + " was deleted.", Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", v -> {
+                                        DailyActivity updatedDailyActivity = dailyActivityResponse.getData();
+                                        updatedDailyActivity.setStatus(1);
+                                        mDailyActivityViewModel.addToPosition(position, updatedDailyActivity);
+                                    }).show();
+                        } else {
+                            FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false)
+                                    .show();
+                        }
+                    });
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getActivity(), R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -205,13 +256,13 @@ public class DailyActivityFragment extends Fragment {
                 mStarButton.setOnClickListener(v -> {
                     int priority = mDailyActivity.getPriority() == 0 ? 1 : 0;
                     mDailyActivity.setPriority(priority);
-                    mDailyActivityViewModel.updateDailyActivity(mDailyActivity);
+                    mDailyActivityViewModel.updateDailyActivity(-1, mDailyActivity);
                 });
 
                 mCheckButton.setOnClickListener(v -> {
                     int workingStatus = mDailyActivity.getWorkingStatus() == 0 ? 1 : 0;
                     mDailyActivity.setWorkingStatus(workingStatus);
-                    mDailyActivityViewModel.updateDailyActivity(mDailyActivity);
+                    mDailyActivityViewModel.updateDailyActivity(-1, mDailyActivity);
                 });
 
             }
@@ -231,7 +282,7 @@ public class DailyActivityFragment extends Fragment {
                 borderLeft.setBackground(borderLeftSrc);
                 mCheckButton.setImageDrawable(checkSrc);
 
-                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.fullFormat, dailyActivity.getDuedateDailyActivity());
+                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, dailyActivity.getDuedateDailyActivity());
                 mDailyActivityTime.setText(dueDate);
 
                 Drawable star = getResources()
@@ -242,12 +293,7 @@ public class DailyActivityFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-//                bundle.putString("scheduleId", Integer.toString(mSchedule.getIdSchedule()));
-//                bundle.putString("scheduleName", mSchedule.getNameSchedule());
-//                bundle.putString("scheduleDesc", mSchedule.getDescriptionSchedule());
-//                Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
-
+                DailyActivityDialogFragment.display(CrudType.EDIT, mDailyActivity, getActivity().getSupportFragmentManager());
             }
         }
     }
