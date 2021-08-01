@@ -27,6 +27,7 @@ import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.architecture.viewmodel.UserViewModel;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.UserResponse;
 
@@ -109,7 +110,7 @@ public class ProfileFragment extends Fragment {
 
         mBirthDateLayout.getEditText().setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
-            DatePickerFragment dialog = DatePickerFragment.newInstance(mBirthDateLayout.getEditText(), getContext(),  new Date());
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATE, mBirthDateLayout.getEditText(), new Date());
             dialog.setTargetFragment(ProfileFragment.this, 0);
             dialog.show(fragmentManager, "DialogDate");
         });

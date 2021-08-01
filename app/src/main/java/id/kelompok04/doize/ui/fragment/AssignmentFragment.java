@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -9,10 +10,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +46,7 @@ import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Schedule;
 import id.kelompok04.doize.model.response.AssignmentResponse;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,6 +116,9 @@ public class AssignmentFragment extends Fragment {
             AssignmentDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
+        itemTouchHelper.attachToRecyclerView(rvAssignment);
+
 
         return view;
     }
@@ -167,6 +174,50 @@ public class AssignmentFragment extends Fragment {
         setTabValue(tab_position);
     }
 
+
+    ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            Assignment assignment = rvAssignmentAdapter.mAssignments.get(position);
+
+            switch (direction) {
+                case ItemTouchHelper.LEFT:
+                    mAssignmentViewModel.deleteAssignment(assignment.getIdAssignment()).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                        if (assignmentResponse.getStatus() == 200) {
+                            rvAssignmentAdapter.notifyItemRemoved(position);
+                            Snackbar.make(rvAssignment, assignment.getNameAssignment() + " was deleted.", Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", v -> {
+                                        Assignment updatedAssignment = assignmentResponse.getAssignment();
+                                        updatedAssignment.setStatus(1);
+                                        mAssignmentViewModel.addToPosition(position, updatedAssignment);
+                                    }).show();
+                        } else {
+                            FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false)
+                                    .show();
+                        }
+                    });
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getActivity(), R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
     private class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.AssignmentHolder> {
 
         private List<Assignment> mAssignments;
@@ -218,13 +269,13 @@ public class AssignmentFragment extends Fragment {
                 mStarButton.setOnClickListener(v -> {
                     int priority = mAssignment.getPriority() == 0 ? 1 : 0;
                     mAssignment.setPriority(priority);
-                    mAssignmentViewModel.updateAssignment(mAssignment);
+                    mAssignmentViewModel.updateAssignment(-1,  mAssignment);
                 });
 
                 mCheckButton.setOnClickListener(v -> {
                     int workingStatus = mAssignment.getWorkingStatus() == 0 ? 1 : 0;
                     mAssignment.setWorkingStatus(workingStatus);
-                    mAssignmentViewModel.updateAssignment(mAssignment);
+                    mAssignmentViewModel.updateAssignment(-1,  mAssignment);
                 });
 
             }
@@ -245,7 +296,7 @@ public class AssignmentFragment extends Fragment {
                 borderLeft.setBackground(borderLeftSrc);
                 mCheckButton.setImageDrawable(checkSrc);
 
-                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.fullFormat, assignment.getDuedateAssignment());
+                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, assignment.getDuedateAssignment());
                 mAssignmentTime.setText(dueDate);
 
                 Drawable star = getResources()
@@ -256,12 +307,7 @@ public class AssignmentFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-//                bundle.putString("scheduleId", Integer.toString(mSchedule.getIdSchedule()));
-//                bundle.putString("scheduleName", mSchedule.getNameSchedule());
-//                bundle.putString("scheduleDesc", mSchedule.getDescriptionSchedule());
-//                Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_scheduleFragment_to_scheduleDetailFragment, bundle);
-
+                AssignmentDialogFragment.display(CrudType.EDIT, mAssignment, getActivity().getSupportFragmentManager());
             }
         }
     }

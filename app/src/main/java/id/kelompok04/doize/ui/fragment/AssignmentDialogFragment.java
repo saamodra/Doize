@@ -2,24 +2,33 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
 import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.model.Assignment;
@@ -33,17 +42,18 @@ public class AssignmentDialogFragment extends DialogFragment {
     private TextInputLayout tilAssignmentName;
     private TextInputLayout tilAssignmentSubject;
     private TextInputLayout tilDueDate;
-    private TextInputLayout tilDueTime;
     private TextInputLayout tilReminderDate;
-    private TextInputLayout tilReminderTime;
     private CheckBox cbPriority;
     private TextInputLayout tilDescription;
+    private Button btnSave;
 
     private Assignment mAssignment;
+    private AssignmentViewModel mAssignmentViewModel;
+    private CrudType mCrudType;
 
 
     public AssignmentDialogFragment(CrudType crudType, Assignment assignment) {
-        this.title = crudType == CrudType.ADD ? "Add Assignment" : "Edit Assignment";
+        mCrudType = crudType;
         this.mAssignment = assignment;
     }
 
@@ -57,6 +67,7 @@ public class AssignmentDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreenDialog);
+        mAssignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
     }
 
     @Override
@@ -80,38 +91,94 @@ public class AssignmentDialogFragment extends DialogFragment {
         tilAssignmentName = view.findViewById(R.id.til_assignment_name);
         tilAssignmentSubject = view.findViewById(R.id.til_subject);
         tilDueDate = view.findViewById(R.id.til_duedate);
-        tilDueTime = view.findViewById(R.id.til_duetime);
         tilReminderDate = view.findViewById(R.id.til_reminder_date);
-        tilReminderTime = view.findViewById(R.id.til_reminder_time);
         tilDescription = view.findViewById(R.id.til_assignment_desc);
         cbPriority = view.findViewById(R.id.cb_priority);
+        btnSave = view.findViewById(R.id.btn_save_assignment);
+
+//        String assignmentName = "", assignmentSubject = "", dueDate = "", reminderDate = "", description = "";
 
         if (mAssignment != null) {
             String assignmentName = DoizeHelper.getString(mAssignment.getNameAssignment());
             String assignmentSubject = DoizeHelper.getString(mAssignment.getCourse());
             String dueDate = DoizeHelper.getString(mAssignment.getDuedateAssignment());
             String reminderDate = DoizeHelper.getString(mAssignment.getReminderAt());
+            String description = DoizeHelper.getString(mAssignment.getDescriptionAssignment());
 
             tilAssignmentName.getEditText().setText(assignmentName);
             tilAssignmentSubject.getEditText().setText(assignmentSubject);
-            tilDueDate.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.dateFormat, dueDate));
-            tilDueTime.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.timeFormat, dueDate));
-            tilReminderDate.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.dateFormat, reminderDate));
-            tilReminderTime.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.timeFormat, reminderDate));
+            tilDueDate.getEditText().setText(dueDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, dueDate));
+            tilReminderDate.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, reminderDate));
+            cbPriority.setChecked(mAssignment.getPriority() != 0);
+            tilDescription.getEditText().setText(description);
         }
 
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        tilDueDate.getEditText().setOnClickListener(v -> {
+            Date dateDueDate = DateConverter.fromDbToDate(DateType.DATETIME, DoizeHelper.getString(mAssignment.getDuedateAssignment()));
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilDueDate.getEditText(), dateDueDate);
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        tilReminderDate.getEditText().setOnClickListener(v -> {
+            Date dateReminderDate = DateConverter.fromDbToDate(DateType.DATETIME, DoizeHelper.getString(mAssignment.getReminderAt()));
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATETIME, tilReminderDate.getEditText(), dateReminderDate);
+            dialog.setTargetFragment(AssignmentDialogFragment.this, 0);
+            dialog.show(fragmentManager, "DialogTime");
+        });
+
+        btnSave.setOnClickListener(v -> {
+            Assignment assignment = getAssignment();
+
+            if (mCrudType == CrudType.ADD) {
+                mAssignmentViewModel.addAssignment(assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                    if (assignmentResponse.getStatus() == 200) {
+                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                        dismiss();
+                    } else {
+                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                    }
+                });
+            } else {
+                mAssignmentViewModel.updateAssignment(-1, assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                    if (assignmentResponse.getStatus() == 200) {
+                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                        dismiss();
+                    } else {
+                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                    }
+                });
+            }
+        });
+
         return view;
+    }
+
+    private Assignment getAssignment() {
+        Assignment assignment = mAssignment == null ? new Assignment() : mAssignment;
+        assignment.setNameAssignment(DoizeHelper.getString(tilAssignmentName.getEditText().getText().toString()));
+        assignment.setCourse(DoizeHelper.getString(tilAssignmentSubject.getEditText().getText().toString()));
+        assignment.setDuedateAssignment(DateConverter.toDbDatetimeFrom(
+                DoizeConstants.FULL_FORMAT,
+                tilDueDate.getEditText().getText().toString()));
+        assignment.setReminderAt(DateConverter.toDbDatetimeFrom(
+                DoizeConstants.FULL_FORMAT,
+                tilReminderDate.getEditText().getText().toString()));
+        assignment.setPriority(cbPriority.isChecked() ? 1 : 0);
+        assignment.setDescriptionAssignment(DoizeHelper.getString(tilDescription.getEditText().getText().toString()));
+
+        return assignment;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         toolbar.setNavigationOnClickListener(v -> dismiss());
-        toolbar.setTitle(title);
+        toolbar.setTitle(mCrudType == CrudType.ADD ? "Add Assignment" : "Edit Assignment");
         toolbar.inflateMenu(R.menu.assignment_dialog_menu);
-        toolbar.setOnMenuItemClickListener(item -> {
-            dismiss();
-            return true;
-        });
+        toolbar.setOnMenuItemClickListener(item -> true);
     }
+
 }

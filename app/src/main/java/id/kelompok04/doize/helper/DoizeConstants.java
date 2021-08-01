@@ -11,11 +11,11 @@ public class DoizeConstants {
     public static final List<String> DAY_LIST = Arrays.asList("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 
     @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
     @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    public static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     @SuppressLint("SimpleDateFormat")
-    public static final SimpleDateFormat fullFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    public static final SimpleDateFormat FULL_FORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 }

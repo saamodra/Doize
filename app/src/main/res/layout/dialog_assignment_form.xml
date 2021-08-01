@@ -13,12 +13,15 @@
             android:id="@+id/toolbar"
             app:elevation="10dp"
             style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:backgroundTint="@color/darkPurple"
+            app:titleTextColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:paddingEnd="16dp"
             android:paddingStart="6dp"
             app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="@drawable/ic_baseline_close_24"
+            app:navigationIconTint="@color/white"
             app:title="Add Assignment">
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -70,105 +73,49 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_duedate"
+                style="@style/FormControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false">
+                android:layout_marginEnd="10dp"
+                android:hint="@string/due_date"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_calendar">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_duedate"
-                    style="@style/FormControl"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/FormDialog"
+                    android:id="@+id/tie_duedate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    android:hint="@string/due_date"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_calendar">
+                    android:textSize="14sp"
+                    android:inputType="text" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/FormDialog"
-                        android:id="@+id/tie_duedate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_duetime"
-                    style="@style/FormControl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:hint="@string/due_time"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_clock">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/FormDialog"
-                        android:id="@+id/tie_duetime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_reminder_date"
+                style="@style/FormControl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false">
+                android:layout_marginEnd="10dp"
+                android:hint="@string/reminder_date"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_calendar">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_reminder_date"
-                    style="@style/FormControl"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/FormDialog"
+                    android:id="@+id/tie_reminder_date"
+                    android:textSize="14sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="10dp"
-                    android:hint="@string/reminder_date"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_calendar">
+                    android:inputType="text" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/FormDialog"
-                        android:id="@+id/tie_reminder_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_reminder_time"
-                    style="@style/FormControl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:hint="@string/reminder_time"
-                    app:endIconMode="clear_text"
-                    app:startIconDrawable="@drawable/ic_clock">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        style="@style/FormDialog"
-                        android:id="@+id/tie_reminder_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/cb_priority"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -180,20 +127,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                app:startIconDrawable="@drawable/ic_document"
                 app:startIconTint="@color/darkPurple"
                 android:hint="@string/description"
-                android:textColorHint="@color/darkPurple"
+                android:gravity="top"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tie_assignment_desc"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="top"
                     android:singleLine="false"
+                    android:overScrollMode="always"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:scrollHorizontally="false"
+                    android:lines="6"
                     android:inputType="textMultiLine"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_save_assignment"
+                android:layout_marginTop="10dp"
+                style="@style/Button.Primary"
+                android:text="@string/save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </ScrollView>

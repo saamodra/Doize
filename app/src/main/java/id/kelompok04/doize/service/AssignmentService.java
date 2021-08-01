@@ -22,6 +22,6 @@ public interface AssignmentService {
     @PUT("assignment/{id}")
     Call<AssignmentResponse> updateAssignment(@Path("id") int id, @Body Assignment assignment);
 
-    @DELETE("detail-schedule/{id}")
+    @DELETE("assignment/{id}")
     Call<AssignmentResponse> deleteAssignment(@Path("id") int id);
 }

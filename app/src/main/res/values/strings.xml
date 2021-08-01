@@ -40,5 +40,6 @@
     <string name="reminder_time">Reminder Time</string>
     <string name="reminder_date">Reminder Date</string>
     <string name="description">Description</string>
+    <string name="save">Save</string>
     <string name="activity_name">Activity Name</string>
 </resources>
