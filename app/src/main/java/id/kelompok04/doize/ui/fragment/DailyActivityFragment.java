@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.DailyActivityViewModel;
+import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.DailyActivity;
@@ -98,7 +99,7 @@ public class DailyActivityFragment extends Fragment {
 
         fabAddDailyActivity = view.findViewById(R.id.fab_add_daily_activity);
         fabAddDailyActivity.setOnClickListener(v -> {
-//            AssignmentDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
+            DailyActivityDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
         });
 
         return view;

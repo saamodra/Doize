@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="4dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            app:elevation="10dp"
+            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingEnd="16dp"
+            android:paddingStart="6dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@drawable/ic_baseline_close_24"
+            app:title="Add Daily Activity">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:paddingHorizontal="20dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_daily_activity_name"
+                style="@style/FormControl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/activity_name"
+                app:endIconMode="clear_text"
+                app:startIconDrawable="@drawable/ic_task">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_daily_activity_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_duedate"
+                    style="@style/FormControl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:hint="@string/due_date"
+                    app:endIconMode="clear_text"
+                    app:startIconDrawable="@drawable/ic_calendar">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormDialog"
+                        android:id="@+id/tie_duedate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_duetime"
+                    style="@style/FormControl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:hint="@string/due_time"
+                    app:endIconMode="clear_text"
+                    app:startIconDrawable="@drawable/ic_clock">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormDialog"
+                        android:id="@+id/tie_duetime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_reminder_date"
+                    style="@style/FormControl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:hint="@string/reminder_date"
+                    app:endIconMode="clear_text"
+                    app:startIconDrawable="@drawable/ic_calendar">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormDialog"
+                        android:id="@+id/tie_reminder_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_reminder_time"
+                    style="@style/FormControl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:hint="@string/reminder_time"
+                    app:endIconMode="clear_text"
+                    app:startIconDrawable="@drawable/ic_clock">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        style="@style/FormDialog"
+                        android:id="@+id/tie_reminder_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/cb_priority"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="false"
+                android:text="@string/priority"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_daily_activity_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:startIconDrawable="@drawable/ic_document"
+                app:startIconTint="@color/darkPurple"
+                android:hint="@string/description"
+                android:textColorHint="@color/darkPurple"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tie_daily_activity_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="false"
+                    android:inputType="textMultiLine"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
