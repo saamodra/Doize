@@ -10,7 +10,10 @@ import java.util.List;
 
 import id.kelompok04.doize.api.ApiUtils;
 import id.kelompok04.doize.architecture.dao.DailyActivityDao;
+import id.kelompok04.doize.helper.CrudType;
+import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
+import id.kelompok04.doize.model.response.AssignmentResponse;
 import id.kelompok04.doize.model.response.DailyActivityResponse;
 import id.kelompok04.doize.model.response.ListDailyActivityResponse;
 import id.kelompok04.doize.service.DailyActivityService;
@@ -76,6 +79,86 @@ public class DailyActivityRepository {
 
                 if (dailyActivityResponse.getStatus() == 200) {
                     mDailyActivityDao.updateDailyActivity(dailyActivity);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DailyActivityResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return dailyActivityResponseMutableLiveData;
+    }
+
+    public LiveData<DailyActivityResponse> addDailyActivity(DailyActivity dailyActivity) {
+        MutableLiveData<DailyActivityResponse> dailyActivityResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.d(TAG, "getDailyActivities: Called");
+        Call<DailyActivityResponse> call = mDailyActivityService.addDailyActivity(dailyActivity);
+        call.enqueue(new Callback<DailyActivityResponse>() {
+            @Override
+            public void onResponse(Call<DailyActivityResponse> call, Response<DailyActivityResponse> response) {
+                DailyActivityResponse dailyActivityResponse = response.body();
+                dailyActivityResponseMutableLiveData.setValue(dailyActivityResponse);
+                Log.d(TAG, "onResponse: " + dailyActivityResponse);
+
+                if (dailyActivityResponse.getStatus() == 200) {
+                    mDailyActivityDao.addDailyActivity(dailyActivityResponse.getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DailyActivityResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return dailyActivityResponseMutableLiveData;
+    }
+
+    public LiveData<DailyActivityResponse> updateDailyActivity(CrudType crudType, int position, DailyActivity dailyActivity) {
+        MutableLiveData<DailyActivityResponse> dailyActivityResponseMutableLiveData = new MutableLiveData<>();
+
+        Log.d(TAG, "getDailyActivities: Called");
+        Call<DailyActivityResponse> call = mDailyActivityService.updateDailyActivity(dailyActivity.getIdDailyActivity(), dailyActivity);
+        call.enqueue(new Callback<DailyActivityResponse>() {
+            @Override
+            public void onResponse(Call<DailyActivityResponse> call, Response<DailyActivityResponse> response) {
+                DailyActivityResponse dailyActivityResponse = response.body();
+                dailyActivityResponseMutableLiveData.setValue(dailyActivityResponse);
+                Log.d(TAG, "onResponse: " + dailyActivityResponse);
+
+                if (dailyActivityResponse.getStatus() == 200) {
+                    if (crudType == CrudType.ADD) {
+                        mDailyActivityDao.addToPosition(position, dailyActivityResponse.getData());
+                    } else {
+                        mDailyActivityDao.updateDailyActivity(dailyActivityResponse.getData());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DailyActivityResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return dailyActivityResponseMutableLiveData;
+    }
+
+    public LiveData<DailyActivityResponse> deleteDailyActivity(int id) {
+        MutableLiveData<DailyActivityResponse> dailyActivityResponseMutableLiveData = new MutableLiveData<>();
+
+        Call<DailyActivityResponse> call = mDailyActivityService.deleteDailyActivity(id);
+        call.enqueue(new Callback<DailyActivityResponse>() {
+            @Override
+            public void onResponse(Call<DailyActivityResponse> call, Response<DailyActivityResponse> response) {
+                DailyActivityResponse dailyActivityResponse = response.body();
+                dailyActivityResponseMutableLiveData.setValue(dailyActivityResponse);
+
+                if (dailyActivityResponse.getStatus() == 200) {
+                    mDailyActivityDao.deleteDailyActivity(id);
                 }
             }
 

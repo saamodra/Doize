@@ -111,6 +111,8 @@ public class AssignmentDialogFragment extends DialogFragment {
             tilReminderDate.getEditText().setText(reminderDate.equals("") ? "" : DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, reminderDate));
             cbPriority.setChecked(mAssignment.getPriority() != 0);
             tilDescription.getEditText().setText(description);
+        } else {
+            mAssignment = new Assignment();
         }
 
         FragmentManager fragmentManager = getParentFragmentManager();

@@ -100,21 +100,15 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/btnUpdateProfile"
+            android:layout_marginTop="10dp"
+            style="@style/Button.Primary"
+            android:text="@string/update_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sf_pro_bold" />
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnUpdateProfile"
-        style="@style/Widget.MaterialComponents.Button.Icon"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/sf_pro_bold"
-        android:text="@string/update_profile"
-        android:textSize="14sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="40dp"
-        app:icon="@drawable/ic_baseline_check_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/formUpdateProfile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
