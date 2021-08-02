@@ -154,6 +154,7 @@ public class ScheduleDetailFragment extends Fragment {
                 String startTime = DateConverter.toDbTimeFrom(mSimpleTimeFormat, startTimeText);
                 String endTime = DateConverter.toDbTimeFrom(mSimpleTimeFormat, endTimeText);
                 int idSchedule = Integer.parseInt(getArguments().getString("scheduleId"));
+                int dayBefore = DoizeConstants.DAY_LIST.indexOf(globalDetailSchedule.getDaySchedule());
 
                 globalDetailSchedule.setNameDetailSchedule(name);
                 globalDetailSchedule.setDaySchedule(day);
@@ -161,7 +162,7 @@ public class ScheduleDetailFragment extends Fragment {
                 globalDetailSchedule.setStartTime(startTime);
                 globalDetailSchedule.setEndTime(endTime);
 
-                mDetailScheduleViewModel.updateDetailSchedule(globalDetailSchedule).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
+                mDetailScheduleViewModel.updateDetailSchedule(dayBefore, globalDetailSchedule).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
                     if (detailScheduleResponse.getStatus() == 200) {
                         FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
                         globalDetailSchedule = new DetailSchedule();

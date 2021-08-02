@@ -80,7 +80,7 @@ public class DetailScheduleRepository {
 
                 if (detailScheduleResponse.getStatus() == 200) {
                     int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
-                    mDetailScheduleDao.updateDetailSchedule(day, detailScheduleResponse.getDetailSchedule());
+                    mDetailScheduleDao.addDetailSchedule(day, detailScheduleResponse.getDetailSchedule());
                     detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
                 }
             }
@@ -95,7 +95,7 @@ public class DetailScheduleRepository {
     }
 
     @SuppressLint("LongLogTag")
-    public LiveData<DetailScheduleResponse> updateDetailSchedule(DetailSchedule detailSchedule) {
+    public LiveData<DetailScheduleResponse> updateDetailSchedule(int dayBefore, DetailSchedule detailSchedule) {
         MutableLiveData<DetailScheduleResponse> detailScheduleResponseMutableLiveData = new MutableLiveData<>();
 
         Log.i(TAG, "editDetailSchedule: " + detailSchedule);
@@ -106,8 +106,7 @@ public class DetailScheduleRepository {
                 DetailScheduleResponse detailScheduleResponse = response.body();
 
                 if (detailScheduleResponse.getStatus() == 200) {
-                    int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
-                    mDetailScheduleDao.updateDetailSchedule(day, detailScheduleResponse.getDetailSchedule());
+                    mDetailScheduleDao.updateDetailSchedule(dayBefore, detailScheduleResponse.getDetailSchedule());
                     detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
                 }
             }

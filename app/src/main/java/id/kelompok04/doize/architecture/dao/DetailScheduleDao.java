@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.DetailSchedule;
 import id.kelompok04.doize.model.Schedule;
 
@@ -58,30 +59,40 @@ public class DetailScheduleDao {
         }
     }
 
-    public void updateDetailSchedule(int day, DetailSchedule detailScheduleParam) {
+    public void updateDetailSchedule(int dayBefore, DetailSchedule detailScheduleParam) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             List<List<DetailSchedule>> detailScheduleList = detailSchedules.getValue();
             if(detailScheduleList != null) {
-                List<DetailSchedule> detailScheduleDay = detailScheduleList.get(day);
-
+                List<DetailSchedule> detailScheduleDay = detailScheduleList.get(dayBefore);
                 for (DetailSchedule detailSchedule : detailScheduleDay) {
                     if (detailSchedule.getIdDetailSchedule() == detailScheduleParam.getIdDetailSchedule()) {
-                        int index = detailScheduleDay.indexOf(detailSchedule);
-                        detailScheduleDay.set(index, detailScheduleParam);
-                        detailScheduleList.set(day, detailScheduleDay);
+                        Log.d(TAG, "updateDetailSchedule: Update detail schedule");
+                        detailScheduleDay.remove(detailSchedule);
+                        detailScheduleList.set(dayBefore, detailScheduleDay);
+
+                        int dayAfter = DoizeConstants.DAY_LIST.indexOf(detailScheduleParam.getDaySchedule());
+                        List<DetailSchedule> detailScheduleUpdateDay = detailScheduleList.get(dayAfter);
+                        detailScheduleUpdateDay.add(detailScheduleParam);
+                        detailScheduleList.set(dayAfter, detailScheduleUpdateDay);
+
                         // Set data to dao
                         detailSchedules.setValue(detailScheduleList);
                         return;
                     }
                 }
-
-                detailScheduleDay.add(detailScheduleParam);
-                detailScheduleList.set(day, detailScheduleDay);
-
-                // Set data to dao
-                detailSchedules.setValue(detailScheduleList);
             }
+        }
+    }
 
+    public void addDetailSchedule(int day, DetailSchedule detailScheduleParam) {
+        List<List<DetailSchedule>> detailScheduleList = detailSchedules.getValue();
+        if(detailScheduleList != null) {
+            List<DetailSchedule> detailScheduleDay = detailScheduleList.get(day);
+            detailScheduleDay.add(detailScheduleParam);
+            detailScheduleList.set(day, detailScheduleDay);
+
+            // Set data to dao
+            detailSchedules.setValue(detailScheduleList);
         }
     }
 }

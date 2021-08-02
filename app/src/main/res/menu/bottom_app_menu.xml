@@ -11,15 +11,15 @@
         android:icon="@drawable/ic_baseline_list_24"
         android:title="To Do" />
     <item
-        android:id="@id/assignmentFragment"
-        android:enabled="true"
-        android:icon="@drawable/ic_baseline_calendar_today_24"
-        android:title="Assignment" />
-    <item
         android:id="@id/pomodoroFragment"
         android:enabled="true"
         android:icon="@drawable/ic_tomato_slice"
         android:title="Pomodoro" />
+    <item
+        android:id="@id/assignmentFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title="Assignment" />
     <item
         android:id="@+id/more_menu"
         android:enabled="true"

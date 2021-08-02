@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setupNavigation();
 
     }
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nvDrawer = findViewById(R.id.nvView);

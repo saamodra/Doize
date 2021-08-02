@@ -2,11 +2,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/notification"
-        android:icon="@drawable/ic_baseline_notifications_24"
-        android:title="@string/notifications"
-        android:contentDescription="Notification"
-        app:showAsAction="always" />
-
 </menu>

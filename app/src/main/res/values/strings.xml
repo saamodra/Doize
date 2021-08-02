@@ -42,4 +42,5 @@
     <string name="description">Description</string>
     <string name="save">Save</string>
     <string name="activity_name">Activity Name</string>
+    <string name="settings">Settings</string>
 </resources>
