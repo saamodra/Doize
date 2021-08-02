@@ -81,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         mNavController.navigate(R.id.scheduleFragment);
                         break;
 
+                    case R.id.pomodoroFragment:
+                        mNavController.navigate(R.id.pomodoroFragment);
+                        break;
+
                     case R.id.exit_drawer:
                         finishAffinity();
                         break;
@@ -131,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.schedule_drawer:
                 mNavController.navigate(R.id.action_dashboardFragment_to_scheduleFragment);
+                break;
+
+            case R.id.pomodoro_drawer:
+                mNavController.navigate(R.id.action_dashboardFragment_to_pomodoroFragment);
                 break;
 
             case R.id.exit_drawer:

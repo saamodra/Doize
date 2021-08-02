@@ -48,6 +48,9 @@
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/slide_left"
             app:popExitAnim="@anim/slide_right" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_pomodoroFragment"
+            app:destination="@id/pomodoroFragment" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDetailFragment"
@@ -64,4 +67,9 @@
         android:name="id.kelompok04.doize.ui.fragment.AssignmentFragment"
         android:label="fragment_assignment"
         tools:layout="@layout/fragment_assignment" />
+    <fragment
+        android:id="@+id/pomodoroFragment"
+        android:name="id.kelompok04.doize.ui.fragment.PomodoroFragment"
+        android:label="fragment_pomodoro"
+        tools:layout="@layout/fragment_pomodoro" />
 </navigation>

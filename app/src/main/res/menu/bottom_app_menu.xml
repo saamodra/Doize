@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_baseline_calendar_today_24"
         android:title="Assignment" />
     <item
-        android:id="@+id/pomodoro_menu"
+        android:id="@id/pomodoroFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_timer_24"
+        android:icon="@drawable/ic_tomato_slice"
         android:title="Pomodoro" />
     <item
         android:id="@+id/more_menu"
