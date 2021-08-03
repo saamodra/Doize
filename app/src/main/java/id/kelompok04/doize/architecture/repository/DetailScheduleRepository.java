@@ -132,10 +132,8 @@ public class DetailScheduleRepository {
 
                 if (detailScheduleResponse.getStatus() == 200) {
                     DetailSchedule detailSchedule = detailScheduleResponse.getDetailSchedule();
-                    Log.d(TAG, "onResponse: " + mDetailScheduleDao.getDetailSchedules().getValue());
                     int day = DoizeConstants.DAY_LIST.indexOf(detailSchedule.getDaySchedule());
                     mDetailScheduleDao.deleteDetailSchedule(day, detailSchedule.getIdDetailSchedule());
-                    Log.e(TAG, "onResponse: " + mDetailScheduleDao.getDetailSchedules().getValue());
 
                     detailScheduleResponseMutableLiveData.setValue(detailScheduleResponse);
                 }

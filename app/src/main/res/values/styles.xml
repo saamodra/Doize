@@ -55,7 +55,17 @@
         <item name="fontFamily">@font/sf_pro_bold</item>
     </style>
 
+    <style name="ButtonOutline" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="textAllCaps">false</item>
+        <item name="fontFamily">@font/sf_pro_bold</item>
+    </style>
+
     <style name="Button.Primary" parent="Button">
+        <item name="backgroundTint">@color/purple</item>
+    </style>
+
+
+    <style name="Button.PrimaryOutline" parent="ButtonOutline">
         <item name="backgroundTint">@color/purple</item>
     </style>
 
