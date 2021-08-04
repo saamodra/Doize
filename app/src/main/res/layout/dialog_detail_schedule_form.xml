@@ -77,8 +77,7 @@
                 android:id="@+id/tie_schedule_detail_start_time"
                 style="@style/FormDialog"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textMultiLine"/>
+                android:layout_height="match_parent"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,8 +98,7 @@
                 style="@style/FormDialog"
                 android:id="@+id/tie_schedule_detail_end_time"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="textMultiLine"/>
+                android:layout_height="match_parent"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -161,7 +161,6 @@ public class ScheduleFragment extends Fragment {
         if (validate()) {
             String name = mScheduleNameLayout.getEditText().getText().toString();
             String desc = mScheduleDescriptionLayout.getEditText().getText().toString();
-            int idUser = 1;
 
             globalSchedule.setNameSchedule(name);
             globalSchedule.setDescriptionSchedule(desc);
