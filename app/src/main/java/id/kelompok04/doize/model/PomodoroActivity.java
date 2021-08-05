@@ -16,6 +16,15 @@ public class PomodoroActivity {
 	@SerializedName("id_pomodoro_activity")
 	private int idPomodoroActivity;
 
+	public PomodoroActivity() {
+	}
+
+	public PomodoroActivity(String activityName, int idPomodoro, int workingStatus) {
+		this.activityName = activityName;
+		this.idPomodoro = idPomodoro;
+		this.workingStatus = workingStatus;
+	}
+
 	public void setActivityName(String activityName){
 		this.activityName = activityName;
 	}

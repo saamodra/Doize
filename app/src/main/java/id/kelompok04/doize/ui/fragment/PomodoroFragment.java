@@ -53,6 +53,8 @@ public class PomodoroFragment extends Fragment {
     TextView tvTimer;
     Drawable startIcon, pauseIcon;
     RecyclerView rvTask;
+    View taskAddDialog;
+    ImageButton btnAddTask;
 
     // Timer
     long currentTime, userTime;
@@ -71,9 +73,7 @@ public class PomodoroFragment extends Fragment {
     private View customAlertDialogView;
     private AlertDialog mAlertDialog;
     private MaterialAlertDialogBuilder mMaterialAlertDialogBuilder;
-    private TextInputLayout tilPomodoroTime;
-    private TextInputLayout tilShortBreak;
-    private TextInputLayout tilLongBreak;
+    private TextInputLayout tilPomodoroTime, tilShortBreak, tilLongBreak, tilTask;
 
 
     public PomodoroFragment() { }
@@ -150,8 +150,28 @@ public class PomodoroFragment extends Fragment {
 
         btnAdd.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
-            bottomSheetDialog.setContentView(R.layout.dialog_add_task_pomodoro);
+            taskAddDialog = inflater.inflate(R.layout.dialog_add_task_pomodoro, null);
+            btnAddTask = taskAddDialog.findViewById(R.id.ib_add_task);
+            tilTask = taskAddDialog.findViewById(R.id.til_task);
+
+            bottomSheetDialog.setContentView(taskAddDialog);
             bottomSheetDialog.setCanceledOnTouchOutside(false);
+            btnAddTask.setOnClickListener(v1 -> {
+                String activityName = tilTask.getEditText().getText().toString();
+                PomodoroActivity pomodoroActivity = new PomodoroActivity(activityName, mPomodoroFragmentData.getIdPomodoro(), 1);
+                ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Task", "Adding task...");
+
+                mPomodoroActivityViewModel.addPomodoroActivity(pomodoroActivity).observe(getViewLifecycleOwner(), pomodoroActivityResponse -> {
+                    if (pomodoroActivityResponse.getStatus() == 200) {
+                        FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                        bottomSheetDialog.dismiss();
+                    } else {
+                        FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                    }
+
+                    progressDialog.dismiss();
+                });
+            });
 
             bottomSheetDialog.show();
         });

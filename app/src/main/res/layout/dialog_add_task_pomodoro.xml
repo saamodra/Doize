@@ -26,7 +26,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password"
+            android:id="@+id/til_task"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_width="0dp"
@@ -45,6 +45,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
+            android:id="@+id/ib_add_task"
             android:backgroundTint="@color/darkPurple"
             android:src="@drawable/ic_baseline_send_24"
             android:layout_marginEnd="10dp"
