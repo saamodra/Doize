@@ -2,6 +2,7 @@ package id.kelompok04.doize.api;
 
 import id.kelompok04.doize.service.AssignmentService;
 import id.kelompok04.doize.service.DetailScheduleService;
+import id.kelompok04.doize.service.PomodoroActivityService;
 import id.kelompok04.doize.service.PomodoroService;
 import id.kelompok04.doize.service.ScheduleService;
 import id.kelompok04.doize.service.DailyActivityService;
@@ -39,6 +40,10 @@ public class ApiUtils {
 
     public static PomodoroService getPomodoroService() {
         return RetrofitClient.getClient(API_URL).create(PomodoroService.class);
+    }
+
+    public static PomodoroActivityService getPomodoroActivityService() {
+        return RetrofitClient.getClient(API_URL).create(PomodoroActivityService.class);
     }
 }
 
