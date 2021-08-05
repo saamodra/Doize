@@ -49,4 +49,6 @@
     <string name="short_break">Short Break</string>
     <string name="long_break">Long Break</string>
     <string name="add_task">Add Task</string>
+    <string name="cancel">Cancel</string>
+    <string name="task">Task</string>
 </resources>

@@ -33,14 +33,41 @@ public class TimeConverter {
         int minutes = timeCal.get(Calendar.MINUTE);
         int seconds = timeCal.get(Calendar.SECOND);
 
-        long milliseconds = TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
+        return TimeUnit.MINUTES.toMillis(minutes) + TimeUnit.SECONDS.toMillis(seconds);
+    }
 
-        Log.d(TAG, "fromDbToMilliseconds: " + milliseconds);
-        return milliseconds;
+    @SuppressLint("DefaultLocale")
+    public static String fromDbToString(String time) {
+        Calendar timeCal = Calendar.getInstance();
+        timeCal.setTime(fromDbToTime(time));
+        int minutes = timeCal.get(Calendar.MINUTE);
+        int seconds = timeCal.get(Calendar.SECOND);
+
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     public static String toDbFromMilliseconds(long milli) {
         return dbTimeFormat.format(new Date(milli));
+    }
+
+    public static String toDbFromStringFormatted(String time) {
+        return "00:" + time;
+    }
+
+    public static CustomTime fromMilliToTime(long milli) {
+        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(milli);
+        int seconds = (int) ((int) TimeUnit.MILLISECONDS.toSeconds(milli) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milli)));
+
+        return new CustomTime(minutes, seconds);
+    }
+
+    public static CustomTime fromDbToCustomTime(String time) {
+        Calendar timeCal = Calendar.getInstance();
+        timeCal.setTime(fromDbToTime(time));
+        int minutes = timeCal.get(Calendar.MINUTE);
+        int seconds = timeCal.get(Calendar.SECOND);
+
+        return new CustomTime(minutes, seconds);
     }
 
     @SuppressLint("DefaultLocale")

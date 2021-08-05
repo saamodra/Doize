@@ -1,8 +1,10 @@
 package id.kelompok04.doize.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,31 +21,33 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.text.Format;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.helper.CrudType;
+import id.kelompok04.doize.helper.CustomTime;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 
 public class DurationPickerFragment extends DialogFragment {
+    private static final String TAG = "DurationPickerFragment";
     private static final String ARG_TIME = "time";
-    private EditText textInputEditText;
-    private DateType mDateType;
-    private View customAlertDialogView;
-    private MaterialAlertDialogBuilder mMaterialAlertDialogBuilder;
-    private AlertDialog mAlertDialog;
 
-    public DurationPickerFragment(DateType dateType, EditText textInputEditText) {
+    private EditText textInputEditText;
+    private CustomTime mCustomTime;
+    private View customAlertDialogView;
+    private AlertDialog mAlertDialog;
+    private NumberPicker npMinutes, npSeconds;
+    private Button saveButton, cancelButton;
+
+
+    public DurationPickerFragment(EditText textInputEditText, CustomTime customTime) {
         this.textInputEditText = textInputEditText;
-        mDateType = dateType;
+        mCustomTime = customTime;
     }
 
-    public static DurationPickerFragment newInstance(DateType dateType, EditText textInputEditText, Date date) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARG_TIME, date);
-        DurationPickerFragment fragment = new DurationPickerFragment(dateType, textInputEditText);
-        fragment.setArguments(args);
-        return fragment;
+    public static DurationPickerFragment newInstance(EditText textInputEditText, CustomTime date) {
+        return new DurationPickerFragment(textInputEditText, date);
     }
 
     @NonNull
@@ -52,46 +56,18 @@ public class DurationPickerFragment extends DialogFragment {
         LayoutInflater inflater = getLayoutInflater();
         customAlertDialogView = inflater.inflate(R.layout.dialog_duration_picker, null);
 
-//        if (crudType == CrudType.EDIT) {
-//            mScheduleNameLayout.getEditText().setText(schedule.getNameSchedule());
-//            mScheduleDescriptionLayout.getEditText().setText(schedule.getDescriptionSchedule());
-//        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(customAlertDialogView);
-        NumberPicker npMinutes = customAlertDialogView.findViewById(R.id.number_picker_minutes);
+        npMinutes = customAlertDialogView.findViewById(R.id.number_picker_minutes);
+        npSeconds = customAlertDialogView.findViewById(R.id.number_picker_seconds);
         npMinutes.setMinValue(0);
         npMinutes.setMaxValue(60);
-//        mMaterialAlertDialogBuilder.setView(customAlertDialogView)
-//                .setTitle(title + " Time")
-//                .setPositiveButton(title, null)
-//                .setNegativeButton("Cancel", (dialog, which) -> {
-//                    dialog.dismiss();
-//                });
+        npMinutes.setValue(mCustomTime.getMinutes());
 
-//        positiveButton.setOnClickListener(nu);
-
-//        TimePickerDialog.OnTimeSetListener timeListener;
-//
-//        Date date = (Date) getArguments().getSerializable(ARG_TIME);
-//
-//        timeListener = (view, hourOfDay, minute) -> {
-//            Calendar time = Calendar.getInstance();
-//            time.setTime(date);
-//            time.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//            time.set(Calendar.MINUTE, minute);
-//
-//            Date resultTime = time.getTime();
-//            Format formatter = (mDateType == DateType.TIME ? DoizeConstants.TIME_FORMAT : DoizeConstants.FULL_FORMAT);
-//
-//            String resultTimeString = formatter.format(resultTime);
-//            textInputEditText.setText(resultTimeString);
-//        };
-//
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-//        int initialHour = calendar.get(Calendar.HOUR);
-//        int initialMinute = calendar.get(Calendar.MINUTE);
+        npSeconds.setMinValue(0);
+        npSeconds.setMaxValue(60);
+        npSeconds.setValue(mCustomTime.getSeconds());
 
         return builder.create();
     }
@@ -100,14 +76,19 @@ public class DurationPickerFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-//        mAlertDialog = mMaterialAlertDialogBuilder.show();
-//        Button positiveButton = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-//        int darkPurple = getResources().getColor(R.color.darkPurple);
-//
-//        Button positiveButton = ((TimePickerDialog) getDialog()).getButton(TimePickerDialog.BUTTON_POSITIVE);
-//        positiveButton.setTextColor(darkPurple);
-//
-//        Button negativeButton = ((TimePickerDialog) getDialog()).getButton(TimePickerDialog.BUTTON_NEGATIVE);
-//        negativeButton.setTextColor(darkPurple);
+        mAlertDialog = (AlertDialog) getDialog();
+        saveButton = customAlertDialogView.findViewById(R.id.action_save);
+        cancelButton = customAlertDialogView.findViewById(R.id.cancel_button);
+
+        saveButton.setOnClickListener(v -> {
+            @SuppressLint("DefaultLocale") String time = String.format("%02d:%02d", npMinutes.getValue(), npSeconds.getValue());
+            textInputEditText.setText(time);
+            mAlertDialog.dismiss();
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            mAlertDialog.dismiss();
+        });
+
     }
 }

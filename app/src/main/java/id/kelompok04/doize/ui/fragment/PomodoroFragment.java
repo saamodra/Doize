@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.Date;
 import java.util.List;
@@ -43,10 +45,12 @@ import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
 import id.kelompok04.doize.helper.CrudType;
+import id.kelompok04.doize.helper.CustomTime;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.TimeConverter;
 import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.DetailSchedule;
 import id.kelompok04.doize.model.Pomodoro;
 import id.kelompok04.doize.model.Schedule;
 
@@ -79,7 +83,7 @@ public class PomodoroFragment extends Fragment {
 
     public PomodoroFragment() { }
 
-    public static PomodoroFragment newInstance(String param1, String param2) {
+    public static PomodoroFragment newInstance() {
         PomodoroFragment fragment = new PomodoroFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -104,7 +108,7 @@ public class PomodoroFragment extends Fragment {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.settings:
-                launchCustomAlertDialog(CrudType.ADD, null, null);
+                launchCustomAlertDialog(updateSettings);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -171,34 +175,76 @@ public class PomodoroFragment extends Fragment {
         tvTimer.setText(TimeConverter.formatTime(userTime));
     }
 
-    private void launchCustomAlertDialog(CrudType crudType, Schedule schedule, View.OnClickListener onClickListener) {
+    private View.OnClickListener updateSettings = v -> {
+        String productivityTime = TimeConverter.toDbFromStringFormatted(tilPomodoroTime.getEditText().getText().toString());
+        String shortBreak = TimeConverter.toDbFromStringFormatted(tilShortBreak.getEditText().getText().toString());
+        String longBreak = TimeConverter.toDbFromStringFormatted(tilLongBreak.getEditText().getText().toString());
+
+        Pomodoro pomodoro = mPomodoroFragmentData;
+        pomodoro.setProductivityTime(productivityTime);
+        pomodoro.setShortBreak(shortBreak);
+        pomodoro.setLongBreak(longBreak);
+
+
+        ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Settings", "Updating settings...");
+        mPomodoroViewModel.updatePomodoro(pomodoro).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
+            if (detailScheduleResponse.getStatus() == 200) {
+                FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                mAlertDialog.dismiss();
+            } else {
+                FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+            }
+
+            progressDialog.dismiss();
+        });
+    };
+
+    private void launchCustomAlertDialog(View.OnClickListener onClickListener) {
         LayoutInflater inflater = getLayoutInflater();
         customAlertDialogView = inflater.inflate(R.layout.dialog_pomodoro_settings, null);
+        FragmentManager fragmentManager = getParentFragmentManager();
 
         Log.d(TAG, "launchCustomAlertDialog: " + " Started");
         tilPomodoroTime = customAlertDialogView.findViewById(R.id.til_pomodoro_time);
         tilShortBreak = customAlertDialogView.findViewById(R.id.til_pomodoro_short_break);
         tilLongBreak = customAlertDialogView.findViewById(R.id.til_pomodoro_long_break);
 
-        if (crudType == CrudType.EDIT) {
-//            mScheduleNameLayout.getEditText().setText(schedule.getNameSchedule());
-//            mScheduleDescriptionLayout.getEditText().setText(schedule.getDescriptionSchedule());
-        }
+        String productivityTime = TimeConverter.fromDbToString(mPomodoroFragmentData.getProductivityTime());
+        String shortBreak = TimeConverter.fromDbToString(mPomodoroFragmentData.getShortBreak());
+        String longBreak = TimeConverter.fromDbToString(mPomodoroFragmentData.getLongBreak());
+
+        tilPomodoroTime.getEditText().setText(productivityTime);
+        tilShortBreak.getEditText().setText(shortBreak);
+        tilLongBreak.getEditText().setText(longBreak);
 
         tilPomodoroTime.getEditText().setOnClickListener(v -> {
-            Log.d(TAG, "launchCustomAlertDialog: " + " Pomodoro time");
-            FragmentManager fragmentManager = getParentFragmentManager();
+            CustomTime customTime = TimeConverter.fromDbToCustomTime(mPomodoroFragmentData.getProductivityTime());
 
-            DurationPickerFragment dialog = DurationPickerFragment.newInstance(DateType.TIME, tilPomodoroTime.getEditText(), null);
+            DurationPickerFragment dialog = DurationPickerFragment.newInstance(tilPomodoroTime.getEditText(), customTime);
             dialog.setTargetFragment(PomodoroFragment.this, 0);
             dialog.show(fragmentManager, "DialogDuration");
         });
 
-        String title = crudType == CrudType.ADD ? "Add" : "Update";
+        tilShortBreak.getEditText().setOnClickListener(v -> {
+            CustomTime customTime = TimeConverter.fromDbToCustomTime(mPomodoroFragmentData.getShortBreak());
+
+            DurationPickerFragment dialog = DurationPickerFragment.newInstance(tilShortBreak.getEditText(), customTime);
+            dialog.setTargetFragment(PomodoroFragment.this, 0);
+            dialog.show(fragmentManager, "DialogDuration");
+        });
+
+        tilLongBreak.getEditText().setOnClickListener(v -> {
+            CustomTime customTime = TimeConverter.fromDbToCustomTime(mPomodoroFragmentData.getLongBreak());
+
+            DurationPickerFragment dialog = DurationPickerFragment.newInstance(tilLongBreak.getEditText(), customTime);
+            dialog.setTargetFragment(PomodoroFragment.this, 0);
+            dialog.show(fragmentManager, "DialogDuration");
+        });
+
         mMaterialAlertDialogBuilder.setView(customAlertDialogView)
-                .setTitle(title + " Schedule")
-                .setMessage("Enter your schedule details")
-                .setPositiveButton(title, null)
+                .setTitle("Pomodoro Settings")
+                .setMessage("Display your pomodoro timer preferences")
+                .setPositiveButton("Update", null)
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
                 });

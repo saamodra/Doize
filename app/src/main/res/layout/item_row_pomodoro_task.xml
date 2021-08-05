@@ -21,7 +21,7 @@
             android:layout_height="match_parent"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:paddingVertical="20dp"
+            android:paddingVertical="15dp"
             android:paddingHorizontal="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -37,53 +37,19 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:contentDescription="@string/check_assignment" />
 
-                <!-- Title, secondary and supporting text -->
+            <!-- Title, secondary and supporting text -->
             <TextView
                 android:id="@+id/tv_assignment_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginEnd="20dp"
                 android:textAppearance="?attr/textAppearanceHeadline6"
                 android:textSize="17sp"
-                app:layout_constraintEnd_toStartOf="@+id/star_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_check_assignment"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Project Jaringan Komputer" />
-
-            <TextView
-                android:id="@+id/tv_assignment_course"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_assignment_name"
-                app:layout_constraintTop_toBottomOf="@+id/tv_assignment_name"
-                tools:text="Jaringan Komputer" />
-
-            <TextView
-                android:id="@+id/tv_assignment_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="@+id/tv_assignment_name"
-                app:layout_constraintTop_toTopOf="@+id/tv_assignment_course"
-                tools:text="12/07/2021 05:00" />
-
-            <ImageView
-                android:id="@+id/star_icon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/priority"
-                android:src="@drawable/ic_star_bordered"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

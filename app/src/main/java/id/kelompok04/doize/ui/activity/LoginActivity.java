@@ -63,24 +63,21 @@ public class LoginActivity extends AppCompatActivity {
             ProgressDialog progressDialog = ProgressDialog.show(this, "Sign In", "Signing in...");
 
             if (validate(v)) {
-                mUserViewModel.login(email, password).observe(this, new Observer<LoginResponse>() {
-                    @Override
-                    public void onChanged(LoginResponse loginResponse) {
-                        if (loginResponse.getStatus() == 200) {;
-                            // Convert object to string
-                            String userLoginObject = new Gson().toJson(loginResponse.getUser());
+                mUserViewModel.login(email, password).observe(this, loginResponse -> {
+                    if (loginResponse.getStatus() == 200) {;
+                        // Convert object to string
+                        String userLoginObject = new Gson().toJson(loginResponse.getUser());
 
-                            // Passing string object to intent extra
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("userLogin", userLoginObject);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-
-                        progressDialog.dismiss();
+                        // Passing string object to intent extra
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("userLogin", userLoginObject);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
+                    progressDialog.dismiss();
                 });
             }
         });

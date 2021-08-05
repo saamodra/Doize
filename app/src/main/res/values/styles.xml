@@ -90,4 +90,11 @@
         <item name="android:windowEnterAnimation">@anim/slide_left</item>
         <item name="android:windowExitAnimation">@anim/slide_right</item>
     </style>
+
+    <style name="NumberPickerCustomText">
+        <item name="colorControlNormal">@color/darkPurple</item>
+        <item name="android:textColor">@color/darkPurple</item>
+        <item name="android:textSize">18sp</item> // add if you want to change size
+        <item name="android:fontFamily">@font/nunito_bold</item> // add font (this font folder is present in res folder)
+    </style>
 </resources>
