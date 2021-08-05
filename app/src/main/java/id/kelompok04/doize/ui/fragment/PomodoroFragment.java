@@ -2,7 +2,6 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -13,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -24,35 +25,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import id.kelompok04.doize.R;
-import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
+import id.kelompok04.doize.architecture.viewmodel.PomodoroActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
-import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.CustomTime;
-import id.kelompok04.doize.helper.DateConverter;
-import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.TimeConverter;
-import id.kelompok04.doize.model.Assignment;
-import id.kelompok04.doize.model.DetailSchedule;
 import id.kelompok04.doize.model.Pomodoro;
-import id.kelompok04.doize.model.Schedule;
+import id.kelompok04.doize.model.PomodoroActivity;
 
 public class PomodoroFragment extends Fragment {
     private static final String TAG = "PomodoroFragment";
@@ -61,6 +52,7 @@ public class PomodoroFragment extends Fragment {
     FloatingActionButton btnStart, btnAdd, btnReset;
     TextView tvTimer;
     Drawable startIcon, pauseIcon;
+    RecyclerView rvTask;
 
     // Timer
     long currentTime, userTime;
@@ -69,7 +61,10 @@ public class PomodoroFragment extends Fragment {
 
     // Data
     PomodoroViewModel mPomodoroViewModel;
+    PomodoroActivityViewModel mPomodoroActivityViewModel;
     Pomodoro mPomodoroFragmentData;
+    List<PomodoroActivity> mPomodoroActivitiesFragmentData;
+    PomodoroActivityAdapter mPomodoroActivityAdapter = new PomodoroActivityAdapter(Collections.emptyList());
 
 
     // Pomodoro Dialog Form
@@ -95,6 +90,7 @@ public class PomodoroFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mPomodoroViewModel = new ViewModelProvider(this).get(PomodoroViewModel.class);
+        mPomodoroActivityViewModel = new ViewModelProvider(this).get(PomodoroActivityViewModel.class);
     }
 
     @Override
@@ -125,6 +121,9 @@ public class PomodoroFragment extends Fragment {
         pauseIcon = getResources().getDrawable(R.drawable.ic_baseline_pause_24);
 
         mMaterialAlertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+        rvTask = view.findViewById(R.id.rv_task);
+        rvTask.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvTask.setAdapter(mPomodoroActivityAdapter);
 
         tvTimer = view.findViewById(R.id.tv_timer);
         btnStart = view.findViewById(R.id.fab_toggle_timer);
@@ -164,7 +163,11 @@ public class PomodoroFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPomodoroViewModel.getPomodoro(1).observe(getViewLifecycleOwner(), this::updateUI);
+        mPomodoroViewModel.getPomodoro(1).observe(getViewLifecycleOwner(), pomodoro -> {
+            updateUI(pomodoro);
+            mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
+        });
+
     }
 
     private void updateUI(Pomodoro pomodoro) {
@@ -173,6 +176,12 @@ public class PomodoroFragment extends Fragment {
         Log.d(TAG, "updateUI: " + userTime + " " + pomodoro);
         currentTime = userTime;
         tvTimer.setText(TimeConverter.formatTime(userTime));
+    }
+
+    private void updateUITask(List<PomodoroActivity> pomodoroActivities) {
+        mPomodoroActivitiesFragmentData = pomodoroActivities;
+        mPomodoroActivityAdapter = new PomodoroActivityAdapter(pomodoroActivities);
+        rvTask.setAdapter(mPomodoroActivityAdapter);
     }
 
     private View.OnClickListener updateSettings = v -> {
@@ -187,12 +196,12 @@ public class PomodoroFragment extends Fragment {
 
 
         ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Settings", "Updating settings...");
-        mPomodoroViewModel.updatePomodoro(pomodoro).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
-            if (detailScheduleResponse.getStatus() == 200) {
-                FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+        mPomodoroViewModel.updatePomodoro(pomodoro).observe(getViewLifecycleOwner(), detailPomodoroActivityResponse -> {
+            if (detailPomodoroActivityResponse.getStatus() == 200) {
+                FancyToast.makeText(getActivity(), detailPomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
                 mAlertDialog.dismiss();
             } else {
-                FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                FancyToast.makeText(getActivity(), detailPomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }
 
             progressDialog.dismiss();
@@ -291,5 +300,51 @@ public class PomodoroFragment extends Fragment {
         resetAlert.show();
     }
 
+    private class PomodoroActivityAdapter extends RecyclerView.Adapter<PomodoroActivityAdapter.PomodoroActivityHolder> {
 
+        private List<PomodoroActivity> mPomodoroActivitys;
+
+        public PomodoroActivityAdapter(List<PomodoroActivity> pomodoroActivitys) {
+            mPomodoroActivitys = pomodoroActivitys;
+        }
+
+        @NonNull
+        @Override
+        public PomodoroActivityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+            return new PomodoroActivityHolder(layoutInflater, parent);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull PomodoroActivityHolder holder, int position) {
+            PomodoroActivity pomodoroActivity = mPomodoroActivitys.get(position);
+            holder.bind(pomodoroActivity);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mPomodoroActivitys.size();
+        }
+
+        private class PomodoroActivityHolder extends RecyclerView.ViewHolder {
+
+            private TextView mPomodoroTaskName;
+            private ImageView ivCheckPomodoroTask;
+            private PomodoroActivity mPomodoroActivity;
+
+            public PomodoroActivityHolder(LayoutInflater inflater, ViewGroup parent) {
+                super(inflater.inflate(R.layout.item_row_pomodoro_task, parent, false));
+
+                mPomodoroTaskName = itemView.findViewById(R.id.tv_pomodoro_task_name);
+                ivCheckPomodoroTask = itemView.findViewById(R.id.iv_check_pomodoro_task);
+            }
+
+            public void bind(PomodoroActivity pomodoroActivity) {
+                mPomodoroActivity = pomodoroActivity;
+                mPomodoroTaskName.setText(pomodoroActivity.getActivityName());
+            }
+
+        }
+    }
 }

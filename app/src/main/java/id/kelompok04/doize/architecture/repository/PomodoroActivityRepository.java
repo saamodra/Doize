@@ -43,7 +43,7 @@ public class PomodoroActivityRepository {
     }
 
     @SuppressLint("LongLogTag")
-    public LiveData<List<PomodoroActivity>> getPomodoroActivitys(int idPomodoro) {
+    public LiveData<List<PomodoroActivity>> getPomodoroActivities(int idPomodoro) {
         Log.d(TAG, "getPomodoroActivitys: Called");
         Call<ListPomodoroActivityResponse> call = mPomodoroActivityService.getPomodoroByActivity(idPomodoro);
         call.enqueue(new Callback<ListPomodoroActivityResponse>() {
