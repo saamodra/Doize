@@ -34,30 +34,19 @@
             app:layout_constraintTop_toBottomOf="@+id/title">
 
             <Button
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:fontFamily="@font/sf_pro_bold"
-                android:text="@string/pomodoro"
-                android:textAllCaps="false" />
+                android:id="@+id/btn_pomodoro"
+                style="@style/PomodoroTab.Button"
+                android:text="@string/pomodoro" />
 
             <Button
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:fontFamily="@font/sf_pro_bold"
-                android:text="@string/short_break"
-                android:textAllCaps="false" />
+                android:id="@+id/btn_short_break"
+                style="@style/PomodoroTab.ButtonOutlined"
+                android:text="@string/short_break" />
 
             <Button
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sf_pro_bold"
-                android:text="@string/long_break"
-                android:textAllCaps="false" />
+                android:id="@+id/btn_long_break"
+                style="@style/PomodoroTab.ButtonOutlined"
+                android:text="@string/long_break" />
 
         </LinearLayout>
 

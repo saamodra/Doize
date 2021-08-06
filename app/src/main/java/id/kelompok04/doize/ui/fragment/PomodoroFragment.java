@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.paris.Paris;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,7 +48,6 @@ import id.kelompok04.doize.architecture.viewmodel.PomodoroActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
 import id.kelompok04.doize.helper.CustomTime;
 import id.kelompok04.doize.helper.TimeConverter;
-import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Pomodoro;
 import id.kelompok04.doize.model.PomodoroActivity;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -63,6 +62,7 @@ public class PomodoroFragment extends Fragment {
     RecyclerView rvTask;
     View taskAddDialog;
     ImageButton btnAddTask;
+    Button btnPomodoro, btnShortBreak, btnLongBreak;
 
     // Timer
     long currentTime, userTime;
@@ -137,6 +137,21 @@ public class PomodoroFragment extends Fragment {
         btnStart = view.findViewById(R.id.fab_toggle_timer);
         btnReset = view.findViewById(R.id.fab_reset_timer);
         btnAdd = view.findViewById(R.id.fab_add_task);
+        btnPomodoro = view.findViewById(R.id.btn_pomodoro);
+        btnShortBreak = view.findViewById(R.id.btn_short_break);
+        btnLongBreak = view.findViewById(R.id.btn_long_break);
+
+        btnPomodoro.setOnClickListener(v -> {
+            resetDialogTab(btnPomodoro, mPomodoroFragmentData.getProductivityTime());
+        });
+
+        btnShortBreak.setOnClickListener(v -> {
+            resetDialogTab(btnShortBreak, mPomodoroFragmentData.getShortBreak());
+        });
+
+        btnLongBreak.setOnClickListener(v -> {
+            resetDialogTab(btnLongBreak, mPomodoroFragmentData.getLongBreak());
+        });
 
         newTimer(userTime);
 
@@ -190,12 +205,21 @@ public class PomodoroFragment extends Fragment {
         return view;
     }
 
+    private void changeTabStyle(Button button) {
+        Paris.style(btnShortBreak).apply(R.style.PomodoroTab_ButtonOutlined);
+        Paris.style(btnLongBreak).apply(R.style.PomodoroTab_ButtonOutlined);
+        Paris.style(btnPomodoro).apply(R.style.PomodoroTab_ButtonOutlined);
+        Paris.style(button).apply(R.style.PomodoroTab_Button);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ProgressDialog progressDialog = ProgressDialog.show(requireContext(), null, "Loading...");
         mPomodoroViewModel.getPomodoro(1).observe(getViewLifecycleOwner(), pomodoro -> {
             updateUI(pomodoro);
+            progressDialog.dismiss();
             mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
         });
 
@@ -311,12 +335,34 @@ public class PomodoroFragment extends Fragment {
         };
     }
 
-    public void resetTapped()
-    {
+    private void resetDialogTab(Button button, String time) {
         AlertDialog.Builder resetAlert = new AlertDialog.Builder(requireContext());
         resetAlert.setTitle("Reset Timer");
         resetAlert.setMessage("Are you sure you want to reset the timer?");
-        resetAlert.setPositiveButton("Reset", (dialogInterface, i) -> {
+        resetAlert.setPositiveButton("Reset", (dialog, which) -> {
+            changeTabStyle(button);
+            userTime = TimeConverter.fromDbToMilliseconds(time);
+            btnStart.setImageDrawable(startIcon);
+            currentTime = userTime;
+            timerStarted = false;
+            tvTimer.setText(TimeConverter.formatTime(userTime));
+
+            if(mCountDownTimer != null)
+            {
+                mCountDownTimer.cancel();
+            }
+        });
+
+        resetAlert.setNeutralButton("Cancel", (dialogInterface, i) -> {});
+        resetAlert.show();
+    }
+
+
+    private void resetTapped() {
+        AlertDialog.Builder resetAlert = new AlertDialog.Builder(requireContext());
+        resetAlert.setTitle("Reset Timer");
+        resetAlert.setMessage("Are you sure you want to reset the timer?");
+        resetAlert.setPositiveButton("Reset", (dialog, which) -> {
             if(mCountDownTimer != null)
             {
                 mCountDownTimer.cancel();
