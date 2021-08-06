@@ -1,20 +1,29 @@
 package id.kelompok04.doize.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PomodoroActivity {
 
 	@SerializedName("activity_name")
+	@Expose
 	private String activityName;
 
 	@SerializedName("id_pomodoro")
+	@Expose
 	private int idPomodoro;
 
 	@SerializedName("working_status")
+	@Expose
 	private int workingStatus;
 
 	@SerializedName("id_pomodoro_activity")
+	@Expose
 	private int idPomodoroActivity;
+
+	@SerializedName("status")
+	@Expose
+	private int status;
 
 	public PomodoroActivity() {
 	}
@@ -55,6 +64,14 @@ public class PomodoroActivity {
 
 	public int getIdPomodoroActivity(){
 		return idPomodoroActivity;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	@Override

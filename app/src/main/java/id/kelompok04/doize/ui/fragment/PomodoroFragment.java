@@ -2,16 +2,20 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +36,7 @@ import android.widget.TextView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -42,8 +48,10 @@ import id.kelompok04.doize.architecture.viewmodel.PomodoroActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
 import id.kelompok04.doize.helper.CustomTime;
 import id.kelompok04.doize.helper.TimeConverter;
+import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Pomodoro;
 import id.kelompok04.doize.model.PomodoroActivity;
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class PomodoroFragment extends Fragment {
     private static final String TAG = "PomodoroFragment";
@@ -175,6 +183,9 @@ public class PomodoroFragment extends Fragment {
 
             bottomSheetDialog.show();
         });
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
+        itemTouchHelper.attachToRecyclerView(rvTask);
 
         return view;
     }
@@ -320,12 +331,55 @@ public class PomodoroFragment extends Fragment {
         resetAlert.show();
     }
 
+    ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getBindingAdapterPosition();
+            PomodoroActivity pomodoroActivity = mPomodoroActivityAdapter.mPomodoroActivities.get(position);
+
+            switch (direction) {
+                case ItemTouchHelper.LEFT:
+                    mPomodoroActivityViewModel.deletePomodoroActivity(pomodoroActivity.getIdPomodoroActivity()).observe(getViewLifecycleOwner(), pomodoroActivityResponse -> {
+                        if (pomodoroActivityResponse.getStatus() == 200) {
+                            mPomodoroActivityAdapter.notifyItemRemoved(position);
+                            Snackbar.make(rvTask, pomodoroActivity.getActivityName() + " was deleted.", Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", v -> {
+                                        PomodoroActivity updatedPomodoroActivity = pomodoroActivityResponse.getData();
+                                        updatedPomodoroActivity.setStatus(1);
+                                        mPomodoroActivityViewModel.addToPosition(position, updatedPomodoroActivity);
+                                    }).show();
+                        } else {
+                            FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false)
+                                    .show();
+                        }
+                    });
+                    break;
+            }
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getActivity(), R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .create()
+                    .decorate();
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
     private class PomodoroActivityAdapter extends RecyclerView.Adapter<PomodoroActivityAdapter.PomodoroActivityHolder> {
 
-        private List<PomodoroActivity> mPomodoroActivitys;
+        private List<PomodoroActivity> mPomodoroActivities;
 
         public PomodoroActivityAdapter(List<PomodoroActivity> pomodoroActivitys) {
-            mPomodoroActivitys = pomodoroActivitys;
+            mPomodoroActivities = pomodoroActivitys;
         }
 
         @NonNull
@@ -338,13 +392,13 @@ public class PomodoroFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull PomodoroActivityHolder holder, int position) {
-            PomodoroActivity pomodoroActivity = mPomodoroActivitys.get(position);
+            PomodoroActivity pomodoroActivity = mPomodoroActivities.get(position);
             holder.bind(pomodoroActivity);
         }
 
         @Override
         public int getItemCount() {
-            return mPomodoroActivitys.size();
+            return mPomodoroActivities.size();
         }
 
         private class PomodoroActivityHolder extends RecyclerView.ViewHolder {
@@ -352,19 +406,37 @@ public class PomodoroFragment extends Fragment {
             private TextView mPomodoroTaskName;
             private ImageView ivCheckPomodoroTask;
             private PomodoroActivity mPomodoroActivity;
+            private FrameLayout borderLeft;
 
             public PomodoroActivityHolder(LayoutInflater inflater, ViewGroup parent) {
                 super(inflater.inflate(R.layout.item_row_pomodoro_task, parent, false));
 
                 mPomodoroTaskName = itemView.findViewById(R.id.tv_pomodoro_task_name);
                 ivCheckPomodoroTask = itemView.findViewById(R.id.iv_check_pomodoro_task);
+                borderLeft = itemView.findViewById(R.id.border_left_card_pomodoro);
+
+                ivCheckPomodoroTask.setOnClickListener(v -> {
+                    int workingStatus = mPomodoroActivity.getWorkingStatus() == 0 ? 1 : 0;
+                    mPomodoroActivity.setWorkingStatus(workingStatus);
+                    mPomodoroActivityViewModel.updatePomodoroActivity(mPomodoroActivity);
+                });
             }
 
+            @SuppressLint("UseCompatLoadingForDrawables")
             public void bind(PomodoroActivity pomodoroActivity) {
                 mPomodoroActivity = pomodoroActivity;
                 mPomodoroTaskName.setText(pomodoroActivity.getActivityName());
-            }
 
+                Drawable borderLeftSrc = getResources()
+                        .getDrawable((mPomodoroActivity.getWorkingStatus() == 1) ? R.drawable.border_left_purple : R.drawable.border_left_green);
+                Drawable checkSrc = getResources()
+                        .getDrawable((mPomodoroActivity.getWorkingStatus() == 1) ? R.drawable.ic_checked_false : R.drawable.ic_checked_true);
+
+                mPomodoroTaskName.setPaintFlags(mPomodoroActivity.getWorkingStatus() == 1 ? 0 : (mPomodoroTaskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG));
+
+                borderLeft.setBackground(borderLeftSrc);
+                ivCheckPomodoroTask.setImageDrawable(checkSrc);
+            }
         }
     }
 }
