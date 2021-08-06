@@ -8,6 +8,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -142,7 +145,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.exit_drawer:
-                finishAffinity();
+                SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear().apply(); //remove all
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
                 break;
 
         }

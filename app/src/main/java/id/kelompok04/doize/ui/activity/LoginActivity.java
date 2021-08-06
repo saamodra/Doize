@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -35,6 +36,8 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
+    SharedPreferences pref;
+
     private UserViewModel mUserViewModel;
     private UserService mUserService;
     private Button mLoginButton;
@@ -48,44 +51,68 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        mLoginButton = findViewById(R.id.btnLogin);
-        mSignUpTv = findViewById(R.id.tvSignUp);
-        mEmailTxt = findViewById(R.id.txtEmail);
-        mPasswordTxt = findViewById(R.id.txtPassword);
-        mEmailLayout = findViewById(R.id.txtLayoutEmail);
-        mPasswordLayout = findViewById(R.id.txtLayoutPassword);
+        // Get Shared Preference
+        pref = getSharedPreferences("user_pref", MODE_PRIVATE);
 
-        mLoginButton.setOnClickListener(v -> {
-            String email = mEmailTxt.getText().toString();
-            String password = mPasswordTxt.getText().toString();
-            ProgressDialog progressDialog = ProgressDialog.show(this, "Sign In", "Signing in...");
+        if (pref.contains("email") && pref.contains("password")){
 
-            if (validate(v)) {
-                mUserViewModel.login(email, password).observe(this, loginResponse -> {
-                    if (loginResponse.getStatus() == 200) {;
-                        // Convert object to string
-                        String userLoginObject = new Gson().toJson(loginResponse.getUser());
-
-                        // Passing string object to intent extra
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("userLogin", userLoginObject);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    progressDialog.dismiss();
-                });
-            }
-        });
-
-        mSignUpTv.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
-        });
+            finish();
+
+        } else {
+
+            mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+            mLoginButton = findViewById(R.id.btnLogin);
+            mSignUpTv = findViewById(R.id.tvSignUp);
+            mEmailTxt = findViewById(R.id.txtEmail);
+            mPasswordTxt = findViewById(R.id.txtPassword);
+            mEmailLayout = findViewById(R.id.txtLayoutEmail);
+            mPasswordLayout = findViewById(R.id.txtLayoutPassword);
+
+            mLoginButton.setOnClickListener(v -> {
+                String email = mEmailTxt.getText().toString();
+                String password = mPasswordTxt.getText().toString();
+
+                if (validate(v)) {
+                    ProgressDialog progressDialog = ProgressDialog.show(this, "Sign In", "Signing in...");
+                    mUserViewModel.login(email, password).observe(this, new Observer<LoginResponse>() {
+                        @Override
+                        public void onChanged(LoginResponse loginResponse) {
+                            if (loginResponse.getStatus() == 200) {
+
+                                // Set Shared Preference
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("email", loginResponse.getUser().getEmail());
+                                editor.putString("password", loginResponse.getUser().getPassword());
+                                editor.putString("name", loginResponse.getUser().getName());
+                                editor.commit();
+
+                                // Convert object to string
+                                String userLoginObject = new Gson().toJson(loginResponse.getUser());
+
+                                // Passing string object to intent extra
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("userLogin", userLoginObject);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+
+            mSignUpTv.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     public boolean validate(View v) {
