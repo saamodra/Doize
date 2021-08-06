@@ -13,8 +13,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface AssignmentService {
-    @GET("assignment")
-    Call<ListAssignmentResponse> getAssignments();
+    @GET("assignments/{id}")
+    Call<ListAssignmentResponse> getAssignments(@Path("id") int idUser);
 
     @POST("assignment")
     Call<AssignmentResponse> addAssignment(@Body Assignment assignment);

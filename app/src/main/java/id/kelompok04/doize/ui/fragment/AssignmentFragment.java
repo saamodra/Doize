@@ -1,6 +1,10 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -19,6 +23,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,13 +40,16 @@ import com.google.android.material.tabs.TabLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
+import id.kelompok04.doize.helper.AlarmReceiver;
 import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Schedule;
@@ -65,6 +73,10 @@ public class AssignmentFragment extends Fragment {
     private AssignmentAdapter rvAssignmentAdapter;
     private AssignmentViewModel mAssignmentViewModel;
     private List<Assignment> mAssignmentListFragment;
+
+    // AlarmNotification
+    private AlarmManager mAlarmManager;
+    private PendingIntent mPendingIntent;
 
 
     public AssignmentFragment() {
@@ -123,11 +135,22 @@ public class AssignmentFragment extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAssignmentViewModel.getAssignments().observe(getViewLifecycleOwner(), this::updateUI);
+        Date currentDate = new Date();
+        mAssignmentViewModel.getAssignments(1).observe(getViewLifecycleOwner(), assignments -> {
+            updateUI(assignments);
+            for (Assignment assignment : assignments) {
+                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
+                if (currentDate.before(reminderAt)) {
+                    Log.d(TAG, "onViewCreated: Alarm setted " + assignment.getNameAssignment());
+                    setAlarm(1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(), assignment.getNameAssignment());
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -174,6 +197,16 @@ public class AssignmentFragment extends Fragment {
         setTabValue(tab_position);
     }
 
+    private void setAlarm(int type, int id, long time, String title, String content) {
+        mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+
+        String requestCode = type + String.valueOf(id);
+        mPendingIntent = PendingIntent.getBroadcast(getActivity(), Integer.parseInt(requestCode), intent, 0);
+        mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, time, mPendingIntent);
+    }
 
     ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override

@@ -8,20 +8,31 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Calendar;
+
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.helper.AlarmReceiver;
+import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.NotificationType;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -31,15 +42,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView nvDrawer;
     private NavController mNavController;
     private BottomNavigationView mBottomNavigationView;
+    private AlarmManager mAlarmManager;
+    private PendingIntent mPendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupNavigation();
-
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void setupNavigation() {
         mToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(mToolbar);
@@ -57,48 +70,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationUI.setupWithNavController(nvDrawer, mNavController);
         NavigationUI.setupWithNavController(mBottomNavigationView, mNavController);
 
+        createNotificationChannel();
+
         nvDrawer.setNavigationItemSelectedListener(this);
-        mBottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                item.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.dashboardFragment:
-                        Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
-                        mNavController.navigate(R.id.dashboardFragment);
-                        break;
+        mBottomNavigationView.setOnItemSelectedListener(item -> {
+            item.setChecked(true);
+            mDrawerLayout.closeDrawers();
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.dashboardFragment:
+                    Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
+                    mNavController.navigate(R.id.dashboardFragment);
+                    break;
 
-                    case R.id.dailyActivityFragment:
-                        Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
-                        mNavController.navigate(R.id.dailyActivityFragment);
-                        break;
+                case R.id.dailyActivityFragment:
+                    Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
+                    mNavController.navigate(R.id.dailyActivityFragment);
+                    break;
 
-                    case R.id.assignmentFragment:
-                        mNavController.navigate(R.id.assignmentFragment);
-                        break;
+                case R.id.assignmentFragment:
+                    mNavController.navigate(R.id.assignmentFragment);
+                    break;
 
-                    case R.id.scheduleFragment:
-                        mNavController.navigate(R.id.scheduleFragment);
-                        break;
+                case R.id.scheduleFragment:
+                    mNavController.navigate(R.id.scheduleFragment);
+                    break;
 
-                    case R.id.pomodoroFragment:
-                        mNavController.navigate(R.id.pomodoroFragment);
-                        break;
+                case R.id.pomodoroFragment:
+                    mNavController.navigate(R.id.pomodoroFragment);
+                    break;
 
-                    case R.id.exit_drawer:
-                        finishAffinity();
-                        break;
+                case R.id.exit_drawer:
+                    finishAffinity();
+                    break;
 
-                }
-
-                return true;
             }
+
+            return true;
         });
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(DoizeConstants.NOTIFICATION_CHANNEL_ID, DoizeConstants.NOTIFICATION_CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel.setDescription("This is notification channel");
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+        }
+    }
 
     @Override
     public boolean onSupportNavigateUp() {

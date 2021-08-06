@@ -42,9 +42,9 @@ public class AssignmentRepository {
         return INSTANCE;
     }
 
-    public LiveData<List<Assignment>> getAssignments() {
+    public LiveData<List<Assignment>> getAssignments(int idUser) {
         Log.d(TAG, "getAssignments: Called");
-        Call<ListAssignmentResponse> call = mAssignmentService.getAssignments();
+        Call<ListAssignmentResponse> call = mAssignmentService.getAssignments(idUser);
         call.enqueue(new Callback<ListAssignmentResponse>() {
             @Override
             public void onResponse(Call<ListAssignmentResponse> call, Response<ListAssignmentResponse> response) {

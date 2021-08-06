@@ -362,7 +362,7 @@ public class PomodoroFragment extends Fragment {
             public void onFinish() {
                 tvTimer.startAnimation(DoizeConstants.BLINK());
                 tvTimer.setText("00:00");
-                NotificationHelper.show(getActivity(), "Pomodoro Timer", "Time's up!");
+                NotificationHelper.show(getActivity(), DoizeConstants.NOTIFICATION_CHANNEL_ID , "Pomodoro Timer", "Time's up!");
                 currentTime = userTime;
                 btnStart.setImageDrawable(startIcon);
                 timerStarted = false;

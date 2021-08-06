@@ -27,6 +27,8 @@
         <activity android:name=".ui.activity.MainActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
+
+        <receiver android:name=".helper.AlarmReceiver" />
     </application>
 
 </manifest>
