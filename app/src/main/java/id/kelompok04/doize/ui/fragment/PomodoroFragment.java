@@ -1,10 +1,14 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +45,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,6 +53,8 @@ import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
 import id.kelompok04.doize.helper.CustomTime;
+import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.NotificationHelper;
 import id.kelompok04.doize.helper.TimeConverter;
 import id.kelompok04.doize.model.Pomodoro;
 import id.kelompok04.doize.model.PomodoroActivity;
@@ -63,11 +71,15 @@ public class PomodoroFragment extends Fragment {
     View taskAddDialog;
     ImageButton btnAddTask;
     Button btnPomodoro, btnShortBreak, btnLongBreak;
+    int tabPosition = 0;
 
     // Timer
     long currentTime, userTime;
     CountDownTimer mCountDownTimer;
     boolean timerStarted = false;
+
+    // Player
+    MediaPlayer mMediaPlayer;
 
     // Data
     PomodoroViewModel mPomodoroViewModel;
@@ -142,23 +154,32 @@ public class PomodoroFragment extends Fragment {
         btnLongBreak = view.findViewById(R.id.btn_long_break);
 
         btnPomodoro.setOnClickListener(v -> {
-            resetDialogTab(btnPomodoro, mPomodoroFragmentData.getProductivityTime());
+            resetDialogTab(btnPomodoro, 0);
         });
 
         btnShortBreak.setOnClickListener(v -> {
-            resetDialogTab(btnShortBreak, mPomodoroFragmentData.getShortBreak());
+            resetDialogTab(btnShortBreak, 1);
         });
 
         btnLongBreak.setOnClickListener(v -> {
-            resetDialogTab(btnLongBreak, mPomodoroFragmentData.getLongBreak());
+            resetDialogTab(btnLongBreak, 2);
         });
 
         newTimer(userTime);
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(DoizeConstants.NOTIFICATION_CHANNEL_ID, DoizeConstants.NOTIFICATION_CHANNEL_ID,
+                    NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager manager = getActivity().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+        }
+
+
         btnStart.setOnClickListener(v -> {
             timerStarted = !timerStarted;
             btnStart.setImageDrawable(timerStarted ? pauseIcon : startIcon);
-
+            stopAlarm();
             if (timerStarted) {
                 newTimer(currentTime);
                 mCountDownTimer.start();
@@ -231,7 +252,7 @@ public class PomodoroFragment extends Fragment {
 
     private void updateUI(Pomodoro pomodoro) {
         mPomodoroFragmentData = pomodoro;
-        userTime = TimeConverter.fromDbToMilliseconds(pomodoro.getProductivityTime());
+        refreshTime();
         currentTime = userTime;
         tvTimer.setText(TimeConverter.formatTime(userTime));
     }
@@ -251,7 +272,6 @@ public class PomodoroFragment extends Fragment {
         pomodoro.setProductivityTime(productivityTime);
         pomodoro.setShortBreak(shortBreak);
         pomodoro.setLongBreak(longBreak);
-
 
         ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Settings", "Updating settings...");
         mPomodoroViewModel.updatePomodoro(pomodoro).observe(getViewLifecycleOwner(), detailPomodoroActivityResponse -> {
@@ -321,7 +341,17 @@ public class PomodoroFragment extends Fragment {
         positiveButton.setOnClickListener(onClickListener);
     }
 
+    private void stopAlarm() {
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.alarm_beep);
+        }
+    }
+
     private void newTimer(long timeLengthMs) {
+        tvTimer.clearAnimation();
+        tvTimer.setAlpha(1.0f);
         mCountDownTimer = new CountDownTimer(timeLengthMs, 1000) { // adjust the milli seconds here
             @SuppressLint({"DefaultLocale", "SetTextI18n"})
             public void onTick(long millisUntilFinished) {
@@ -330,25 +360,48 @@ public class PomodoroFragment extends Fragment {
             }
 
             public void onFinish() {
-                tvTimer.setText("done!");
+                tvTimer.startAnimation(DoizeConstants.BLINK());
+                tvTimer.setText("00:00");
+                NotificationHelper.show(getActivity(), "Pomodoro Timer", "Time's up!");
                 currentTime = userTime;
                 btnStart.setImageDrawable(startIcon);
                 timerStarted = false;
+
+                mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.alarm_beep);
+                mMediaPlayer.start();
             }
         };
     }
 
-    private void resetDialogTab(Button button, String time) {
+    private void refreshTime() {
+        switch (tabPosition) {
+            case 1:
+                userTime = TimeConverter.fromDbToMilliseconds(mPomodoroFragmentData.getShortBreak());
+                break;
+            case 2:
+                userTime = TimeConverter.fromDbToMilliseconds(mPomodoroFragmentData.getLongBreak());
+                break;
+            default:
+                userTime = TimeConverter.fromDbToMilliseconds(mPomodoroFragmentData.getProductivityTime());
+                break;
+        }
+        tvTimer.setText(TimeConverter.formatTime(userTime));
+    }
+
+    private void resetDialogTab(Button button, int tabPosition) {
+        this.tabPosition = tabPosition;
         AlertDialog.Builder resetAlert = new AlertDialog.Builder(requireContext());
         resetAlert.setTitle("Reset Timer");
         resetAlert.setMessage("Are you sure you want to reset the timer?");
         resetAlert.setPositiveButton("Reset", (dialog, which) -> {
+            tvTimer.clearAnimation();
+            tvTimer.setAlpha(1.0f);
             changeTabStyle(button);
-            userTime = TimeConverter.fromDbToMilliseconds(time);
+            refreshTime();
+            stopAlarm();
             btnStart.setImageDrawable(startIcon);
             currentTime = userTime;
             timerStarted = false;
-            tvTimer.setText(TimeConverter.formatTime(userTime));
 
             if(mCountDownTimer != null)
             {
@@ -366,6 +419,9 @@ public class PomodoroFragment extends Fragment {
         resetAlert.setTitle("Reset Timer");
         resetAlert.setMessage("Are you sure you want to reset the timer?");
         resetAlert.setPositiveButton("Reset", (dialog, which) -> {
+            tvTimer.clearAnimation();
+            tvTimer.setAlpha(1.0f);
+            stopAlarm();
             if(mCountDownTimer != null)
             {
                 mCountDownTimer.cancel();
