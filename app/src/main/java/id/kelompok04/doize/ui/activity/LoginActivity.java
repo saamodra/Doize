@@ -83,19 +83,19 @@ public class LoginActivity extends AppCompatActivity {
                         public void onChanged(LoginResponse loginResponse) {
                             if (loginResponse.getStatus() == 200) {
 
+                                // Convert object to string
+                                String userLoginObject = new Gson().toJson(loginResponse.getUser());
+
                                 // Set Shared Preference
                                 SharedPreferences.Editor editor = pref.edit();
                                 editor.putString("email", loginResponse.getUser().getEmail());
                                 editor.putString("password", loginResponse.getUser().getPassword());
                                 editor.putString("name", loginResponse.getUser().getName());
-                                editor.commit();
-
-                                // Convert object to string
-                                String userLoginObject = new Gson().toJson(loginResponse.getUser());
+                                editor.putString("id", loginResponse.getUser().getIdUser());
+                                editor.apply();
 
                                 // Passing string object to intent extra
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("userLogin", userLoginObject);
                                 startActivity(intent);
                                 finish();
                             } else {

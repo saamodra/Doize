@@ -34,6 +34,7 @@ public class DashboardFragment extends Fragment {
 
     private TextView mUserHeaderProfile;
     private TextView mUserHeaderEmail;
+    SharedPreferences preferences;
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
@@ -47,7 +48,7 @@ public class DashboardFragment extends Fragment {
         Gson gson = new Gson();
 
 //        User user = new User("Kelompok 04", "kel4@gmail.com", "password", "1");
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
+        preferences = this.getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         String name = (preferences.getString("name", ""));
 
         mUserLogin = v.findViewById(R.id.txtDashboardWelcome);
@@ -55,10 +56,16 @@ public class DashboardFragment extends Fragment {
 
         mBtnLogout = v.findViewById(R.id.btnLogout);
         mBtnLogout.setOnClickListener(v1 -> {
-
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.remove("email");
+            editor.remove("password");
+            editor.remove("name");
+            editor.remove("id");
+            editor.apply();
         });
 
         return v;
