@@ -217,10 +217,14 @@ public class PomodoroFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ProgressDialog progressDialog = ProgressDialog.show(requireContext(), null, "Loading...");
-        mPomodoroViewModel.getPomodoro(1).observe(getViewLifecycleOwner(), pomodoro -> {
-            updateUI(pomodoro);
+        mPomodoroViewModel.getPomodoro(8).observe(getViewLifecycleOwner(), pomodoro -> {
+            if (pomodoro != null) {
+                updateUI(pomodoro);
+                mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
+            } else {
+                mPomodoroViewModel.addPomodoro(8);
+            }
             progressDialog.dismiss();
-            mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
         });
 
     }
@@ -228,7 +232,6 @@ public class PomodoroFragment extends Fragment {
     private void updateUI(Pomodoro pomodoro) {
         mPomodoroFragmentData = pomodoro;
         userTime = TimeConverter.fromDbToMilliseconds(pomodoro.getProductivityTime());
-        Log.d(TAG, "updateUI: " + userTime + " " + pomodoro);
         currentTime = userTime;
         tvTimer.setText(TimeConverter.formatTime(userTime));
     }

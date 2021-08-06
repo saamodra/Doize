@@ -93,7 +93,7 @@ public class PomodoroRepository {
         MutableLiveData<PomodoroResponse> pomodoroResponseMutableLiveData = new MutableLiveData<>();
 
         Log.d(TAG, "getPomodoro: Called");
-        Call<PomodoroResponse> call = mPomodoroService.updatePomodoro(pomodoro.getIdUser(), pomodoro);
+        Call<PomodoroResponse> call = mPomodoroService.updatePomodoro(pomodoro.getIdPomodoro(), pomodoro);
         call.enqueue(new Callback<PomodoroResponse>() {
             @Override
             public void onResponse(Call<PomodoroResponse> call, Response<PomodoroResponse> response) {
