@@ -48,7 +48,7 @@ public class DashboardFragment extends Fragment {
         Gson gson = new Gson();
 
 //        User user = new User("Kelompok 04", "kel4@gmail.com", "password", "1");
-        preferences = this.getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         String name = (preferences.getString("name", ""));
 
         mUserLogin = v.findViewById(R.id.txtDashboardWelcome);
@@ -64,7 +64,6 @@ public class DashboardFragment extends Fragment {
             editor.remove("email");
             editor.remove("password");
             editor.remove("name");
-            editor.remove("id");
             editor.apply();
         });
 

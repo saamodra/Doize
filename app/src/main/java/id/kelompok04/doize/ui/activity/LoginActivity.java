@@ -92,6 +92,11 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("password", loginResponse.getUser().getPassword());
                                 editor.putString("name", loginResponse.getUser().getName());
                                 editor.putString("id", loginResponse.getUser().getIdUser());
+
+//                                if (pref.contains("email") && pref.contains("password")) {
+//
+//                                }
+//                                editor.putString("oldId", loginResponse.getUser().getIdUser());
                                 editor.apply();
 
                                 // Passing string object to intent extra

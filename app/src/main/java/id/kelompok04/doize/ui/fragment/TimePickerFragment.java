@@ -58,7 +58,7 @@ public class TimePickerFragment extends DialogFragment {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        int initialHour = calendar.get(Calendar.HOUR);
+        int initialHour = calendar.get(Calendar.HOUR_OF_DAY);
         int initialMinute = calendar.get(Calendar.MINUTE);
 
         return new TimePickerDialog(

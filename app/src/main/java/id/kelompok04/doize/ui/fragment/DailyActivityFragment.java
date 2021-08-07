@@ -160,7 +160,7 @@ public class DailyActivityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDailyActivityViewModel.getDailyActivities().observe(getViewLifecycleOwner(), this::updateUI);
+        mDailyActivityViewModel.getDailyActivities(1).observe(getViewLifecycleOwner(), this::updateUI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

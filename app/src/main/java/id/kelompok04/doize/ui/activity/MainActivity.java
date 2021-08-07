@@ -3,6 +3,7 @@ package id.kelompok04.doize.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -28,11 +29,19 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import id.kelompok04.doize.R;
+import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
+import id.kelompok04.doize.architecture.viewmodel.DailyActivityViewModel;
 import id.kelompok04.doize.helper.AlarmReceiver;
+import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.NotificationHelper;
 import id.kelompok04.doize.helper.NotificationType;
+import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.DailyActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -44,12 +53,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView mBottomNavigationView;
     private AlarmManager mAlarmManager;
     private PendingIntent mPendingIntent;
+    private AssignmentViewModel mAssignmentViewModel;
+    private DailyActivityViewModel mDailyActivityViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupNavigation();
+        mAssignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
+        mDailyActivityViewModel = new ViewModelProvider(this).get(DailyActivityViewModel.class);
+        setAlarm();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -180,5 +194,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return true;
+    }
+
+    private void setAlarm() {
+//        SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
+//        String idUser = (preferences.getString("id", ""));
+
+        mAssignmentViewModel.getAssignments(1).observe(this, assignments -> {
+            Date currentDate = new Date();
+            for (Assignment assignment : assignments) {
+                int requestCode = Integer.parseInt("1" + assignment.getIdAssignment());
+                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
+                boolean alarmUp = (PendingIntent.getBroadcast(this, requestCode , new Intent(MainActivity.this, AlarmReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
+                if (alarmUp) {
+                    NotificationHelper.cancelAlarm(this, 1, assignment.getIdAssignment());
+                }
+                if (currentDate.before(reminderAt)) {
+                    NotificationHelper.setAlarm(this, 1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(), assignment.getNameAssignment());
+                }
+            }
+        });
+
+        mDailyActivityViewModel.getDailyActivities(1).observe(this, dailyActivities -> {
+            Date currentDate = new Date();
+            for (DailyActivity dailyActivity : dailyActivities) {
+                int requestCode = Integer.parseInt("2" + dailyActivity.getIdDailyActivity());
+                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, dailyActivity.getReminderAt());
+                boolean alarmUp = (PendingIntent.getBroadcast(this, requestCode , new Intent(MainActivity.this, AlarmReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
+                if (alarmUp) {
+                    NotificationHelper.cancelAlarm(this, 2, dailyActivity.getIdDailyActivity());
+                }
+                if (currentDate.before(reminderAt)) {
+                    NotificationHelper.setAlarm(this, 2, dailyActivity.getIdDailyActivity(), reminderAt.getTime(),
+                            dailyActivity.getNameDailyActivity(), dailyActivity.getDescriptionDailyActivity());
+                }
+            }
+        });
     }
 }

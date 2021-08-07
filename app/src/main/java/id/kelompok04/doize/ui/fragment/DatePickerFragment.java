@@ -79,6 +79,7 @@ public class DatePickerFragment extends DialogFragment {
                     calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.MONTH, month);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    Log.d(TAG, "onCreateDialog: " + calendar.getTime());
 
                     TimePickerFragment.newInstance(DateType.DATETIME, textInputEditText, calendar.getTime()).show(getParentFragmentManager(), "time");
                 };

@@ -12,8 +12,8 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface DailyActivityService {
-    @GET("daily-activity")
-    Call<ListDailyActivityResponse> getDailyActivities();
+    @GET("daily-activities/{id}")
+    Call<ListDailyActivityResponse> getDailyActivities(@Path("id") int id);
 
     @POST("daily-activity")
     Call<DailyActivityResponse> addDailyActivity(@Body DailyActivity dailyActivity);

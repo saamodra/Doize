@@ -43,9 +43,9 @@ public class DailyActivityRepository {
         return INSTANCE;
     }
 
-    public LiveData<List<DailyActivity>> getDailyActivities() {
+    public LiveData<List<DailyActivity>> getDailyActivities(int idUser) {
         Log.d(TAG, "getDailyActivities: Called");
-        Call<ListDailyActivityResponse> call = mDailyActivityService.getDailyActivities();
+        Call<ListDailyActivityResponse> call = mDailyActivityService.getDailyActivities(idUser);
         call.enqueue(new Callback<ListDailyActivityResponse>() {
             @Override
             public void onResponse(Call<ListDailyActivityResponse> call, Response<ListDailyActivityResponse> response) {

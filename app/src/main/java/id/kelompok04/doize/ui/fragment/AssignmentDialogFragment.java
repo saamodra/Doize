@@ -1,6 +1,8 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
+import id.kelompok04.doize.helper.NotificationHelper;
 import id.kelompok04.doize.model.Assignment;
 
 public class AssignmentDialogFragment extends DialogFragment {
@@ -38,7 +41,6 @@ public class AssignmentDialogFragment extends DialogFragment {
     public static final String TAG = "example_dialog";
 
     private Toolbar toolbar;
-    private String title;
     private TextInputLayout tilAssignmentName;
     private TextInputLayout tilAssignmentSubject;
     private TextInputLayout tilDueDate;
@@ -170,6 +172,7 @@ public class AssignmentDialogFragment extends DialogFragment {
                 tilReminderDate.getEditText().getText().toString()));
         assignment.setPriority(cbPriority.isChecked() ? 1 : 0);
         assignment.setDescriptionAssignment(DoizeHelper.getString(tilDescription.getEditText().getText().toString()));
+        assignment.setIdUser(1);
 
         return assignment;
     }

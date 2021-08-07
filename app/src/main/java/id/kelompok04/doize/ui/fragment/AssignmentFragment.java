@@ -140,17 +140,7 @@ public class AssignmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Date currentDate = new Date();
-        mAssignmentViewModel.getAssignments(1).observe(getViewLifecycleOwner(), assignments -> {
-            updateUI(assignments);
-            for (Assignment assignment : assignments) {
-                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
-                if (currentDate.before(reminderAt)) {
-                    Log.d(TAG, "onViewCreated: Alarm setted " + assignment.getNameAssignment());
-                    setAlarm(1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(), assignment.getNameAssignment());
-                }
-            }
-        });
+        mAssignmentViewModel.getAssignments(1).observe(getViewLifecycleOwner(), this::updateUI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

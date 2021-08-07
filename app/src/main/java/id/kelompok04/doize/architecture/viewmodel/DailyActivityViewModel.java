@@ -19,8 +19,8 @@ public class DailyActivityViewModel extends ViewModel {
         mDailyActivityRepository = DailyActivityRepository.get();
     }
 
-    public LiveData<List<DailyActivity>> getDailyActivities() {
-        return mDailyActivityRepository.getDailyActivities();
+    public LiveData<List<DailyActivity>> getDailyActivities(int idUser) {
+        return mDailyActivityRepository.getDailyActivities(idUser);
     }
 
     public LiveData<DailyActivityResponse> addToPosition(int position, DailyActivity dailyActivity) {
