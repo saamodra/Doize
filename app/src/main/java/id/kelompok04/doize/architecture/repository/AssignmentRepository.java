@@ -64,6 +64,27 @@ public class AssignmentRepository {
         return mAssignmentDao.getListAssignment();
     }
 
+    public LiveData<List<Assignment>> getAssignmentsOnce(int idUser) {
+        MutableLiveData<List<Assignment>> mutableLiveData = new MutableLiveData<>();
+        Call<ListAssignmentResponse> call = mAssignmentService.getAssignments(idUser);
+        call.enqueue(new Callback<ListAssignmentResponse>() {
+            @Override
+            public void onResponse(Call<ListAssignmentResponse> call, Response<ListAssignmentResponse> response) {
+                ListAssignmentResponse listAssignment = response.body();
+                if (listAssignment.getStatus() == 200) {
+                    mutableLiveData.setValue(listAssignment.getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListAssignmentResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return mutableLiveData;
+    }
+
     public LiveData<AssignmentResponse> addAssignment(Assignment assignment) {
         MutableLiveData<AssignmentResponse> assignmentResponseMutableLiveData = new MutableLiveData<>();
 

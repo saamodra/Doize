@@ -183,7 +183,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
 
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.clear().apply(); //remove all
+                editor.putString("oldId", preferences.getString("id", ""));
+                editor.apply();
+
+                editor.remove("email");
+                editor.remove("password");
+                editor.remove("name");
+                editor.remove("id");
+                editor.apply(); //remove all
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
@@ -197,25 +204,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setAlarm() {
-//        SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
-//        String idUser = (preferences.getString("id", ""));
+        SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
+        int idUser = Integer.parseInt(preferences.getString("id", "0"));
+        int oldUser = Integer.parseInt(preferences.getString("oldId", "0"));
 
-        mAssignmentViewModel.getAssignments(1).observe(this, assignments -> {
+        // if user sign in with a new account, cancel all alarm of previous user
+        if (idUser != oldUser && oldUser != 0) {
+            mAssignmentViewModel.getAssignmentsOnce(oldUser).observe(this, assignments -> {
+                for (Assignment assignment : assignments) {
+                    Log.d(TAG, "setAlarm: Cancel Assignment " + assignment);
+                    NotificationHelper.cancelAlarm(this, 1, assignment.getIdAssignment());
+                }
+            });
+
+            mDailyActivityViewModel.getDailyActivitiesOnce(oldUser).observe(this, dailyActivities -> {;
+                for (DailyActivity dailyActivity : dailyActivities) {
+                    Log.d(TAG, "setAlarm: Cancel Daily " + dailyActivity);
+                    NotificationHelper.cancelAlarm(this, 2, dailyActivity.getIdDailyActivity());
+                }
+            });
+        }
+
+        // Set new alarm
+        mAssignmentViewModel.getAssignments(idUser).observe(this, assignments -> {
             Date currentDate = new Date();
             for (Assignment assignment : assignments) {
                 int requestCode = Integer.parseInt("1" + assignment.getIdAssignment());
-                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
                 boolean alarmUp = (PendingIntent.getBroadcast(this, requestCode , new Intent(MainActivity.this, AlarmReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
                 if (alarmUp) {
                     NotificationHelper.cancelAlarm(this, 1, assignment.getIdAssignment());
                 }
+
+                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
                 if (currentDate.before(reminderAt)) {
                     NotificationHelper.setAlarm(this, 1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(), assignment.getNameAssignment());
                 }
             }
         });
 
-        mDailyActivityViewModel.getDailyActivities(1).observe(this, dailyActivities -> {
+        mDailyActivityViewModel.getDailyActivities(idUser).observe(this, dailyActivities -> {
             Date currentDate = new Date();
             for (DailyActivity dailyActivity : dailyActivities) {
                 int requestCode = Integer.parseInt("2" + dailyActivity.getIdDailyActivity());

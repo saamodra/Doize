@@ -65,6 +65,29 @@ public class DailyActivityRepository {
         return mDailyActivityDao.getListDailyActivity();
     }
 
+    public LiveData<List<DailyActivity>> getDailyActivitiesOnce(int idUser) {
+        MutableLiveData<List<DailyActivity>> mutableLiveData = new MutableLiveData<>();
+        Log.d(TAG, "getDailyActivities: Called");
+        Call<ListDailyActivityResponse> call = mDailyActivityService.getDailyActivities(idUser);
+        call.enqueue(new Callback<ListDailyActivityResponse>() {
+            @Override
+            public void onResponse(Call<ListDailyActivityResponse> call, Response<ListDailyActivityResponse> response) {
+                ListDailyActivityResponse listActivity = response.body();
+
+                if (listActivity.getStatus() == 200) {
+                    mutableLiveData.setValue(listActivity.getData());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListDailyActivityResponse> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
+        return mutableLiveData;
+    }
+
     public LiveData<DailyActivityResponse> updateDailyActivity(DailyActivity dailyActivity) {
         MutableLiveData<DailyActivityResponse> dailyActivityResponseMutableLiveData = new MutableLiveData<>();
 

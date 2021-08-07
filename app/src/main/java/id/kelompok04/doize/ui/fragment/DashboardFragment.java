@@ -45,9 +45,6 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        Gson gson = new Gson();
-
-//        User user = new User("Kelompok 04", "kel4@gmail.com", "password", "1");
         preferences = getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         String name = (preferences.getString("name", ""));
 
@@ -64,6 +61,7 @@ public class DashboardFragment extends Fragment {
             editor.remove("email");
             editor.remove("password");
             editor.remove("name");
+            editor.remove("id");
             editor.apply();
         });
 

@@ -24,6 +24,10 @@ public class AssignmentViewModel extends ViewModel {
         return mAssignmentRepository.getAssignments(idUser);
     }
 
+    public LiveData<List<Assignment>> getAssignmentsOnce(int idUser) {
+        return mAssignmentRepository.getAssignmentsOnce(idUser);
+    }
+
     public LiveData<AssignmentResponse> addToPosition(int position, Assignment assignment) {
         return mAssignmentRepository.updateAssignment(CrudType.ADD, position, assignment);
     }

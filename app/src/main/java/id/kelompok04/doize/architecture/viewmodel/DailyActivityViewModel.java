@@ -23,6 +23,10 @@ public class DailyActivityViewModel extends ViewModel {
         return mDailyActivityRepository.getDailyActivities(idUser);
     }
 
+    public LiveData<List<DailyActivity>> getDailyActivitiesOnce(int idUser) {
+        return mDailyActivityRepository.getDailyActivitiesOnce(idUser);
+    }
+
     public LiveData<DailyActivityResponse> addToPosition(int position, DailyActivity dailyActivity) {
         return mDailyActivityRepository.updateDailyActivity(CrudType.ADD, position, dailyActivity);
     }
