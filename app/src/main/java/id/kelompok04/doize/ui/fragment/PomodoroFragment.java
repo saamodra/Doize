@@ -241,11 +241,10 @@ public class PomodoroFragment extends Fragment {
                 updateUI(pomodoro);
                 mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
             } else {
-                mPomodoroViewModel.addPomodoro(8);
+                mPomodoroViewModel.addPomodoro(DoizeHelper.getIdUserPref(requireActivity()));
             }
             progressDialog.dismiss();
         });
-
     }
 
     private void updateUI(Pomodoro pomodoro) {

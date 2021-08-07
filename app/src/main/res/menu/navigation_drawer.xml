@@ -41,11 +41,6 @@
             android:title="Pomodoro"/>
 
         <item
-            android:id="@+id/notification_drawer"
-            android:icon="@drawable/ic_baseline_notifications_24"
-            android:title="Notification"/>
-
-        <item
             android:id="@+id/exit_drawer"
             android:icon="@drawable/ic_baseline_exit_to_app_24"
             android:title="Logout"/>

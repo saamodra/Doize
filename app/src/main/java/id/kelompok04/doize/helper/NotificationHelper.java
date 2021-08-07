@@ -61,7 +61,7 @@ public class NotificationHelper {
         String requestCode = type + String.valueOf(id);
         Log.d(TAG, "cancelAlarm: " + requestCode);
         PendingIntent mPendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(requestCode), intent, 0);
-
+        mPendingIntent.cancel();
         if (alarmManager == null) {
             alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         }
