@@ -51,6 +51,7 @@ import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.Schedule;
 import id.kelompok04.doize.model.response.AssignmentResponse;
@@ -73,10 +74,6 @@ public class AssignmentFragment extends Fragment {
     private AssignmentAdapter rvAssignmentAdapter;
     private AssignmentViewModel mAssignmentViewModel;
     private List<Assignment> mAssignmentListFragment;
-
-    // AlarmNotification
-    private AlarmManager mAlarmManager;
-    private PendingIntent mPendingIntent;
 
 
     public AssignmentFragment() {
@@ -125,7 +122,7 @@ public class AssignmentFragment extends Fragment {
 
         fabAddAssignment = view.findViewById(R.id.fab_add_assignment);
         fabAddAssignment.setOnClickListener(v -> {
-            AssignmentDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
+            AssignmentDialogFragment.display(CrudType.ADD, null, requireActivity().getSupportFragmentManager());
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
@@ -140,7 +137,7 @@ public class AssignmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mAssignmentViewModel.getAssignments(1).observe(getViewLifecycleOwner(), this::updateUI);
+        mAssignmentViewModel.getAssignments(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), this::updateUI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -187,17 +184,6 @@ public class AssignmentFragment extends Fragment {
         setTabValue(tab_position);
     }
 
-    private void setAlarm(int type, int id, long time, String title, String content) {
-        mAlarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
-        intent.putExtra("title", title);
-        intent.putExtra("content", content);
-
-        String requestCode = type + String.valueOf(id);
-        mPendingIntent = PendingIntent.getBroadcast(getActivity(), Integer.parseInt(requestCode), intent, 0);
-        mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, time, mPendingIntent);
-    }
-
     ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -232,7 +218,7 @@ public class AssignmentFragment extends Fragment {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getActivity(), R.color.pink))
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.pink))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .create()
                     .decorate();

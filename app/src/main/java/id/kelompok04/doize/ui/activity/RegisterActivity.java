@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -58,12 +59,15 @@ public class RegisterActivity extends AppCompatActivity {
             User newUser = new User(name, email, password, "1");
 
             if (validate(v)) {
+                ProgressDialog progressDialog = ProgressDialog.show(this, "Sign Up", "Signing Up...");
                 mUserViewModel.register(newUser).observe(this, loginResponse -> {
                     if (loginResponse.getStatus() == 200) {
                         Toast.makeText(RegisterActivity.this, "Sign Up Success!", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(RegisterActivity.this, "Sign Up Failed!", Toast.LENGTH_SHORT).show();
                     }
+
+                    progressDialog.dismiss();
                 });
 
             }

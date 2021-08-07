@@ -102,7 +102,7 @@ public class UserRepository {
         MutableLiveData<UserResponse> userResponseMutableLiveData = new MutableLiveData<>();
 
         Log.d(TAG, "getUsers: Called");
-        Call<UserResponse> call = mUserService.updateUser(mUserDao.getUserLogin().getValue().getIdUser(), user);
+        Call<UserResponse> call = mUserService.updateUser(user.getIdUser(), user);
         call.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {

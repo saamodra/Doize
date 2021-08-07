@@ -1,6 +1,9 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +35,6 @@ import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.UserResponse;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
 
@@ -48,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private TextInputLayout mEmailLayout;
     private TextInputLayout mBirthDateLayout;
     private Button mButtonUpdate;
+    private SharedPreferences userPreferences;
 
     // Date Format
     @SuppressLint("SimpleDateFormat")
@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        userPreferences = requireActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
@@ -87,30 +88,48 @@ public class ProfileFragment extends Fragment {
             String email = mEmailLayout.getEditText().getText().toString();
             String birth_date = mBirthDateLayout.getEditText().getText().toString();
             String newBirthDate = DateConverter.toDbFrom(mSimpleDateFormat, birth_date);
+            String idUser = userPreferences.getString("id", "");
 
             User user = new User();
             user.setName(name);
             user.setPhone(phone);
             user.setEmail(email);
             user.setBirthDate(newBirthDate);
+            user.setIdUser(idUser);
 
-            mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), new Observer<UserResponse>() {
-                @Override
-                public void onChanged(UserResponse userResponse) {
-                    if (userResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+            ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Profile", "Updating profile ...");
+            mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), userResponse -> {
+                if (userResponse.getStatus() == 200) {
+                    User addedUser = userResponse.getData();
 
-                    } else {
-                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
+                    SharedPreferences.Editor editor = userPreferences.edit();
+                    editor.putString("name", addedUser.getName());
+                    editor.putString("phone", addedUser.getPhone());
+                    editor.putString("email", addedUser.getEmail());
+                    editor.putString("birth_date", addedUser.getBirthDate());
+                    editor.apply();
+
+
+                    FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                } else {
+                    FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                 }
+
+                progressDialog.dismiss();
             });
 
         });
 
         mBirthDateLayout.getEditText().setOnClickListener(v -> {
             FragmentManager fragmentManager = getParentFragmentManager();
-            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATE, mBirthDateLayout.getEditText(), new Date());
+
+            Date birthDate = null;
+            String birth_date = userPreferences.getString("birth_date", "");
+            if (birth_date != null && !birth_date.equals("")) {
+                birthDate = DateConverter.fromDbToDate(DateType.DATE, birth_date);
+            }
+
+            DatePickerFragment dialog = DatePickerFragment.newInstance(DateType.DATE, mBirthDateLayout.getEditText(), birthDate != null ? birthDate : new Date());
             dialog.setTargetFragment(ProfileFragment.this, 0);
             dialog.show(fragmentManager, "DialogDate");
         });
@@ -121,17 +140,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        String name = userPreferences.getString("name", "");
+        String phone = userPreferences.getString("phone", "");
+        String birth_date = userPreferences.getString("birth_date", "");
+        String email = userPreferences.getString("email", "");
 
-        mUserViewModel.getUserLogin().observe(getViewLifecycleOwner(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                String newBirthDate = DateConverter.fromDbTo(mSimpleDateFormat, user.getBirthDate());
 
-                mNameLayout.getEditText().setText(user.getName());
-                mPhoneLayout.getEditText().setText(user.getPhone());
-                mEmailLayout.getEditText().setText(user.getEmail());
-                mBirthDateLayout.getEditText().setText(newBirthDate);
-            }
-        });
+        if (birth_date != null && !birth_date.equals("")) {
+            String newBirthDate = DateConverter.fromDbTo(mSimpleDateFormat, birth_date);
+            mBirthDateLayout.getEditText().setText(newBirthDate);
+        }
+
+        mNameLayout.getEditText().setText(name);
+        mPhoneLayout.getEditText().setText(phone);
+        mEmailLayout.getEditText().setText(email);
     }
 }

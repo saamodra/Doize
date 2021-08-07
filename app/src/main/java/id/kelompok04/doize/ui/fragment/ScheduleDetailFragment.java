@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -162,6 +163,7 @@ public class ScheduleDetailFragment extends Fragment {
                 globalDetailSchedule.setStartTime(startTime);
                 globalDetailSchedule.setEndTime(endTime);
 
+                ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Schedule Detail", "Adding schedule detail...");
                 mDetailScheduleViewModel.updateDetailSchedule(dayBefore, globalDetailSchedule).observe(getViewLifecycleOwner(), detailScheduleResponse -> {
                     if (detailScheduleResponse.getStatus() == 200) {
                         FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
@@ -170,6 +172,8 @@ public class ScheduleDetailFragment extends Fragment {
                     } else {
                         FancyToast.makeText(getActivity(), detailScheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                     }
+
+                    progressDialog.dismiss();
                 });
 
             } else {
@@ -277,7 +281,6 @@ public class ScheduleDetailFragment extends Fragment {
 
             private TextView mDay;
             private RecyclerView rvItem;
-            private RecyclerView rvItemModal;
             private List<DetailSchedule> listSchedule;
             private ScheduleDetailDayItemAdapter mScheduleDetailDayItemAdapter;
 

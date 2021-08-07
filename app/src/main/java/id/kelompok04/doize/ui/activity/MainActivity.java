@@ -1,6 +1,7 @@
 package id.kelompok04.doize.ui.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,15 +19,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,15 +58,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView nvDrawer;
     private NavController mNavController;
     private BottomNavigationView mBottomNavigationView;
-    private AlarmManager mAlarmManager;
-    private PendingIntent mPendingIntent;
     private AssignmentViewModel mAssignmentViewModel;
     private DailyActivityViewModel mDailyActivityViewModel;
+
+    // Components
+    private TextView mTvHeaderTitle;
+    private TextView mTvHeaderSubtitle;
+    private SharedPreferences userPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        userPreferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         setupNavigation();
         mAssignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
         mDailyActivityViewModel = new ViewModelProvider(this).get(DailyActivityViewModel.class);
@@ -77,6 +89,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = findViewById(R.id.drawer_layout);
         nvDrawer = findViewById(R.id.nvView);
         mBottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        View headerView = LayoutInflater.from(this).inflate(R.layout.header_navigation_drawer, nvDrawer, false);
+        nvDrawer.addHeaderView(headerView);
+        mTvHeaderTitle = headerView.findViewById(R.id.navigation_drawer_header_title);
+        mTvHeaderSubtitle = headerView.findViewById(R.id.navigation_drawer_header_subtitle);
+
+        mTvHeaderTitle.setText(userPreferences.getString("name", ""));
+        mTvHeaderSubtitle.setText(userPreferences.getString("email", ""));
 
         mNavController = Navigation.findNavController(this, R.id.fragment_container);
 
@@ -180,14 +200,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.exit_drawer:
-                SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("oldId", preferences.getString("id", ""));
+                SharedPreferences.Editor editor = userPreferences.edit();
+                editor.putString("oldId", userPreferences.getString("id", ""));
                 editor.apply();
 
                 editor.remove("email");
                 editor.remove("password");
+                editor.remove("birth_date");
+                editor.remove("phone");
                 editor.remove("name");
                 editor.remove("id");
                 editor.apply(); //remove all
@@ -204,9 +224,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setAlarm() {
-        SharedPreferences preferences = getSharedPreferences("user_pref", Context.MODE_PRIVATE);
-        int idUser = Integer.parseInt(preferences.getString("id", "0"));
-        int oldUser = Integer.parseInt(preferences.getString("oldId", "0"));
+        int idUser = Integer.parseInt(userPreferences.getString("id", "0"));
+        int oldUser = Integer.parseInt(userPreferences.getString("oldId", "0"));
 
         // if user sign in with a new account, cancel all alarm of previous user
         if (idUser != oldUser && oldUser != 0) {

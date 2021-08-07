@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.CountDownTimer;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,7 +44,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,6 +52,7 @@ import id.kelompok04.doize.architecture.viewmodel.PomodoroActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.PomodoroViewModel;
 import id.kelompok04.doize.helper.CustomTime;
 import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.helper.NotificationHelper;
 import id.kelompok04.doize.helper.TimeConverter;
 import id.kelompok04.doize.model.Pomodoro;
@@ -87,7 +86,6 @@ public class PomodoroFragment extends Fragment {
     Pomodoro mPomodoroFragmentData;
     List<PomodoroActivity> mPomodoroActivitiesFragmentData;
     PomodoroActivityAdapter mPomodoroActivityAdapter = new PomodoroActivityAdapter(Collections.emptyList());
-
 
     // Pomodoro Dialog Form
     private View customAlertDialogView;
@@ -238,7 +236,7 @@ public class PomodoroFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ProgressDialog progressDialog = ProgressDialog.show(requireContext(), null, "Loading...");
-        mPomodoroViewModel.getPomodoro(8).observe(getViewLifecycleOwner(), pomodoro -> {
+        mPomodoroViewModel.getPomodoro(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), pomodoro -> {
             if (pomodoro != null) {
                 updateUI(pomodoro);
                 mPomodoroActivityViewModel.getPomodoroActivites(pomodoro.getIdPomodoro()).observe(getViewLifecycleOwner(), this::updateUITask);
@@ -488,7 +486,7 @@ public class PomodoroFragment extends Fragment {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(getActivity(), R.color.pink))
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.pink))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .create()
                     .decorate();

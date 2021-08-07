@@ -13,27 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.gson.Gson;
-
-import java.io.Serializable;
 
 import id.kelompok04.doize.R;
-import id.kelompok04.doize.architecture.viewmodel.UserViewModel;
-import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.ui.activity.LoginActivity;
-import id.kelompok04.doize.ui.activity.MainActivity;
 
 public class DashboardFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
-    private static final String USERLOGIN = "UserLogin";
 
     private TextView mUserLogin;
     private Button mBtnLogout;
 
-    private TextView mUserHeaderProfile;
-    private TextView mUserHeaderEmail;
     SharedPreferences preferences;
 
     public static DashboardFragment newInstance() {

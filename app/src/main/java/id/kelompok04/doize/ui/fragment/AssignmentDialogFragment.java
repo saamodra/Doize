@@ -2,7 +2,9 @@ package id.kelompok04.doize.ui.fragment;
 
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -172,7 +174,8 @@ public class AssignmentDialogFragment extends DialogFragment {
                 tilReminderDate.getEditText().getText().toString()));
         assignment.setPriority(cbPriority.isChecked() ? 1 : 0);
         assignment.setDescriptionAssignment(DoizeHelper.getString(tilDescription.getEditText().getText().toString()));
-        assignment.setIdUser(1);
+        assignment.setStatus(1);
+        assignment.setIdUser(DoizeHelper.getIdUserPref(requireActivity()));
 
         return assignment;
     }

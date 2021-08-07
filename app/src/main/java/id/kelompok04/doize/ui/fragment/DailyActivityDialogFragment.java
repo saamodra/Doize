@@ -35,12 +35,9 @@ public class DailyActivityDialogFragment extends DialogFragment {
 
     // Component
     private Toolbar toolbar;
-    private String title;
     private TextInputLayout tilDailyActivityName;
     private TextInputLayout tilDueDate;
-    private TextInputLayout tilDueTime;
     private TextInputLayout tilReminderDate;
-    private TextInputLayout tilReminderTime;
     private CheckBox cbPriority;
     private TextInputLayout tilDailyActivityDescription;
     private Button btnSaveDailyActivity;
@@ -163,6 +160,8 @@ public class DailyActivityDialogFragment extends DialogFragment {
                 tilReminderDate.getEditText().getText().toString()));
         dailyActivity.setPriority(cbPriority.isChecked() ? 1 : 0);
         dailyActivity.setDescriptionDailyActivity(DoizeHelper.getString(tilDailyActivityDescription.getEditText().getText().toString()));
+        dailyActivity.setStatus(1);
+        dailyActivity.setIdUser(DoizeHelper.getIdUserPref(requireActivity()));
 
         return dailyActivity;
     }

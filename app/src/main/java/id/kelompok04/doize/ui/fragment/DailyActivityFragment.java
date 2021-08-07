@@ -37,14 +37,11 @@ import id.kelompok04.doize.architecture.viewmodel.DailyActivityViewModel;
 import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
+import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.model.DailyActivity;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DailyActivityFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class DailyActivityFragment extends Fragment {
     private static final String TAG = "DailyActivityFragment";
 
@@ -104,7 +101,7 @@ public class DailyActivityFragment extends Fragment {
 
         fabAddDailyActivity = view.findViewById(R.id.fab_add_daily_activity);
         fabAddDailyActivity.setOnClickListener(v -> {
-            DailyActivityDialogFragment.display(CrudType.ADD, null, getActivity().getSupportFragmentManager());
+            DailyActivityDialogFragment.display(CrudType.ADD, null, requireActivity().getSupportFragmentManager());
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
@@ -160,7 +157,7 @@ public class DailyActivityFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mDailyActivityViewModel.getDailyActivities(1).observe(getViewLifecycleOwner(), this::updateUI);
+        mDailyActivityViewModel.getDailyActivities(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), this::updateUI);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

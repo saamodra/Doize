@@ -1,5 +1,6 @@
 package id.kelompok04.doize.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -50,6 +51,7 @@ import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.Schedule;
 import id.kelompok04.doize.model.response.ScheduleResponse;
@@ -140,9 +142,9 @@ public class ScheduleFragment extends Fragment {
         if (validate()) {
             String name = mScheduleNameLayout.getEditText().getText().toString();
             String desc = mScheduleDescriptionLayout.getEditText().getText().toString();
-            int idUser = 1;
 
-            Schedule schedule = new Schedule(name, desc, idUser);
+            Schedule schedule = new Schedule(name, desc, DoizeHelper.getIdUserPref(requireActivity()));
+            ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Schedule", "Adding schedule ...");
             mScheduleViewModel.addSchedule(schedule).observe(getViewLifecycleOwner(), scheduleResponse -> {
                 if (scheduleResponse.getStatus() == 200) {
                     FancyToast.makeText(getActivity(), scheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
@@ -150,6 +152,8 @@ public class ScheduleFragment extends Fragment {
                 } else {
                     FancyToast.makeText(getActivity(), scheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                 }
+
+                progressDialog.dismiss();
             });
 
         } else {
@@ -165,6 +169,7 @@ public class ScheduleFragment extends Fragment {
             globalSchedule.setNameSchedule(name);
             globalSchedule.setDescriptionSchedule(desc);
 
+            ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Schedule", "Updating schedule ...");
             mScheduleViewModel.updateSchedule(globalSchedule).observe(getViewLifecycleOwner(), scheduleResponse -> {
                 if (scheduleResponse.getStatus() == 200) {
                     FancyToast.makeText(getActivity(), scheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
@@ -172,6 +177,8 @@ public class ScheduleFragment extends Fragment {
                 } else {
                     FancyToast.makeText(getActivity(), scheduleResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                 }
+
+                progressDialog.dismiss();
             });
 
         } else {

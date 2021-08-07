@@ -90,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences.Editor editor = pref.edit();
                                 editor.putString("email", loginResponse.getUser().getEmail());
                                 editor.putString("password", loginResponse.getUser().getPassword());
+                                editor.putString("birth_date", loginResponse.getUser().getBirthDate());
+                                editor.putString("phone", loginResponse.getUser().getPhone());
                                 editor.putString("name", loginResponse.getUser().getName());
                                 editor.putString("id", loginResponse.getUser().getIdUser());
                                 editor.apply();
