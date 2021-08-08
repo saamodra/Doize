@@ -139,6 +139,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public void setHeaderUser(String name, String email) {
+        mTvHeaderTitle.setText(name);
+        mTvHeaderSubtitle.setText(email);
+    }
+
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(DoizeConstants.NOTIFICATION_CHANNEL_ID, DoizeConstants.NOTIFICATION_CHANNEL_ID,

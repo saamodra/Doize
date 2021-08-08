@@ -251,7 +251,6 @@ public class PomodoroFragment extends Fragment {
         mPomodoroFragmentData = pomodoro;
         refreshTime();
         currentTime = userTime;
-        tvTimer.setText(TimeConverter.formatTime(userTime));
     }
 
     private void updateUITask(List<PomodoroActivity> pomodoroActivities) {

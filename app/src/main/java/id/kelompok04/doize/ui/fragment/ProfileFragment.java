@@ -34,6 +34,7 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.UserResponse;
+import id.kelompok04.doize.ui.activity.MainActivity;
 
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
@@ -109,7 +110,7 @@ public class ProfileFragment extends Fragment {
                     editor.putString("birth_date", addedUser.getBirthDate());
                     editor.apply();
 
-
+                    ((MainActivity)requireActivity()).setHeaderUser(addedUser.getName(), addedUser.getEmail());
                     FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
                 } else {
                     FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
