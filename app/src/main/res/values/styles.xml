@@ -122,4 +122,25 @@
         <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
         <item name="strokeWidth">@dimen/mtrl_btn_stroke_size</item>
     </style>
+
+    <style name="CustomToolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionOverflowButtonStyle">@style/ThemeOverlay.App.Toolbar</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/gray</item>
+        <item name="android:popupBackground">@color/darkPurple2</item>
+        <item name="android:background">@color/darkPurple2</item>
+    </style>
+
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <!-- color used by navigation icon and overflow icon -->
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/darkPurple2</item>
+        <item name="colorPrimaryVariant">@color/darkPurple</item>
+    </style>
+
 </resources>

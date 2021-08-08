@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,31 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
+        
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/topAppBar"
-            app:elevation="10dp"
-            style="@style/Widget.MaterialComponents.Toolbar.Surface"
+            style="@style/CustomToolbar"
+            app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/top_app_bar"
+            app:navigationIconTint="@color/white"
             app:navigationIcon="@drawable/ic_baseline_menu_24">
 
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:src="@drawable/doize_white"
+                android:contentDescription="@string/doize_logo" />
+        </androidx.appcompat.widget.Toolbar>
 
-        </com.google.android.material.appbar.MaterialToolbar>
-
-        <ImageView
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:src="@drawable/doize_logo" />
     </FrameLayout>
-
-    <View
-        android:id="@+id/shadow"
-        android:layout_width="match_parent"
-        android:layout_height="7dp"
-        android:background="@drawable/shadow_gradient"
-        app:layout_anchor="@id/bottomSheet" />
 
 </LinearLayout>

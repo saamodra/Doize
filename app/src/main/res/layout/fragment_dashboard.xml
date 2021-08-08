@@ -3,22 +3,56 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_dashboard"
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/txtDashboardWelcome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Welcome, Samodra" />
-
-    <Button
-        android:id="@+id/btnLogout"
+        android:id="@+id/txt_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/white"
+        android:layout_marginStart="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDashboardWelcome" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/welcome" />
+
+    <TextView
+        android:id="@+id/txt_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/white"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/today" />
+
+    <TextView
+        android:id="@+id/tv_dashboard_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/txt_welcome"
+        app:layout_constraintTop_toBottomOf="@id/txt_welcome"
+        tools:text="Samodra" />
+
+    <TextView
+        android:id="@+id/tv_dashboard_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:fontFamily="@font/montserrat_semibold"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/txt_today"
+        app:layout_constraintTop_toTopOf="@id/tv_dashboard_name"
+        tools:text="08 Aug 2021" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

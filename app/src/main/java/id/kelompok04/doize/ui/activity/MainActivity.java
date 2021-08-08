@@ -3,6 +3,7 @@ package id.kelompok04.doize.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = "MainActivity";
 
     private DrawerLayout mDrawerLayout;
-    private MaterialToolbar mToolbar;
+    private Toolbar mToolbar;
     private NavigationView nvDrawer;
     private NavController mNavController;
     private BottomNavigationView mBottomNavigationView;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setupNavigation() {
         mToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -256,7 +258,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, assignment.getReminderAt());
                 if (currentDate.before(reminderAt)) {
-                    NotificationHelper.setAlarm(this, 1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(), assignment.getNameAssignment());
+                    NotificationHelper.setAlarm(this, 1, assignment.getIdAssignment(), reminderAt.getTime(), assignment.getCourse(),
+                            DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, assignment.getDuedateAssignment()) + " : " + assignment.getNameAssignment());
                 }
             }
         });
@@ -265,14 +268,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Date currentDate = new Date();
             for (DailyActivity dailyActivity : dailyActivities) {
                 int requestCode = Integer.parseInt("2" + dailyActivity.getIdDailyActivity());
-                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, dailyActivity.getReminderAt());
                 boolean alarmUp = (PendingIntent.getBroadcast(this, requestCode , new Intent(MainActivity.this, AlarmReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
                 if (alarmUp) {
                     NotificationHelper.cancelAlarm(this, 2, dailyActivity.getIdDailyActivity());
                 }
+
+                Date reminderAt = DateConverter.fromDbToDate(DateType.DATETIME, dailyActivity.getReminderAt());
                 if (currentDate.before(reminderAt)) {
                     NotificationHelper.setAlarm(this, 2, dailyActivity.getIdDailyActivity(), reminderAt.getTime(),
-                            dailyActivity.getNameDailyActivity(), dailyActivity.getDescriptionDailyActivity());
+                            dailyActivity.getNameDailyActivity(), DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, dailyActivity.getDuedateDailyActivity()) +
+                                    " : " + dailyActivity.getDescriptionDailyActivity());
                 }
             }
         });

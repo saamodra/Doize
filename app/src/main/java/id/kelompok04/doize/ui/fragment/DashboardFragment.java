@@ -1,5 +1,6 @@
 package id.kelompok04.doize.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,16 +15,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.ui.activity.LoginActivity;
 
 public class DashboardFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
 
-    private TextView mUserLogin;
-    private Button mBtnLogout;
+    private TextView mUserLoginName, mTodayDate;
 
     SharedPreferences preferences;
+
+    SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
 
     public static DashboardFragment newInstance() {
         return new DashboardFragment();
@@ -37,22 +42,11 @@ public class DashboardFragment extends Fragment {
         preferences = getActivity().getSharedPreferences("user_pref", Context.MODE_PRIVATE);
         String name = (preferences.getString("name", ""));
 
-        mUserLogin = v.findViewById(R.id.txtDashboardWelcome);
-        mUserLogin.setText("Welcome, " + name);
+        mUserLoginName = v.findViewById(R.id.tv_dashboard_name);
+        mUserLoginName.setText(name);
 
-        mBtnLogout = v.findViewById(R.id.btnLogout);
-        mBtnLogout.setOnClickListener(v1 -> {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.remove("email");
-            editor.remove("password");
-            editor.remove("name");
-            editor.remove("id");
-            editor.apply();
-        });
+        mTodayDate = v.findViewById(R.id.tv_dashboard_day);
+        mTodayDate.setText(mSimpleDateFormat.format(new Date()));
 
         return v;
     }

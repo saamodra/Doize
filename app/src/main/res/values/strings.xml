@@ -51,4 +51,7 @@
     <string name="add_task">Add Task</string>
     <string name="cancel">Cancel</string>
     <string name="task">Task</string>
+    <string name="welcome">Welcome,</string>
+    <string name="today">Today</string>
+    <string name="doize_logo">Doize Logo</string>
 </resources>
