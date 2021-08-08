@@ -49,7 +49,6 @@ public class UserRepository {
         return INSTANCE;
     }
 
-
     public LiveData<LoginResponse> register(User user) {
         MutableLiveData<LoginResponse> loginResponseMutableLiveData = new MutableLiveData<>();
 

@@ -54,4 +54,8 @@
     <string name="welcome">Welcome,</string>
     <string name="today">Today</string>
     <string name="doize_logo">Doize Logo</string>
+    <string name="see_all">See all</string>
+    <string name="assignments">Assignments</string>
+    <string name="daily_activities">Daily Activities</string>
+    <string name="schedule">Schedule</string>
 </resources>

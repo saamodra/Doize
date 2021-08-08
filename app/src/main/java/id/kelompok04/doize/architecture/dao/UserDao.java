@@ -15,7 +15,7 @@ public class UserDao {
 
     private MutableLiveData<LoginResponse> mLoginResponse = new MutableLiveData<>();
     private MutableLiveData<User> mUserLogin = new MutableLiveData<>();
-    private MutableLiveData<List<User>> listUser = new MutableLiveData<List<User>>();
+    private MutableLiveData<List<User>> listUser = new MutableLiveData<>();
 
     public LiveData<LoginResponse> getLogin() {
         return mLoginResponse;

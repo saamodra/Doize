@@ -3,6 +3,7 @@ package id.kelompok04.doize.ui.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
@@ -20,23 +21,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 
 import id.kelompok04.doize.R;
@@ -47,7 +42,6 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.NotificationHelper;
-import id.kelompok04.doize.helper.NotificationType;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
 
@@ -65,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Components
     private TextView mTvHeaderTitle;
     private TextView mTvHeaderSubtitle;
+
     private SharedPreferences userPreferences;
 
 
@@ -83,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setupNavigation() {
         mToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("Dashboard");
         mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -116,12 +110,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int id = item.getItemId();
             switch (id) {
                 case R.id.dashboardFragment:
-                    Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
                     mNavController.navigate(R.id.dashboardFragment);
                     break;
 
                 case R.id.dailyActivityFragment:
-                    Log.d(TAG, "onNavigationItemSelected: " + "DashboardFragment");
                     mNavController.navigate(R.id.dailyActivityFragment);
                     break;
 

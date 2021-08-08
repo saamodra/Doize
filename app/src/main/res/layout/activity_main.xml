@@ -12,12 +12,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
+        <FrameLayout
             android:id="@+id/appBarLayout"
-            layout="@layout/tool_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/topAppBar"
+                style="@style/CustomToolbar"
+                app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/top_app_bar"
+                app:title="Dashboard"
+                android:gravity="center"
+                app:titleTextColor="@color/white"
+                app:navigationIconTint="@color/white"
+                app:navigationIcon="@drawable/ic_baseline_menu_24">
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <ImageView
+                android:id="@+id/iv_doize_logo"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:src="@drawable/doize_white"
+                android:contentDescription="@string/doize_logo" />
+        </FrameLayout>
 
         <fragment
             android:id="@+id/fragment_container"

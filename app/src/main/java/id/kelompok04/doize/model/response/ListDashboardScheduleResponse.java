@@ -1,13 +1,12 @@
 package id.kelompok04.doize.model.response;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-import id.kelompok04.doize.model.Schedule;
-
-public class ScheduleResponse{
+public class ListDashboardScheduleResponse{
 
 	@SerializedName("data")
-	private DataItem data;
+	private List<DataItem> data;
 
 	@SerializedName("message")
 	private String message;
@@ -15,11 +14,11 @@ public class ScheduleResponse{
 	@SerializedName("status")
 	private int status;
 
-	public void setData(DataItem data){
+	public void setData(List<DataItem> data){
 		this.data = data;
 	}
 
-	public DataItem getData(){
+	public List<DataItem> getData(){
 		return data;
 	}
 
@@ -42,7 +41,7 @@ public class ScheduleResponse{
 	@Override
  	public String toString(){
 		return 
-			"ScheduleResponse {" +
+			"ListDashboardScheduleResponse{" + 
 			"data = '" + data + '\'' + 
 			",message = '" + message + '\'' + 
 			",status = '" + status + '\'' + 
