@@ -17,8 +17,8 @@ public class ScheduleViewModel extends ViewModel {
         mScheduleRepository = ScheduleRepository.get();
     }
 
-    public LiveData<List<Schedule>> getSchedules() {
-        return mScheduleRepository.getSchedules();
+    public LiveData<List<Schedule>> getSchedules(int idUser) {
+        return mScheduleRepository.getSchedules(idUser);
     }
 
     public LiveData<ScheduleResponse> addSchedule(Schedule schedule) {

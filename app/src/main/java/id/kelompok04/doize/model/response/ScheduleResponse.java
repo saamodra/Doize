@@ -7,7 +7,7 @@ import id.kelompok04.doize.model.Schedule;
 public class ScheduleResponse{
 
 	@SerializedName("data")
-	private DataItem data;
+	private Schedule data;
 
 	@SerializedName("message")
 	private String message;
@@ -15,11 +15,11 @@ public class ScheduleResponse{
 	@SerializedName("status")
 	private int status;
 
-	public void setData(DataItem data){
+	public void setData(Schedule data){
 		this.data = data;
 	}
 
-	public DataItem getData(){
+	public Schedule getData(){
 		return data;
 	}
 

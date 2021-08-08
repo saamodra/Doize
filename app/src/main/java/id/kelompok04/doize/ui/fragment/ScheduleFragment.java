@@ -130,7 +130,7 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mScheduleViewModel.getSchedules().observe(getViewLifecycleOwner(), new Observer<List<Schedule>>() {
+        mScheduleViewModel.getSchedules(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), new Observer<List<Schedule>>() {
             @Override
             public void onChanged(List<Schedule> schedules) {
                 updateUI(schedules);

@@ -41,9 +41,9 @@ public class ScheduleRepository {
         return INSTANCE;
     }
 
-    public LiveData<List<Schedule>> getSchedules() {
+    public LiveData<List<Schedule>> getSchedules(int idUser) {
         Log.d(TAG, "getSchedules: Called");
-        Call<ListScheduleResponse> call = mScheduleService.getSchedules();
+        Call<ListScheduleResponse> call = mScheduleService.getSchedules(idUser);
         call.enqueue(new Callback<ListScheduleResponse>() {
             @Override
             public void onResponse(Call<ListScheduleResponse> call, Response<ListScheduleResponse> response) {

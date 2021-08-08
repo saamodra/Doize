@@ -13,8 +13,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ScheduleService {
-    @GET("schedule")
-    Call<ListScheduleResponse> getSchedules();
+    @GET("schedules/{id}")
+    Call<ListScheduleResponse> getSchedules(@Path("id") int idUser);
 
     @GET("schedule/{id}")
     Call<ScheduleResponse> getScheduleById(@Path("id") String id);

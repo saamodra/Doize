@@ -3,10 +3,12 @@ package id.kelompok04.doize.model.response;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
+import id.kelompok04.doize.model.Schedule;
+
 public class ListDashboardScheduleResponse{
 
 	@SerializedName("data")
-	private List<DataItem> data;
+	private List<Schedule> data;
 
 	@SerializedName("message")
 	private String message;
@@ -14,11 +16,11 @@ public class ListDashboardScheduleResponse{
 	@SerializedName("status")
 	private int status;
 
-	public void setData(List<DataItem> data){
+	public void setData(List<Schedule> data){
 		this.data = data;
 	}
 
-	public List<DataItem> getData(){
+	public List<Schedule> getData(){
 		return data;
 	}
 
