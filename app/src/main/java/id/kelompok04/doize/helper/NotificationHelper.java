@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -21,7 +23,9 @@ public class NotificationHelper {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID);
         builder.setContentTitle(title);
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher_doize_foreground);
+        builder.setSmallIcon(R.drawable.ic_notification);
+        builder.setColor(context.getResources().getColor(R.color.darkPurple));
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification));
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setAutoCancel(true);
 
@@ -34,7 +38,9 @@ public class NotificationHelper {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID);
         builder.setContentTitle(title);
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher_doize_foreground);
+        builder.setSmallIcon(R.drawable.ic_notification);
+        builder.setColor(context.getResources().getColor(R.color.darkPurple));
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification));
         builder.setPriority(NotificationCompat.PRIORITY_MAX);
         builder.setAutoCancel(true);
         builder.setContentIntent(intent);

@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setupNavigation() {
         mToolbar = findViewById(R.id.topAppBar);
         setSupportActionBar(mToolbar);
+        mToolbar.setTitle("Dashboard");
         mToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
