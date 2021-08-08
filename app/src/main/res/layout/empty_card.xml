@@ -37,7 +37,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Tidak ada data." />
+                android:text="@string/oopss_no_data_found" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -16,6 +16,9 @@ public interface ScheduleService {
     @GET("schedules/{id}")
     Call<ListScheduleResponse> getSchedules(@Path("id") int idUser);
 
+    @GET("schedules-day-user/{id}")
+    Call<ListScheduleResponse> getSchedulesDayUser(@Path("id") int idUser);
+
     @GET("schedule/{id}")
     Call<ScheduleResponse> getScheduleById(@Path("id") String id);
 
