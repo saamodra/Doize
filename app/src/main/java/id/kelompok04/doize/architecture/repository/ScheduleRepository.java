@@ -64,6 +64,8 @@ public class ScheduleRepository {
     }
 
     public LiveData<List<Schedule>> getSchedulesDayUser(int idUser) {
+        MutableLiveData<List<Schedule>> mutableLiveData = new MutableLiveData<>();
+
         Log.d(TAG, "getSchedules: Called");
         Call<ListScheduleResponse> call = mScheduleService.getSchedulesDayUser(idUser);
         call.enqueue(new Callback<ListScheduleResponse>() {
@@ -71,9 +73,8 @@ public class ScheduleRepository {
             public void onResponse(Call<ListScheduleResponse> call, Response<ListScheduleResponse> response) {
                 ListScheduleResponse listSchedule = response.body();
                 Log.d(TAG, "onResponse: " + listSchedule);
-                if (listSchedule.getStatus() == 200) {
-                    mScheduleDao.setListSchedule(listSchedule.getData());
-                }
+
+                mutableLiveData.setValue(listSchedule.getData());
             }
 
             @Override
@@ -82,7 +83,7 @@ public class ScheduleRepository {
             }
         });
 
-        return mScheduleDao.getListSchedule();
+        return mutableLiveData;
     }
 
     public LiveData<ScheduleResponse> addSchedule(Schedule schedule) {
