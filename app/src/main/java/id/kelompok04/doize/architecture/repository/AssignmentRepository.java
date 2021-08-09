@@ -1,19 +1,28 @@
 package id.kelompok04.doize.architecture.repository;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import id.kelompok04.doize.api.ApiUtils;
 import id.kelompok04.doize.architecture.dao.AssignmentDao;
 import id.kelompok04.doize.helper.CrudType;
+import id.kelompok04.doize.helper.DateConverter;
+import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.DailyActivity;
 import id.kelompok04.doize.model.response.AssignmentResponse;
 import id.kelompok04.doize.model.response.ListAssignmentResponse;
+import id.kelompok04.doize.model.response.ListDailyActivityResponse;
 import id.kelompok04.doize.model.response.ScheduleResponse;
 import id.kelompok04.doize.service.AssignmentService;
 import retrofit2.Call;
@@ -43,13 +52,11 @@ public class AssignmentRepository {
     }
 
     public LiveData<List<Assignment>> getAssignments(int idUser) {
-        Log.d(TAG, "getAssignments: Called");
         Call<ListAssignmentResponse> call = mAssignmentService.getAssignments(idUser);
         call.enqueue(new Callback<ListAssignmentResponse>() {
             @Override
             public void onResponse(Call<ListAssignmentResponse> call, Response<ListAssignmentResponse> response) {
                 ListAssignmentResponse listAssignment = response.body();
-                Log.d(TAG, "onResponse: " + listAssignment);
                 if (listAssignment.getStatus() == 200) {
                     mAssignmentDao.setListAssignment(listAssignment.getData());
                 }
