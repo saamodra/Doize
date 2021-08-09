@@ -17,6 +17,13 @@
     <string name="account">Account</string>
     <string name="confirmation_password">Confirmation Password</string>
     <string name="notifications">Notifications</string>
+    <string name="title1">Welcome to Doize!</string>
+    <string name="title2">Full Features</string>
+    <string name="title3">Simple and Easy</string>
+    <string name="desc_title1">Increase your produktivity with Doize</string>
+    <string name="desc_title2">Organize your day, create reminders and manage your productive time</string>
+    <string name="desc_title3">Organize your day anytime and anywhere easily</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_schedule">Add Schedule</string>
