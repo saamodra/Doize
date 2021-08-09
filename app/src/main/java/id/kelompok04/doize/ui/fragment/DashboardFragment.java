@@ -55,7 +55,7 @@ public class DashboardFragment extends Fragment {
     // Components
     private TextView mUserLoginName, mTodayDate;
     private RecyclerView mRvAssignments, mRvSchedules, mRvDailyActivities;
-    private View scheduleEmptyCard, assignmentEmptyCard;
+    private View scheduleEmptyCard, assignmentEmptyCard, dailyActivityEmptyCard;
 
     SharedPreferences preferences;
 
@@ -71,6 +71,7 @@ public class DashboardFragment extends Fragment {
     // Adapter
     private ScheduleAdapter mScheduleAdapter = new ScheduleAdapter(Collections.emptyList());
     private AssignmentAdapter mAssignmentAdapter = new AssignmentAdapter(Collections.emptyList());
+    private DailyActivityAdapter mDailyActivityAdapter = new DailyActivityAdapter(Collections.emptyList());
 
     SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("dd MMM yyyy");
 
@@ -108,8 +109,13 @@ public class DashboardFragment extends Fragment {
         mRvAssignments.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRvAssignments.setAdapter(mAssignmentAdapter);
 
+        mRvDailyActivities = v.findViewById(R.id.rv_dashboard_daily_activity);
+        mRvDailyActivities.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRvDailyActivities.setAdapter(mDailyActivityAdapter);
+
         scheduleEmptyCard = v.findViewById(R.id.dashboard_schedule_empty_card);
         assignmentEmptyCard = v.findViewById(R.id.dashboard_assignment_empty_card);
+        dailyActivityEmptyCard = v.findViewById(R.id.dashboard_daily_activity_empty_card);
 
         return v;
     }
@@ -119,7 +125,19 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mAssignmentViewModel.getAssignments(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), this::updateAssignmentUI);
+        mDailyActivityViewModel.getDailyActivities(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), this::updateDailyActivityUI);
         mScheduleViewModel.getSchedulesDayUser(DoizeHelper.getIdUserPref(requireActivity())).observe(getViewLifecycleOwner(), this::updateScheduleUI);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateDailyActivityUI(List<DailyActivity> dailyActivities) {
+        Log.d(TAG, "updateDailyActivityUI: " + dailyActivities);
+        mDailyActivityList = DoizeHelper.getDashboardDailyActivities(dailyActivities);
+        mDailyActivityAdapter = new DailyActivityAdapter(mDailyActivityList);
+        mRvDailyActivities.setAdapter(mDailyActivityAdapter);
+
+        dailyActivityEmptyCard.setVisibility(dailyActivities.size() == 0 ? View.VISIBLE : View.GONE);
+        mRvDailyActivities.setVisibility(dailyActivities.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -344,6 +362,90 @@ public class DashboardFragment extends Fragment {
                 public void onClick(View v) {
 
                 }
+            }
+        }
+    }
+
+    private class DailyActivityAdapter extends RecyclerView.Adapter<DailyActivityAdapter.DailyActivityHolder> {
+
+        private List<DailyActivity> mDailyActivities;
+
+        public DailyActivityAdapter(List<DailyActivity> dailyActivities) {
+            mDailyActivities = dailyActivities;
+        }
+
+        @NonNull
+        @Override
+        public DailyActivityHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+
+            return new DailyActivityHolder(layoutInflater, parent);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull DailyActivityHolder holder, int position) {
+            DailyActivity dailyActivity = mDailyActivities.get(position);
+            holder.bind(dailyActivity);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mDailyActivities.size();
+        }
+
+        private class DailyActivityHolder extends RecyclerView.ViewHolder {
+
+            private TextView mDailyActivityName;
+            private TextView mDailyActivityTime;
+            private ImageView mStarButton;
+            private ImageView mCheckButton;
+            private FrameLayout borderLeft;
+            private DailyActivity mDailyActivity;
+
+            public DailyActivityHolder(LayoutInflater inflater, ViewGroup parent) {
+                super(inflater.inflate(R.layout.item_row_daily_activity, parent, false));
+
+                mDailyActivityName = itemView.findViewById(R.id.tv_daily_activity_name);
+                mDailyActivityTime = itemView.findViewById(R.id.tv_daily_activity_time);
+                mStarButton = itemView.findViewById(R.id.star_icon);
+                mCheckButton = itemView.findViewById(R.id.iv_check_daily_activity);
+                borderLeft = itemView.findViewById(R.id.border_left_card_daily_activity);
+
+                mStarButton.setOnClickListener(v -> {
+                    int priority = mDailyActivity.getPriority() == 0 ? 1 : 0;
+                    mDailyActivity.setPriority(priority);
+                    mDailyActivityViewModel.updateDailyActivity(-1,  mDailyActivity);
+                });
+
+                mCheckButton.setOnClickListener(v -> {
+                    int workingStatus = mDailyActivity.getWorkingStatus() == 0 ? 1 : 0;
+                    mDailyActivity.setWorkingStatus(workingStatus);
+                    mDailyActivityViewModel.updateDailyActivity(-1,  mDailyActivity);
+                });
+            }
+
+            @SuppressLint("UseCompatLoadingForDrawables")
+            public void bind(DailyActivity dailyActivity) {
+                mDailyActivity = dailyActivity;
+                mDailyActivityName.setText(dailyActivity.getNameDailyActivity());
+
+                Drawable borderLeftSrc = getResources()
+                        .getDrawable((mDailyActivity.getWorkingStatus() == 0) ? R.drawable.border_left_purple : R.drawable.border_left_green);
+                Drawable checkSrc = getResources()
+                        .getDrawable((mDailyActivity.getWorkingStatus() == 0) ? R.drawable.ic_checked_false : R.drawable.ic_checked_true);
+
+                mDailyActivityName.setPaintFlags(mDailyActivity.getWorkingStatus() == 0 ? 0 : (mDailyActivityName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG));
+
+                borderLeft.setBackground(borderLeftSrc);
+                mCheckButton.setImageDrawable(checkSrc);
+
+                String dueDate = DateConverter.fromDbDateTimeTo(DoizeConstants.FULL_FORMAT, dailyActivity.getDuedateDailyActivity());
+                mDailyActivityTime.setText(dueDate);
+
+                Drawable star = getResources()
+                        .getDrawable((mDailyActivity.getPriority() == 0) ? R.drawable.ic_star_bordered : R.drawable.ic_star_filled);
+
+                mStarButton.setImageDrawable(star);
             }
         }
     }

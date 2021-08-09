@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
 
+import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
 
 public class DailyActivityDao {

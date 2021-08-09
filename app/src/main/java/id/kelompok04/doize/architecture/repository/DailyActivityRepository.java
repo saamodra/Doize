@@ -66,16 +66,16 @@ public class DailyActivityRepository {
     }
 
     public LiveData<List<DailyActivity>> getDailyActivitiesOnce(int idUser) {
-        MutableLiveData<List<DailyActivity>> mutableLiveData = new MutableLiveData<>();
         Log.d(TAG, "getDailyActivities: Called");
         Call<ListDailyActivityResponse> call = mDailyActivityService.getDailyActivities(idUser);
         call.enqueue(new Callback<ListDailyActivityResponse>() {
             @Override
             public void onResponse(Call<ListDailyActivityResponse> call, Response<ListDailyActivityResponse> response) {
                 ListDailyActivityResponse listActivity = response.body();
+                Log.d(TAG, "onResponse: " + listActivity);
 
                 if (listActivity.getStatus() == 200) {
-                    mutableLiveData.setValue(listActivity.getData());
+                    mDailyActivityDao.setListDailyActivity(listActivity.getData());
                 }
             }
 
@@ -85,7 +85,7 @@ public class DailyActivityRepository {
             }
         });
 
-        return mutableLiveData;
+        return mDailyActivityDao.getListDailyActivity();
     }
 
     public LiveData<DailyActivityResponse> updateDailyActivity(DailyActivity dailyActivity) {
