@@ -136,8 +136,8 @@ public class DashboardFragment extends Fragment {
         mDailyActivityAdapter = new DailyActivityAdapter(mDailyActivityList);
         mRvDailyActivities.setAdapter(mDailyActivityAdapter);
 
-        dailyActivityEmptyCard.setVisibility(dailyActivities.size() == 0 ? View.VISIBLE : View.GONE);
-        mRvDailyActivities.setVisibility(dailyActivities.size() == 0 ? View.GONE : View.VISIBLE);
+        dailyActivityEmptyCard.setVisibility(mDailyActivityList.size() == 0 ? View.VISIBLE : View.GONE);
+        mRvDailyActivities.setVisibility(mDailyActivityList.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -147,8 +147,8 @@ public class DashboardFragment extends Fragment {
         mAssignmentAdapter = new AssignmentAdapter(mAssignmentList);
         mRvAssignments.setAdapter(mAssignmentAdapter);
 
-        scheduleEmptyCard.setVisibility(assignments.size() == 0 ? View.VISIBLE : View.GONE);
-        mRvSchedules.setVisibility(assignments.size() == 0 ? View.GONE : View.VISIBLE);
+        assignmentEmptyCard.setVisibility(mAssignmentList.size() == 0 ? View.VISIBLE : View.GONE);
+        mRvAssignments.setVisibility(mAssignmentList.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     private void updateScheduleUI(List<Schedule> schedules) {;
