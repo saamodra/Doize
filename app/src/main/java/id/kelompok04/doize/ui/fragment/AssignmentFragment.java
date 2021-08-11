@@ -93,8 +93,6 @@ public class AssignmentFragment extends Fragment {
 
         mEmptyLayout = view.findViewById(R.id.layout_empty_data);
 
-        tilSearchAssignments = view.findViewById(R.id.til_assignment_search);
-
         tlAssignment = view.findViewById(R.id.tl_assignment);
         tlAssignment.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -120,6 +118,7 @@ public class AssignmentFragment extends Fragment {
             AssignmentDialogFragment.display(CrudType.ADD, null, requireActivity().getSupportFragmentManager());
         });
 
+        tilSearchAssignments = view.findViewById(R.id.til_assignment_search);
         tilSearchAssignments.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

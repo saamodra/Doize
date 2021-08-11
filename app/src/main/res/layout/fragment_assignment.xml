@@ -84,7 +84,6 @@
                 android:layout_height="10dp"
                 android:background="@drawable/shadow_gradient" />
 
-
             <include
                 android:id="@+id/layout_empty_data"
                 layout="@layout/layout_empty_data"

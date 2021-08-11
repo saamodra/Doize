@@ -6,43 +6,100 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.DailyActivityFragment">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <me.didik.component.StickyNestedScrollView
         android:layout_width="match_parent"
+        android:isScrollContainer="true"
+        android:measureAllChildren="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl_daily_activity"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Active"
-                />
+            <LinearLayout
+                android:orientation="vertical"
+                android:paddingVertical="15dp"
+                android:paddingHorizontal="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Done"
-                />
+                <TextView
+                    android:textSize="22sp"
+                    android:textColor="@color/darkPurple"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/daily_activities" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Priority"
-                />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/til_assignment_search"
+                    style="@style/MyDenseOutlined"
+                    app:endIconMode="custom"
+                    android:layout_width="match_parent"
+                    app:endIconDrawable="@drawable/ic_baseline_search_24"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search">
 
-        </com.google.android.material.tabs.TabLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tie_assignment_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:paddingTop="10dp"
-            android:id="@+id/rv_daily_activity"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tl_daily_activity"
+                android:tag="sticky"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active"
+                    />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done"
+                    />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Priority"
+                    />
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@drawable/shadow_gradient" />
+
+            <include
+                android:id="@+id/layout_empty_data"
+                layout="@layout/layout_empty_data"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingTop="10dp"
+                android:id="@+id/rv_daily_activity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+    </me.didik.component.StickyNestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_daily_activity"

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +29,10 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +42,7 @@ import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
+import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -49,6 +54,8 @@ public class DailyActivityFragment extends Fragment {
     private RecyclerView rvDailyActivity;
     private FloatingActionButton fabAddDailyActivity;
     private TabLayout tlDailyActivity;
+    private TextInputLayout tilSearchDailyActivities;
+    private View mEmptyLayout;
 
     // Data
     private DailyActivityFragment.DailyActivityAdapter rvDailyActivityAdapter;
@@ -79,6 +86,8 @@ public class DailyActivityFragment extends Fragment {
         rvDailyActivity.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvDailyActivity.setAdapter(rvDailyActivityAdapter);
 
+        mEmptyLayout = view.findViewById(R.id.layout_empty_data);
+
         tlDailyActivity = view.findViewById(R.id.tl_daily_activity);
         tlDailyActivity.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -104,10 +113,41 @@ public class DailyActivityFragment extends Fragment {
             DailyActivityDialogFragment.display(CrudType.ADD, null, requireActivity().getSupportFragmentManager());
         });
 
+        tilSearchDailyActivities = view.findViewById(R.id.til_assignment_search);
+        tilSearchDailyActivities.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
         itemTouchHelper.attachToRecyclerView(rvDailyActivity);
 
         return view;
+    }
+
+    public void filter(String text) {
+        List<DailyActivity> filtered = new ArrayList<>();
+
+        for (DailyActivity s : mDailyActivityListFragment) {
+            if (s.getNameDailyActivity().toLowerCase().contains(text.toLowerCase())
+                    || s.getDescriptionDailyActivity().toLowerCase().contains(text.toLowerCase())) {
+                filtered.add(s);
+            }
+        }
+
+        rvDailyActivityAdapter.filterList(filtered);
     }
 
     ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -210,6 +250,18 @@ public class DailyActivityFragment extends Fragment {
 
         public DailyActivityAdapter(List<DailyActivity> dailyActivities) {
             mDailyActivities = dailyActivities;
+        }
+
+        public void filterList(List<DailyActivity> filtered) {
+            if (filtered.size() == 0) {
+                mEmptyLayout.setVisibility(View.VISIBLE);
+                rvDailyActivity.setVisibility(View.GONE);
+            } else {
+                mEmptyLayout.setVisibility(View.GONE);
+                rvDailyActivity.setVisibility(View.VISIBLE);
+            }
+            this.mDailyActivities = filtered;
+            notifyDataSetChanged();
         }
 
         @NonNull
