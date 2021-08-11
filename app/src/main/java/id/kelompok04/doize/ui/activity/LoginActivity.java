@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                FancyToast.makeText(LoginActivity.this, loginResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                                FancyToast.makeText(LoginActivity.this, loginResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                             }
 
                             progressDialog.dismiss();

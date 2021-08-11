@@ -62,11 +62,11 @@ public class DurationPickerFragment extends DialogFragment {
         npMinutes = customAlertDialogView.findViewById(R.id.number_picker_minutes);
         npSeconds = customAlertDialogView.findViewById(R.id.number_picker_seconds);
         npMinutes.setMinValue(0);
-        npMinutes.setMaxValue(60);
+        npMinutes.setMaxValue(59);
         npMinutes.setValue(mCustomTime.getMinutes());
 
         npSeconds.setMinValue(0);
-        npSeconds.setMaxValue(60);
+        npSeconds.setMaxValue(59);
         npSeconds.setValue(mCustomTime.getSeconds());
 
         return builder.create();

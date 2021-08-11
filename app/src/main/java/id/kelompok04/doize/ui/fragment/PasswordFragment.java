@@ -124,7 +124,7 @@ public class PasswordFragment extends Fragment {
 
                             SharedPreferences.Editor editor = userPreferences.edit();
                             editor.putString("name", addedUser.getName());
-                            editor.putString("password", addedUser.getPassword());
+                            editor.putString("password", newPassword);
                             editor.putString("email", addedUser.getEmail());
                             editor.apply();
 
