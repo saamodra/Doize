@@ -7,7 +7,7 @@
         <item
             android:id="@+id/profile_drawer"
             android:icon="@drawable/ic_baseline_person_24"
-            android:title="Profile"/>
+            android:title="@string/profile"/>
 
     </group>
 
@@ -18,37 +18,37 @@
         <item
             android:id="@+id/home_drawer"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="Home"/>
-
-        <item
-            android:id="@+id/to_do_drawer"
-            android:icon="@drawable/ic_baseline_list_24"
-            android:title="Daily Activity"/>
+            android:title="@string/home"/>
 
         <item
             android:id="@+id/schedule_drawer"
             android:icon="@drawable/ic_baseline_calendar_today_24"
-            android:title="Schedule" />
+            android:title="@string/schedules" />
+
+        <item
+            android:id="@+id/to_do_drawer"
+            android:icon="@drawable/ic_baseline_list_24"
+            android:title="@string/daily_activities"/>
 
         <item
             android:id="@+id/assignment_drawer"
             android:icon="@drawable/ic_baseline_assignment_24"
-            android:title="Assignment"/>
+            android:title="@string/assignments"/>
 
         <item
             android:id="@+id/pomodoro_drawer"
             android:icon="@drawable/ic_baseline_timer_24"
-            android:title="Pomodoro"/>
+            android:title="@string/pomodoro"/>
 
         <item
             android:id="@+id/password_drawer"
             android:icon="@drawable/ic_baseline_lock_24"
-            android:title="Change Password"/>
+            android:title="@string/change_password"/>
 
         <item
             android:id="@+id/exit_drawer"
             android:icon="@drawable/ic_baseline_exit_to_app_24"
-            android:title="Logout"/>
+            android:title="@string/logout"/>
 
     </group>
 </menu>

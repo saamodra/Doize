@@ -190,6 +190,7 @@ public class ScheduleFragment extends Fragment {
         mAdapter = new ScheduleAdapter(schedules);
         mScheduleRecyclerView.setAdapter(mAdapter);
         mSchedulesFragment = schedules;
+        filter("");
     }
 
     private void launchCustomAlertDialog(CrudType crudType, Schedule schedule, View.OnClickListener onClickListener) {

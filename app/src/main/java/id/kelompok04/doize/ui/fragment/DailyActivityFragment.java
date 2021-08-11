@@ -242,6 +242,7 @@ public class DailyActivityFragment extends Fragment {
         mDailyActivityListFragment = dailyActivities;
         int tab_position = tlDailyActivity.getSelectedTabPosition();
         setTabValue(tab_position);
+        filter("");
     }
 
     private class DailyActivityAdapter extends RecyclerView.Adapter<DailyActivityFragment.DailyActivityAdapter.DailyActivityHolder> {

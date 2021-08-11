@@ -206,6 +206,7 @@ public class AssignmentFragment extends Fragment {
         mAssignmentListFragment = assignments;
         int tab_position = tlAssignment.getSelectedTabPosition();
         setTabValue(tab_position);
+        filter("");
     }
 
     ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

@@ -32,6 +32,13 @@
                 android:layout_marginBottom="10dp"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
 
+            <TextView
+                android:id="@+id/tv_empty_schedule"
+                android:text="@string/there_are_no_schedules"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_schedule_detail_item"
                 android:layout_width="match_parent"

@@ -279,7 +279,7 @@ public class ScheduleDetailFragment extends Fragment {
 
         private class ScheduleDetailHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-            private TextView mDay;
+            private TextView mDay, mTvEmptySchedules;
             private RecyclerView rvItem;
             private List<DetailSchedule> listSchedule;
             private ScheduleDetailDayItemAdapter mScheduleDetailDayItemAdapter;
@@ -291,7 +291,7 @@ public class ScheduleDetailFragment extends Fragment {
                 mDay = itemView.findViewById(R.id.tv_schedule_day);
                 rvItem = itemView.findViewById(R.id.rv_schedule_detail_item);
                 rvItem.setLayoutManager(new LinearLayoutManager(parent.getContext()));
-
+                mTvEmptySchedules = itemView.findViewById(R.id.tv_empty_schedule);
             }
 
             public void bind(String day, List<DetailSchedule> listSchedule) {
@@ -299,6 +299,9 @@ public class ScheduleDetailFragment extends Fragment {
                 mDay.setText(day);
                 mScheduleDetailDayItemAdapter = new ScheduleDetailDayItemAdapter(listSchedule);
                 rvItem.setAdapter(mScheduleDetailDayItemAdapter);
+
+                rvItem.setVisibility(listSchedule.size() > 0 ? View.VISIBLE : View.GONE);
+                mTvEmptySchedules.setVisibility(listSchedule.size() > 0 ? View.GONE : View.VISIBLE);
             }
 
             @Override

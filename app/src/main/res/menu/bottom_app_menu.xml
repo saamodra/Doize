@@ -8,7 +8,7 @@
     <item
         android:id="@id/scheduleFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:icon="@drawable/ic_calendar_schedule_2"
         android:title="@string/schedule" />
     <item
         android:id="@id/dailyActivityFragment"
@@ -23,6 +23,6 @@
     <item
         android:id="@id/pomodoroFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_tomato_slice"
+        android:icon="@drawable/ic_timer"
         android:title="@string/pomodoro" />
 </menu>

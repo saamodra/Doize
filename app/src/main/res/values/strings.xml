@@ -68,4 +68,9 @@
     <string name="home">Home</string>
     <string name="to_do">To Do</string>
     <string name="assignment">Assignment</string>
+    <string name="there_are_no_schedules">There are no schedules.</string>
+    <string name="schedules">Schedules</string>
+    <string name="profile">Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="logout">Logout</string>
 </resources>

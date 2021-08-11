@@ -56,12 +56,16 @@
                 android:id="@+id/btn_edit_schedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_circular"
+                android:backgroundTint="@color/yellow"
                 android:src="@drawable/ic_baseline_edit_24"
                 android:layout_marginEnd="10dp"
+                android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/edit" />
+                android:contentDescription="@string/edit"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
