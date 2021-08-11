@@ -37,4 +37,8 @@ public interface UserService {
     @FormUrlEncoded
     @POST("login")
     Call<LoginResponse> login(@Field("email") String email, @Field("password") String password);
+
+    @FormUrlEncoded
+    @POST("checkPassword")
+    Call<UserResponse> checkPassword(@Field("email") String email, @Field("password") String password);
 }

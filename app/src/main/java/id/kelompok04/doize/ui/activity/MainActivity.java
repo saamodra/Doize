@@ -199,6 +199,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mNavController.navigate(R.id.action_dashboardFragment_to_pomodoroFragment);
                 break;
 
+            case R.id.password_drawer:
+                mNavController.navigate(R.id.action_dashboardFragment_to_passwordFragment);
+                break;
+
             case R.id.exit_drawer:
                 SharedPreferences.Editor editor = userPreferences.edit();
                 editor.putString("oldId", userPreferences.getString("id", ""));

@@ -145,8 +145,7 @@ public class ProfileFragment extends Fragment {
         String phone = userPreferences.getString("phone", "");
         String birth_date = userPreferences.getString("birth_date", "");
         String email = userPreferences.getString("email", "");
-
-
+        
         if (birth_date != null && !birth_date.equals("")) {
             String newBirthDate = DateConverter.fromDbTo(mSimpleDateFormat, birth_date);
             mBirthDateLayout.getEditText().setText(newBirthDate);
