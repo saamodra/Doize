@@ -32,6 +32,7 @@ import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
 import id.kelompok04.doize.architecture.viewmodel.UserViewModel;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
+import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.User;
 import id.kelompok04.doize.model.response.UserResponse;
 import id.kelompok04.doize.ui.activity.MainActivity;
@@ -84,41 +85,44 @@ public class ProfileFragment extends Fragment {
         mButtonUpdate = view.findViewById(R.id.btnUpdateProfile);
 
         mButtonUpdate.setOnClickListener(v -> {
-            String name = mNameLayout.getEditText().getText().toString();
-            String phone = mPhoneLayout.getEditText().getText().toString();
-            String email = mEmailLayout.getEditText().getText().toString();
-            String birth_date = mBirthDateLayout.getEditText().getText().toString();
-            String newBirthDate = DateConverter.toDbFrom(mSimpleDateFormat, birth_date);
-            String idUser = userPreferences.getString("id", "");
+            if (validate()) {
+                String name = mNameLayout.getEditText().getText().toString();
+                String phone = mPhoneLayout.getEditText().getText().toString();
+                String email = mEmailLayout.getEditText().getText().toString();
+                String birth_date = mBirthDateLayout.getEditText().getText().toString();
+                String newBirthDate = DateConverter.toDbFrom(mSimpleDateFormat, birth_date);
+                String idUser = userPreferences.getString("id", "");
 
-            User user = new User();
-            user.setName(name);
-            user.setPhone(phone);
-            user.setEmail(email);
-            user.setBirthDate(newBirthDate);
-            user.setIdUser(idUser);
+                User user = new User();
+                user.setName(name);
+                user.setPhone(phone);
+                user.setEmail(email);
+                user.setBirthDate(newBirthDate);
+                user.setIdUser(idUser);
 
-            ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Profile", "Updating profile ...");
-            mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), userResponse -> {
-                if (userResponse.getStatus() == 200) {
-                    User addedUser = userResponse.getData();
+                ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Profile", "Updating profile ...");
+                mUserViewModel.updateProfile(user).observe(getViewLifecycleOwner(), userResponse -> {
+                    if (userResponse.getStatus() == 200) {
+                        User addedUser = userResponse.getData();
 
-                    SharedPreferences.Editor editor = userPreferences.edit();
-                    editor.putString("name", addedUser.getName());
-                    editor.putString("phone", addedUser.getPhone());
-                    editor.putString("email", addedUser.getEmail());
-                    editor.putString("birth_date", addedUser.getBirthDate());
-                    editor.apply();
+                        SharedPreferences.Editor editor = userPreferences.edit();
+                        editor.putString("name", addedUser.getName());
+                        editor.putString("phone", addedUser.getPhone());
+                        editor.putString("email", addedUser.getEmail());
+                        editor.putString("birth_date", addedUser.getBirthDate());
+                        editor.apply();
 
-                    ((MainActivity)requireActivity()).setHeaderUser(addedUser.getName(), addedUser.getEmail());
-                    FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                } else {
-                    FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                }
+                        ((MainActivity)requireActivity()).setHeaderUser(addedUser.getName(), addedUser.getEmail());
+                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                    } else {
+                        FancyToast.makeText(getActivity(), userResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                    }
 
-                progressDialog.dismiss();
-            });
-
+                    progressDialog.dismiss();
+                });
+            } else {
+                FancyToast.makeText(getActivity(),"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+            }
         });
 
         mBirthDateLayout.getEditText().setOnClickListener(v -> {
@@ -154,5 +158,12 @@ public class ProfileFragment extends Fragment {
         mNameLayout.getEditText().setText(name);
         mPhoneLayout.getEditText().setText(phone);
         mEmailLayout.getEditText().setText(email);
+    }
+
+    public boolean validate() {
+        boolean nameValidation = ValidationHelper.requiredTextInputValidation(mNameLayout);
+        boolean emailValidation = ValidationHelper.requiredTextInputValidation(mEmailLayout);
+
+        return nameValidation && emailValidation;
     }
 }

@@ -19,14 +19,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,7 +38,6 @@ import id.kelompok04.doize.architecture.viewmodel.AssignmentViewModel;
 import id.kelompok04.doize.architecture.viewmodel.DailyActivityViewModel;
 import id.kelompok04.doize.architecture.viewmodel.DetailScheduleViewModel;
 import id.kelompok04.doize.architecture.viewmodel.ScheduleViewModel;
-import id.kelompok04.doize.helper.CrudType;
 import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
@@ -53,7 +50,7 @@ public class DashboardFragment extends Fragment {
     private static final String TAG = "DashboardFragment";
 
     // Components
-    private TextView mUserLoginName, mTodayDate;
+    private TextView mUserLoginName, mTodayDate, mTvAssignmentSeeAll, mTvDailyActivitySeeAll, mTvScheduleSeeAll;
     private RecyclerView mRvAssignments, mRvSchedules, mRvDailyActivities;
     private View scheduleEmptyCard, assignmentEmptyCard, dailyActivityEmptyCard;
 
@@ -117,6 +114,22 @@ public class DashboardFragment extends Fragment {
         assignmentEmptyCard = v.findViewById(R.id.dashboard_assignment_empty_card);
         dailyActivityEmptyCard = v.findViewById(R.id.dashboard_daily_activity_empty_card);
 
+        mTvAssignmentSeeAll = v.findViewById(R.id.tv_assignment_seeall);
+        mTvDailyActivitySeeAll = v.findViewById(R.id.tv_daily_activity_seeall);
+        mTvScheduleSeeAll = v.findViewById(R.id.tv_schedule_seeall);
+
+        mTvAssignmentSeeAll.setOnClickListener(v1 -> {
+            Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_dashboardFragment_to_assignmentFragment);
+        });
+
+        mTvDailyActivitySeeAll.setOnClickListener(v1 -> {
+            Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_dashboardFragment_to_dailyActivityFragment);
+        });
+
+        mTvScheduleSeeAll.setOnClickListener(v1 -> {
+            Navigation.findNavController(getActivity(), R.id.fragment_container).navigate(R.id.action_dashboardFragment_to_scheduleFragment);
+        });
+
         return v;
     }
 
@@ -136,8 +149,8 @@ public class DashboardFragment extends Fragment {
         mDailyActivityAdapter = new DailyActivityAdapter(mDailyActivityList);
         mRvDailyActivities.setAdapter(mDailyActivityAdapter);
 
-        dailyActivityEmptyCard.setVisibility(dailyActivities.size() == 0 ? View.VISIBLE : View.GONE);
-        mRvDailyActivities.setVisibility(dailyActivities.size() == 0 ? View.GONE : View.VISIBLE);
+        dailyActivityEmptyCard.setVisibility(mDailyActivityList.size() == 0 ? View.VISIBLE : View.GONE);
+        mRvDailyActivities.setVisibility(mDailyActivityList.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -147,8 +160,8 @@ public class DashboardFragment extends Fragment {
         mAssignmentAdapter = new AssignmentAdapter(mAssignmentList);
         mRvAssignments.setAdapter(mAssignmentAdapter);
 
-        scheduleEmptyCard.setVisibility(assignments.size() == 0 ? View.VISIBLE : View.GONE);
-        mRvSchedules.setVisibility(assignments.size() == 0 ? View.GONE : View.VISIBLE);
+        assignmentEmptyCard.setVisibility(mAssignmentList.size() == 0 ? View.VISIBLE : View.GONE);
+        mRvAssignments.setVisibility(mAssignmentList.size() == 0 ? View.GONE : View.VISIBLE);
     }
 
     private void updateScheduleUI(List<Schedule> schedules) {;

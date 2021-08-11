@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.api.ApiUtils;
@@ -83,9 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                         public void onChanged(LoginResponse loginResponse) {
                             if (loginResponse.getStatus() == 200) {
 
-                                // Convert object to string
-                                String userLoginObject = new Gson().toJson(loginResponse.getUser());
-
                                 // Set Shared Preference
                                 SharedPreferences.Editor editor = pref.edit();
                                 editor.putString("email", loginResponse.getUser().getEmail());
@@ -101,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(LoginActivity.this, loginResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                FancyToast.makeText(LoginActivity.this, loginResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
                             }
 
                             progressDialog.dismiss();

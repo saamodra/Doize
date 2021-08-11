@@ -30,30 +30,31 @@
         <action
             android:id="@+id/action_dashboardFragment_to_scheduleFragment"
             app:destination="@id/scheduleFragment"
-            app:enterAnim="@anim/wait_anim"
-            app:exitAnim="@anim/wait_anim"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/slide_right"
             app:popEnterAnim="@anim/slide_left"
             app:popExitAnim="@anim/slide_right" />
         <action
             android:id="@+id/action_dashboardFragment_to_dailyActivityFragment"
             app:destination="@id/dailyActivityFragment"
             app:enterAnim="@anim/slide_left"
-            app:exitAnim="@anim/wait_anim"
-            app:popEnterAnim="@anim/wait_anim"
+            app:exitAnim="@anim/slide_right"
+            app:popEnterAnim="@anim/slide_left"
             app:popExitAnim="@anim/slide_right" />
         <action
             android:id="@+id/action_dashboardFragment_to_assignmentFragment"
             app:destination="@id/assignmentFragment"
-            app:enterAnim="@anim/wait_anim"
-            app:exitAnim="@anim/wait_anim"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/slide_right"
             app:popEnterAnim="@anim/slide_left"
             app:popExitAnim="@anim/slide_right" />
         <action
             android:id="@+id/action_dashboardFragment_to_pomodoroFragment"
-            app:destination="@id/pomodoroFragment" />
-        <action
-            android:id="@+id/action_dashboardFragment_to_passwordFragment"
-            app:destination="@id/passwordFragment" />
+            app:destination="@id/pomodoroFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/slide_right"
+            app:popEnterAnim="@anim/slide_left"
+            app:popExitAnim="@anim/slide_right" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDetailFragment"

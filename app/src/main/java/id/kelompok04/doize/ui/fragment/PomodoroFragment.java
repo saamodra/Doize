@@ -366,6 +366,8 @@ public class PomodoroFragment extends Fragment {
                 mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.alarm_beep);
                 mMediaPlayer.start();
 
+                Log.d(TAG, "onFinish: Media Player started");
+
                 AlertDialog.Builder resetAlert = new AlertDialog.Builder(requireContext());
                 resetAlert.setTitle("Time's up");
                 resetAlert.setMessage("Time to start a new session.");

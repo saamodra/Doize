@@ -36,6 +36,7 @@ import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.helper.NotificationHelper;
+import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.Assignment;
 
 public class AssignmentDialogFragment extends DialogFragment {
@@ -136,26 +137,30 @@ public class AssignmentDialogFragment extends DialogFragment {
         });
 
         btnSave.setOnClickListener(v -> {
-            Assignment assignment = getAssignment();
+            if (validate()) {
+                Assignment assignment = getAssignment();
 
-            if (mCrudType == CrudType.ADD) {
-                mAssignmentViewModel.addAssignment(assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
-                    if (assignmentResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        dismiss();
-                    } else {
-                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
-                });
+                if (mCrudType == CrudType.ADD) {
+                    mAssignmentViewModel.addAssignment(assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                        if (assignmentResponse.getStatus() == 200) {
+                            FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                            dismiss();
+                        } else {
+                            FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                        }
+                    });
+                } else {
+                    mAssignmentViewModel.updateAssignment(-1, assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
+                        if (assignmentResponse.getStatus() == 200) {
+                            FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                            dismiss();
+                        } else {
+                            FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                        }
+                    });
+                }
             } else {
-                mAssignmentViewModel.updateAssignment(-1, assignment).observe(getViewLifecycleOwner(), assignmentResponse -> {
-                    if (assignmentResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        dismiss();
-                    } else {
-                        FancyToast.makeText(getActivity(), assignmentResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
-                });
+                FancyToast.makeText(getActivity(),"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }
         });
 
@@ -178,6 +183,14 @@ public class AssignmentDialogFragment extends DialogFragment {
         assignment.setIdUser(DoizeHelper.getIdUserPref(requireActivity()));
 
         return assignment;
+    }
+
+    public boolean validate() {
+        boolean nameValidation = ValidationHelper.requiredTextInputValidation(tilAssignmentName);
+        boolean subjectValidation = ValidationHelper.requiredTextInputValidation(tilAssignmentSubject);
+        boolean dueDateValidation = ValidationHelper.requiredTextInputValidation(tilDueDate);
+
+        return nameValidation && dueDateValidation && subjectValidation;
     }
 
     @Override

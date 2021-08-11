@@ -26,6 +26,7 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DateType;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
+import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.Assignment;
 import id.kelompok04.doize.model.DailyActivity;
 
@@ -123,26 +124,30 @@ public class DailyActivityDialogFragment extends DialogFragment {
         });
 
         btnSaveDailyActivity.setOnClickListener(v -> {
-            DailyActivity dailyActivity = getDailyActivity();
+            if (validate()) {
+                DailyActivity dailyActivity = getDailyActivity();
 
-            if (mCrudType == CrudType.ADD) {
-                mDailyActivityViewModel.addDailyActivity(dailyActivity).observe(getViewLifecycleOwner(), dailyActivityResponse -> {
-                    if (dailyActivityResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        dismiss();
-                    } else {
-                        FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
-                });
+                if (mCrudType == CrudType.ADD) {
+                    mDailyActivityViewModel.addDailyActivity(dailyActivity).observe(getViewLifecycleOwner(), dailyActivityResponse -> {
+                        if (dailyActivityResponse.getStatus() == 200) {
+                            FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                            dismiss();
+                        } else {
+                            FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                        }
+                    });
+                } else {
+                    mDailyActivityViewModel.updateDailyActivity(-1, dailyActivity).observe(getViewLifecycleOwner(), dailyActivityResponse -> {
+                        if (dailyActivityResponse.getStatus() == 200) {
+                            FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                            dismiss();
+                        } else {
+                            FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                        }
+                    });
+                }
             } else {
-                mDailyActivityViewModel.updateDailyActivity(-1, dailyActivity).observe(getViewLifecycleOwner(), dailyActivityResponse -> {
-                    if (dailyActivityResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        dismiss();
-                    } else {
-                        FancyToast.makeText(getActivity(), dailyActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
-                });
+                FancyToast.makeText(getActivity(),"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }
         });
 
@@ -166,6 +171,12 @@ public class DailyActivityDialogFragment extends DialogFragment {
         return dailyActivity;
     }
 
+    public boolean validate() {
+        boolean nameValidation = ValidationHelper.requiredTextInputValidation(tilDailyActivityName);
+        boolean dueDateValidation = ValidationHelper.requiredTextInputValidation(tilDueDate);
+
+        return nameValidation && dueDateValidation;
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

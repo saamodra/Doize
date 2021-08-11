@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Doize"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.activity.SlideActivity"></activity>
+        <activity android:name=".ui.activity.SlideActivity" />
 
         <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
@@ -25,10 +25,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.RegisterActivity" />
-        <activity android:name=".ui.activity.LoginActivity"></activity>
+        <activity android:name=".ui.activity.LoginActivity" />
         <activity
-            android:name=".ui.activity.MainActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:name=".ui.activity.MainActivity" />
 
         <receiver android:name=".helper.AlarmReceiver" />
     </application>
