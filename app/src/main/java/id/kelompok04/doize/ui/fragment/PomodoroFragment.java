@@ -56,6 +56,7 @@ import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.helper.NotificationHelper;
 import id.kelompok04.doize.helper.TimeConverter;
+import id.kelompok04.doize.helper.ValidationHelper;
 import id.kelompok04.doize.model.Pomodoro;
 import id.kelompok04.doize.model.PomodoroActivity;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -200,20 +201,22 @@ public class PomodoroFragment extends Fragment {
             bottomSheetDialog.setContentView(taskAddDialog);
             bottomSheetDialog.setCanceledOnTouchOutside(false);
             btnAddTask.setOnClickListener(v1 -> {
-                String activityName = tilTask.getEditText().getText().toString();
-                PomodoroActivity pomodoroActivity = new PomodoroActivity(activityName, mPomodoroFragmentData.getIdPomodoro(), 1);
-                ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Task", "Adding task...");
+                if (validate()) {
+                    String activityName = tilTask.getEditText().getText().toString();
+                    PomodoroActivity pomodoroActivity = new PomodoroActivity(activityName, mPomodoroFragmentData.getIdPomodoro(), 1);
+                    ProgressDialog progressDialog = ProgressDialog.show(requireContext(), "Task", "Adding task...");
 
-                mPomodoroActivityViewModel.addPomodoroActivity(pomodoroActivity).observe(getViewLifecycleOwner(), pomodoroActivityResponse -> {
-                    if (pomodoroActivityResponse.getStatus() == 200) {
-                        FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
-                        bottomSheetDialog.dismiss();
-                    } else {
-                        FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
-                    }
+                    mPomodoroActivityViewModel.addPomodoroActivity(pomodoroActivity).observe(getViewLifecycleOwner(), pomodoroActivityResponse -> {
+                        if (pomodoroActivityResponse.getStatus() == 200) {
+                            FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                            bottomSheetDialog.dismiss();
+                        } else {
+                            FancyToast.makeText(getActivity(), pomodoroActivityResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
+                        }
 
-                    progressDialog.dismiss();
-                });
+                        progressDialog.dismiss();
+                    });
+                }
             });
 
             bottomSheetDialog.show();
@@ -230,6 +233,10 @@ public class PomodoroFragment extends Fragment {
         Paris.style(btnLongBreak).apply(R.style.PomodoroTab_ButtonOutlined);
         Paris.style(btnPomodoro).apply(R.style.PomodoroTab_ButtonOutlined);
         Paris.style(button).apply(R.style.PomodoroTab_Button);
+    }
+
+    private boolean validate() {
+        return ValidationHelper.requiredTextInputValidation(tilTask);
     }
 
     @Override

@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +29,10 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +43,7 @@ import id.kelompok04.doize.helper.DateConverter;
 import id.kelompok04.doize.helper.DoizeConstants;
 import id.kelompok04.doize.helper.DoizeHelper;
 import id.kelompok04.doize.model.Assignment;
+import id.kelompok04.doize.model.Schedule;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 /**
@@ -53,6 +58,8 @@ public class AssignmentFragment extends Fragment {
     private RecyclerView rvAssignment;
     private FloatingActionButton fabAddAssignment;
     private TabLayout tlAssignment;
+    private TextInputLayout tilSearchAssignments;
+    private View mEmptyLayout;
 
     // Data
     private AssignmentAdapter rvAssignmentAdapter;
@@ -84,6 +91,10 @@ public class AssignmentFragment extends Fragment {
         rvAssignment.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvAssignment.setAdapter(rvAssignmentAdapter);
 
+        mEmptyLayout = view.findViewById(R.id.layout_empty_data);
+
+        tilSearchAssignments = view.findViewById(R.id.til_assignment_search);
+
         tlAssignment = view.findViewById(R.id.tl_assignment);
         tlAssignment.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -109,11 +120,41 @@ public class AssignmentFragment extends Fragment {
             AssignmentDialogFragment.display(CrudType.ADD, null, requireActivity().getSupportFragmentManager());
         });
 
+        tilSearchAssignments.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(mSimpleCallback);
         itemTouchHelper.attachToRecyclerView(rvAssignment);
 
 
         return view;
+    }
+
+    public void filter(String text) {
+        List<Assignment> filtered = new ArrayList<>();
+
+        for (Assignment s : mAssignmentListFragment) {
+            if (s.getNameAssignment().toLowerCase().contains(text.toLowerCase())
+                    || s.getCourse().toLowerCase().contains(text.toLowerCase())) {
+                filtered.add(s);
+            }
+        }
+
+        rvAssignmentAdapter.filterList(filtered);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -217,6 +258,18 @@ public class AssignmentFragment extends Fragment {
 
         public AssignmentAdapter(List<Assignment> assignments) {
             mAssignments = assignments;
+        }
+
+        public void filterList(List<Assignment> filtered) {
+            if (filtered.size() == 0) {
+                mEmptyLayout.setVisibility(View.VISIBLE);
+                rvAssignment.setVisibility(View.GONE);
+            } else {
+                mEmptyLayout.setVisibility(View.GONE);
+                rvAssignment.setVisibility(View.VISIBLE);
+            }
+            this.mAssignments = filtered;
+            notifyDataSetChanged();
         }
 
         @NonNull
