@@ -55,6 +55,9 @@
             app:exitAnim="@anim/slide_right"
             app:popEnterAnim="@anim/slide_left"
             app:popExitAnim="@anim/slide_right" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
     </fragment>
     <fragment
         android:id="@+id/scheduleDetailFragment"
@@ -76,4 +79,9 @@
         android:name="id.kelompok04.doize.ui.fragment.PomodoroFragment"
         android:label="fragment_pomodoro"
         tools:layout="@layout/fragment_pomodoro" />
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="id.kelompok04.doize.ui.fragment.PasswordFragment"
+        android:label="fragment_password"
+        tools:layout="@layout/fragment_password" />
 </navigation>

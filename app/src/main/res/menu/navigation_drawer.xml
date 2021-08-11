@@ -41,6 +41,11 @@
             android:title="Pomodoro"/>
 
         <item
+            android:id="@+id/password_drawer"
+            android:icon="@drawable/ic_baseline_lock_24"
+            android:title="Change Password"/>
+
+        <item
             android:id="@+id/exit_drawer"
             android:icon="@drawable/ic_baseline_exit_to_app_24"
             android:title="Logout"/>
