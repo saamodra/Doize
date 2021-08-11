@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import id.kelompok04.doize.R;
 import id.kelompok04.doize.architecture.viewmodel.UserViewModel;
@@ -62,14 +63,18 @@ public class RegisterActivity extends AppCompatActivity {
                 ProgressDialog progressDialog = ProgressDialog.show(this, "Sign Up", "Signing Up...");
                 mUserViewModel.register(newUser).observe(this, loginResponse -> {
                     if (loginResponse.getStatus() == 200) {
-                        Toast.makeText(RegisterActivity.this, "Sign Up Success!", Toast.LENGTH_SHORT).show();
+                        FancyToast.makeText(RegisterActivity.this, loginResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.SUCCESS,false).show();
+                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Sign Up Failed!", Toast.LENGTH_SHORT).show();
+                        FancyToast.makeText(RegisterActivity.this, loginResponse.getMessage(), FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
                     }
 
                     progressDialog.dismiss();
                 });
-
+            } else {
+                FancyToast.makeText(RegisterActivity.this,"Lengkapi semua data!", FancyToast.LENGTH_LONG, FancyToast.ERROR,false).show();
             }
         });
     }

@@ -4,26 +4,25 @@
         android:id="@id/dashboardFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Home" />
+        android:title="@string/home" />
+    <item
+        android:id="@id/scheduleFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title="@string/schedule" />
     <item
         android:id="@id/dailyActivityFragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_list_24"
-        android:title="To Do" />
+        android:title="@string/to_do" />
+    <item
+        android:id="@id/assignmentFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_assignment_24"
+        android:title="@string/assignment" />
     <item
         android:id="@id/pomodoroFragment"
         android:enabled="true"
         android:icon="@drawable/ic_tomato_slice"
-        android:title="Pomodoro" />
-    <item
-        android:id="@id/assignmentFragment"
-        android:enabled="true"
-        android:icon="@drawable/ic_baseline_calendar_today_24"
-        android:title="Assignment" />
-    <item
-        android:id="@+id/more_menu"
-        android:enabled="true"
-        android:icon="@drawable/ic_baseline_more_horiz_24"
-        android:title="More" />
-
+        android:title="@string/pomodoro" />
 </menu>

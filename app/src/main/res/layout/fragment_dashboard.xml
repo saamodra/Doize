@@ -82,7 +82,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/tv_assignment_seeall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
@@ -128,7 +128,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/ll_assignments_data" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/tv_daily_activity_seeall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
@@ -136,7 +136,7 @@
                     android:textColor="@color/gray"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_dashboard_dailyactivity"
-                    app:layout_constraintEnd_toEndOf="@+id/textView4" />
+                    app:layout_constraintEnd_toEndOf="@+id/tv_assignment_seeall" />
 
                 <LinearLayout
                     android:id="@+id/ll_daily_activity_data"
@@ -171,6 +171,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/ll_daily_activity_data" />
 
                 <TextView
+                    android:id="@+id/tv_schedule_seeall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserrat_semibold"
@@ -178,7 +179,7 @@
                     android:textColor="@color/gray"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_dashboard_schedules"
-                    app:layout_constraintEnd_toEndOf="@+id/textView5" />
+                    app:layout_constraintEnd_toEndOf="@+id/tv_daily_activity_seeall" />
 
                 <LinearLayout
                     android:id="@+id/ll_schedule_data"

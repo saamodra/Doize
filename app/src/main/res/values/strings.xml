@@ -65,4 +65,7 @@
     <string name="assignments">Assignments</string>
     <string name="daily_activities">Daily Activities</string>
     <string name="schedule">Schedule</string>
+    <string name="home">Home</string>
+    <string name="to_do">To Do</string>
+    <string name="assignment">Assignment</string>
 </resources>
