@@ -110,8 +110,6 @@ public class PasswordFragment extends Fragment {
             user.setPassword(newPassword);
             user.setIdUser(idUser);
             user.setName(name);
-            user.setPhone(phone);
-            user.setBirthDate(birth_date);
             user.setEmail(email);
 
             if (validate(v)) {
