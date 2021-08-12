@@ -60,7 +60,9 @@ public class DailyActivityFragment extends Fragment {
     // Data
     private DailyActivityFragment.DailyActivityAdapter rvDailyActivityAdapter;
     private DailyActivityViewModel mDailyActivityViewModel;
-    private List<DailyActivity> mDailyActivityListFragment;
+    private List<DailyActivity> mDailyActivityFullListFragment;
+    private List<DailyActivity> mDailyActivityActiveListFragment;
+
 
     public DailyActivityFragment() {
         // Required empty public constructor
@@ -140,7 +142,7 @@ public class DailyActivityFragment extends Fragment {
     public void filter(String text) {
         List<DailyActivity> filtered = new ArrayList<>();
 
-        for (DailyActivity s : mDailyActivityListFragment) {
+        for (DailyActivity s : mDailyActivityActiveListFragment) {
             if (s.getNameDailyActivity().toLowerCase().contains(text.toLowerCase())
                     || s.getDescriptionDailyActivity().toLowerCase().contains(text.toLowerCase())) {
                 filtered.add(s);
@@ -225,24 +227,25 @@ public class DailyActivityFragment extends Fragment {
     private void setTabValue(int tabPosition) {
         switch (tabPosition) {
             case 0:
-                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getActiveDailyActivity(mDailyActivityListFragment));
+                mDailyActivityActiveListFragment = getActiveDailyActivity(mDailyActivityFullListFragment);
                 break;
             case 1:
-                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getDoneDailyActivity(mDailyActivityListFragment));
+                mDailyActivityActiveListFragment = getDoneDailyActivity(mDailyActivityFullListFragment);
                 break;
             case 2:
-                rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getPriorityDailyActivity(mDailyActivityListFragment));
+                mDailyActivityActiveListFragment = getPriorityDailyActivity(mDailyActivityFullListFragment);
                 break;
         }
+        rvDailyActivityAdapter = new DailyActivityFragment.DailyActivityAdapter(getPriorityDailyActivity(mDailyActivityActiveListFragment));
         rvDailyActivity.setAdapter(rvDailyActivityAdapter);
+        filter(tilSearchDailyActivities.getEditText().getText().toString());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateUI(List<DailyActivity> dailyActivities) {
-        mDailyActivityListFragment = dailyActivities;
+        mDailyActivityFullListFragment = dailyActivities;
         int tab_position = tlDailyActivity.getSelectedTabPosition();
         setTabValue(tab_position);
-        filter("");
     }
 
     private class DailyActivityAdapter extends RecyclerView.Adapter<DailyActivityFragment.DailyActivityAdapter.DailyActivityHolder> {

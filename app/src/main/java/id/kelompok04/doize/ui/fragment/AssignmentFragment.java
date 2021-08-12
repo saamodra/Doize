@@ -64,7 +64,8 @@ public class AssignmentFragment extends Fragment {
     // Data
     private AssignmentAdapter rvAssignmentAdapter;
     private AssignmentViewModel mAssignmentViewModel;
-    private List<Assignment> mAssignmentListFragment;
+    private List<Assignment> mAssignmentFullListFragment;
+    private List<Assignment> mAssignmentActiveListFragment;
 
 
     public AssignmentFragment() {
@@ -146,7 +147,7 @@ public class AssignmentFragment extends Fragment {
     public void filter(String text) {
         List<Assignment> filtered = new ArrayList<>();
 
-        for (Assignment s : mAssignmentListFragment) {
+        for (Assignment s : mAssignmentActiveListFragment) {
             if (s.getNameAssignment().toLowerCase().contains(text.toLowerCase())
                     || s.getCourse().toLowerCase().contains(text.toLowerCase())) {
                 filtered.add(s);
@@ -189,24 +190,25 @@ public class AssignmentFragment extends Fragment {
     private void setTabValue(int tabPosition) {
         switch (tabPosition) {
             case 0:
-                rvAssignmentAdapter = new AssignmentAdapter(getActiveAssignment(mAssignmentListFragment));
+                mAssignmentActiveListFragment = getActiveAssignment(mAssignmentFullListFragment);
                 break;
             case 1:
-                rvAssignmentAdapter = new AssignmentAdapter(getDoneAssignment(mAssignmentListFragment));
+                mAssignmentActiveListFragment = getDoneAssignment(mAssignmentFullListFragment);
                 break;
             case 2:
-                rvAssignmentAdapter = new AssignmentAdapter(getPriorityAssignment(mAssignmentListFragment));
+                mAssignmentActiveListFragment = getPriorityAssignment(mAssignmentFullListFragment);
                 break;
         }
+        rvAssignmentAdapter = new AssignmentAdapter(mAssignmentActiveListFragment);
         rvAssignment.setAdapter(rvAssignmentAdapter);
+        filter(tilSearchAssignments.getEditText().getText().toString());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateUI(List<Assignment> assignments) {
-        mAssignmentListFragment = assignments;
+        mAssignmentFullListFragment = assignments;
         int tab_position = tlAssignment.getSelectedTabPosition();
         setTabValue(tab_position);
-        filter("");
     }
 
     ItemTouchHelper.SimpleCallback mSimpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
