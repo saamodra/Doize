@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences pref;
 
     private UserViewModel mUserViewModel;
-    private UserService mUserService;
     private Button mLoginButton;
     private TextInputEditText mEmailTxt;
     private TextInputEditText mPasswordTxt;

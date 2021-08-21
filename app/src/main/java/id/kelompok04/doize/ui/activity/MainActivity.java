@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
     }
-
+    
     public void setHeaderUser(String name, String email) {
         mTvHeaderTitle.setText(name);
         mTvHeaderSubtitle.setText(email);
